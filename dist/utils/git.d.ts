@@ -32,4 +32,16 @@ export declare function getRepoStatus(repoPath: string): Promise<{
  * Check if a path is a git repository
  */
 export declare function isGitRepo(repoPath: string): Promise<boolean>;
+/**
+ * Merge a branch into target branch
+ */
+export declare function mergeBranch(repoPath: string, sourceBranch: string, targetBranch?: string): Promise<void>;
+/**
+ * Push branch to remote
+ */
+export declare function pushBranch(repoPath: string, branch: string, remote?: string): Promise<void>;
+/**
+ * Delete a local branch
+ */
+export declare function deleteBranch(repoPath: string, branchName: string, force?: boolean): Promise<void>;
 //# sourceMappingURL=git.d.ts.map

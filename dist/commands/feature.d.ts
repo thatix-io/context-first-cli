@@ -8,6 +8,12 @@ export declare const featureCommands: {
         force?: boolean;
     }) => Promise<void>;
     status: (issueId?: string) => Promise<void>;
+    merge: (issueId: string, options: {
+        targetBranch?: string;
+        noPush?: boolean;
+        keepWorkspace?: boolean;
+        force?: boolean;
+    }) => Promise<void>;
     end: (issueId: string, options: {
         force?: boolean;
     }) => Promise<void>;

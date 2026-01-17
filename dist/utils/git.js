@@ -10,8 +10,12 @@ exports.listWorktrees = listWorktrees;
 exports.getCurrentBranch = getCurrentBranch;
 exports.getRepoStatus = getRepoStatus;
 exports.isGitRepo = isGitRepo;
+exports.mergeBranch = mergeBranch;
+exports.pushBranch = pushBranch;
+exports.deleteBranch = deleteBranch;
 const simple_git_1 = __importDefault(require("simple-git"));
 const child_process_1 = require("child_process");
+const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 /**
  * Clone a repository if it doesn't exist
@@ -165,6 +169,52 @@ async function isGitRepo(repoPath) {
     }
     catch (error) {
         return false;
+    }
+}
+/**
+ * Merge a branch into target branch
+ */
+async function mergeBranch(repoPath, sourceBranch, targetBranch = 'main') {
+    const git = (0, simple_git_1.default)(repoPath);
+    try {
+        // Fetch latest changes
+        await git.fetch();
+        // Checkout target branch
+        await git.checkout(targetBranch);
+        // Pull latest changes
+        await git.pull('origin', targetBranch);
+        // Merge source branch
+        await git.merge([sourceBranch]);
+        console.log(chalk_1.default.green(`✓ Merged ${sourceBranch} into ${targetBranch} in ${path_1.default.basename(repoPath)}`));
+    }
+    catch (error) {
+        throw new Error(`Failed to merge ${sourceBranch} into ${targetBranch}: ${error.message}`);
+    }
+}
+/**
+ * Push branch to remote
+ */
+async function pushBranch(repoPath, branch, remote = 'origin') {
+    const git = (0, simple_git_1.default)(repoPath);
+    try {
+        await git.push(remote, branch);
+        console.log(chalk_1.default.green(`✓ Pushed ${branch} to ${remote} in ${path_1.default.basename(repoPath)}`));
+    }
+    catch (error) {
+        throw new Error(`Failed to push ${branch}: ${error.message}`);
+    }
+}
+/**
+ * Delete a local branch
+ */
+async function deleteBranch(repoPath, branchName, force = false) {
+    const git = (0, simple_git_1.default)(repoPath);
+    try {
+        await git.deleteLocalBranch(branchName, force);
+        console.log(chalk_1.default.green(`✓ Deleted branch ${branchName} in ${path_1.default.basename(repoPath)}`));
+    }
+    catch (error) {
+        console.log(chalk_1.default.yellow(`  Could not delete branch ${branchName}: ${error.message}`));
     }
 }
 //# sourceMappingURL=git.js.map

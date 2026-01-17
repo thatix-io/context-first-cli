@@ -175,3 +175,68 @@ export async function isGitRepo(repoPath: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * Merge a branch into target branch
+ */
+export async function mergeBranch(
+  repoPath: string,
+  sourceBranch: string,
+  targetBranch: string = 'main'
+): Promise<void> {
+  const git: SimpleGit = simpleGit(repoPath);
+  
+  try {
+    // Fetch latest changes
+    await git.fetch();
+    
+    // Checkout target branch
+    await git.checkout(targetBranch);
+    
+    // Pull latest changes
+    await git.pull('origin', targetBranch);
+    
+    // Merge source branch
+    await git.merge([sourceBranch]);
+    
+    console.log(chalk.green(`✓ Merged ${sourceBranch} into ${targetBranch} in ${path.basename(repoPath)}`));
+  } catch (error: any) {
+    throw new Error(`Failed to merge ${sourceBranch} into ${targetBranch}: ${error.message}`);
+  }
+}
+
+/**
+ * Push branch to remote
+ */
+export async function pushBranch(
+  repoPath: string,
+  branch: string,
+  remote: string = 'origin'
+): Promise<void> {
+  const git: SimpleGit = simpleGit(repoPath);
+  
+  try {
+    await git.push(remote, branch);
+    console.log(chalk.green(`✓ Pushed ${branch} to ${remote} in ${path.basename(repoPath)}`));
+  } catch (error: any) {
+    throw new Error(`Failed to push ${branch}: ${error.message}`);
+  }
+}
+
+/**
+ * Delete a local branch
+ */
+export async function deleteBranch(
+  repoPath: string,
+  branchName: string,
+  force: boolean = false
+): Promise<void> {
+  const git: SimpleGit = simpleGit(repoPath);
+  
+  try {
+    await git.deleteLocalBranch(branchName, force);
+    console.log(chalk.green(`✓ Deleted branch ${branchName} in ${path.basename(repoPath)}`));
+  } catch (error: any) {
+    console.log(chalk.yellow(`  Could not delete branch ${branchName}: ${error.message}`));
+  }
+}

@@ -17,6 +17,10 @@ import {
   createWorktree,
   removeWorktree,
   listWorktrees,
+  mergeBranch,
+  pushBranch,
+  deleteBranch,
+  getCurrentBranch,
 } from '../utils/git';
 import {
   loadAiProperties,
@@ -427,6 +431,130 @@ export const featureCommands = {
       }
 
       console.log(chalk.yellow('Not in a feature workspace. Use "context-cli feature list" to see all workspaces.'));
+    }
+  },
+
+  merge: async (issueId: string, options: { targetBranch?: string; noPush?: boolean; keepWorkspace?: boolean; force?: boolean }) => {
+    console.log(chalk.blue.bold(`\n🔀 Merging feature: ${issueId}\n`));
+
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      exitWithError('No configuration found. Run "context-cli init" first.');
+    }
+
+    const workspacePath = path.join(sessionsDir, issueId);
+
+    if (!(await pathExists(workspacePath))) {
+      exitWithError(`Workspace for ${issueId} not found`);
+    }
+
+    // Load metadata to get repository list
+    const metadata = await loadWorkspaceMetadata(workspacePath);
+    if (!metadata) {
+      exitWithError('Could not load workspace metadata');
+    }
+
+    const targetBranch = options.targetBranch || 'main';
+    const branchName = `feature/${issueId}`;
+
+    // Confirm merge
+    if (!options.force) {
+      const { confirm } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'confirm',
+          message: `Merge ${branchName} into ${targetBranch} in ${metadata.repositories.length} repository(ies)?`,
+          default: false,
+        },
+      ]);
+
+      if (!confirm) {
+        console.log(chalk.yellow('✋ Merge cancelled'));
+        return;
+      }
+    }
+
+    // Load ai.properties to get base_path
+    const configResult = await findConfig();
+    if (!configResult) {
+      exitWithError('No configuration found');
+    }
+
+    const { configDir } = configResult;
+    
+    // Determine orchestrator path
+    let orchestratorPath: string;
+    const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
+    
+    if (await pathExists(aiPropertiesInConfigDir)) {
+      orchestratorPath = configDir;
+    } else {
+      orchestratorPath = path.join(configDir, '.context-orchestrator');
+    }
+    
+    const aiProperties = await loadAiProperties(orchestratorPath);
+    const basePath = getBasePath(aiProperties);
+    
+    if (!basePath) {
+      exitWithError('Could not determine base_path from ai.properties.md');
+    }
+
+    // Merge each repository
+    console.log(chalk.blue(`\nMerging ${branchName} into ${targetBranch}...\n`));
+    
+    const mergeErrors: string[] = [];
+    
+    for (const repoId of metadata.repositories) {
+      const mainRepoPath = path.join(basePath, repoId);
+      
+      if (!(await pathExists(mainRepoPath))) {
+        console.log(chalk.yellow(`  ⚠ Repository ${repoId} not found at ${mainRepoPath}, skipping`));
+        continue;
+      }
+
+      try {
+        console.log(chalk.gray(`  Processing ${repoId}...`));
+        
+        // Merge branch
+        await mergeBranch(mainRepoPath, branchName, targetBranch);
+        
+        // Push if not disabled
+        if (!options.noPush) {
+          await pushBranch(mainRepoPath, targetBranch);
+        }
+        
+        // Delete feature branch
+        await deleteBranch(mainRepoPath, branchName, true);
+        
+      } catch (error: any) {
+        console.log(chalk.red(`  ✗ Error in ${repoId}: ${error.message}`));
+        mergeErrors.push(`${repoId}: ${error.message}`);
+      }
+    }
+
+    if (mergeErrors.length > 0) {
+      console.log(chalk.red.bold('\n⚠️ Merge completed with errors:\n'));
+      mergeErrors.forEach(err => console.log(chalk.red(`  - ${err}`)));
+      console.log(chalk.yellow('\n💡 Tip: Fix errors manually and re-run merge, or use --keep-workspace to preserve the workspace'));
+      return;
+    }
+
+    console.log(chalk.green.bold('\n✅ Merge completed successfully!'));
+
+    // Remove workspace if not disabled
+    if (!options.keepWorkspace) {
+      console.log(chalk.blue('\nCleaning up workspace...'));
+      await featureCommands.remove(issueId, { force: true });
+    } else {
+      console.log(chalk.blue('\n💾 Workspace preserved (use --keep-workspace=false to remove)'));
+    }
+
+    console.log(chalk.green.bold('\n🎉 Feature merged successfully!'));
+    
+    if (!options.noPush) {
+      console.log(chalk.gray(`\n💡 Changes have been pushed to ${targetBranch}`));
+    } else {
+      console.log(chalk.yellow(`\n⚠️ Remember to push ${targetBranch} manually (--no-push was used)`));
     }
   },
 

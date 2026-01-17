@@ -62,6 +62,7 @@ npm install -g context-first-cli
 | `context-cli feature start <issue-id>` | Create a new feature workspace with isolated git worktrees. |
 | `context-cli feature list` | List all active feature workspaces on your machine. |
 | `context-cli feature switch <issue-id>` | Get the command to switch to an existing feature workspace. |
+| `context-cli feature merge <issue-id>` | Merge feature branch into target branch, push changes, and clean up workspace. |
 | `context-cli feature end <issue-id>` | Archive and clean up a completed feature workspace. |
 
 ### Diagnostic Commands
@@ -146,8 +147,31 @@ npx context-first-cli@latest feature switch FIN-123
 cd orchestrator/.sessions/FIN-123/
 npx context-first-cli@latest status
 
-# Clean up a finished workspace
+# Merge feature and clean up workspace
+npx context-first-cli@latest feature merge FIN-123
+# This will:
+# 1. Merge feature/FIN-123 into main (or specified target branch)
+# 2. Push changes to remote
+# 3. Delete feature branch
+# 4. Clean up workspace
+
+# Or manually clean up without merging
 npx context-first-cli@latest feature end FIN-123
+```
+
+**Merge Options**:
+```bash
+# Merge into a different branch
+npx context-first-cli@latest feature merge FIN-123 --target-branch develop
+
+# Merge without pushing (for manual review)
+npx context-first-cli@latest feature merge FIN-123 --no-push
+
+# Keep workspace after merge (for reference)
+npx context-first-cli@latest feature merge FIN-123 --keep-workspace
+
+# Force merge without confirmation
+npx context-first-cli@latest feature merge FIN-123 --force
 ```
 
 ---

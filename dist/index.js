@@ -57,6 +57,14 @@ feature
     .description('Switch to an existing feature workspace')
     .action(feature_1.featureCommands.switch);
 feature
+    .command('merge <issue-id>')
+    .description('Merge feature branch into target branch and clean up workspace')
+    .option('-t, --target-branch <branch>', 'Target branch to merge into (default: main)')
+    .option('--no-push', 'Do not push changes after merge')
+    .option('--keep-workspace', 'Keep workspace after merge')
+    .option('-f, --force', 'Force merge without confirmation')
+    .action(feature_1.featureCommands.merge);
+feature
     .command('end <issue-id>')
     .description('Archive and clean up a completed feature workspace')
     .option('-f, --force', 'Force cleanup without confirmation')
