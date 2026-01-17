@@ -36,9 +36,6 @@ async function addRepoCommand() {
                     if (!/^[a-z0-9-]+$/.test(input)) {
                         return 'Repository ID must contain only lowercase letters, numbers, and hyphens';
                     }
-                    if (existingRepoIds.includes(input)) {
-                        return `Repository ID "${input}" already exists`;
-                    }
                     return true;
                 },
             },
@@ -88,6 +85,25 @@ async function addRepoCommand() {
                 when: () => existingRepoIds.length > 0,
             },
         ]);
+        // Check if repository already exists
+        const existingIndex = manifest.repositories.findIndex(r => r.id === answers.id);
+        if (existingIndex !== -1) {
+            console.log(chalk_1.default.yellow(`\n⚠️  Repository "${answers.id}" already exists in the manifest`));
+            const { proceed } = await inquirer_1.default.prompt([
+                {
+                    type: 'confirm',
+                    name: 'proceed',
+                    message: 'Do you want to replace it?',
+                    default: false,
+                },
+            ]);
+            if (!proceed) {
+                console.log(chalk_1.default.gray('\nOperation cancelled'));
+                return;
+            }
+            // Remove existing repository
+            manifest.repositories.splice(existingIndex, 1);
+        }
         // Create new repository entry
         const newRepo = {
             id: answers.id,
