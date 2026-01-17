@@ -59,10 +59,10 @@ npm install -g context-first-cli
 
 | Command | Description |
 | :--- | :--- |
-| `context-cli feature:start <issue-id>` | Create a new feature workspace with isolated git worktrees. |
-| `context-cli feature:list` | List all active feature workspaces on your machine. |
-| `context-cli feature:switch <issue-id>` | Get the command to switch to an existing feature workspace. |
-| `context-cli feature:end <issue-id>` | Archive and clean up a completed feature workspace. |
+| `context-cli feature start <issue-id>` | Create a new feature workspace with isolated git worktrees. |
+| `context-cli feature list` | List all active feature workspaces on your machine. |
+| `context-cli feature switch <issue-id>` | Get the command to switch to an existing feature workspace. |
+| `context-cli feature end <issue-id>` | Archive and clean up a completed feature workspace. |
 
 ### Diagnostic Commands
 
@@ -73,97 +73,66 @@ npm install -g context-first-cli
 
 ---
 
-## 🚀 Getting Started: Complete Workflow
+## 🚀 Getting Started: The 5-Minute Workflow
 
-### Step 1: Create a New Orchestrator
+The primary workflow is designed to be simple and centralized within the Orchestrator.
 
-First, create a central orchestrator for your project ecosystem.
+### Step 1: Create Your Orchestrator
+
+This is your project's "home base". It defines your development process and the repositories involved.
 
 ```bash
+# Run this once per project ecosystem
 npx context-first-cli@latest create:orchestrator
 ```
 
-This will guide you through an interactive setup:
-1.  **Project name** (e.g., `my-project-orchestrator`)
-2.  **Project description**
-3.  **MetaSpecs repository URL** (Git URL of your specifications repository)
-4.  **Task manager** (Jira, Linear, GitHub, or None)
-5.  **Initialize Git** (optional: create initial commit)
+This command interactively sets up your orchestrator, which includes:
+-   `.contextrc.json`: A file that makes the orchestrator self-aware, so you can run all commands from here.
+-   `context-manifest.json`: Defines all repositories in your project.
+-   `.claude/commands/`: Pre-built command templates for your AI assistant.
+-   `ai.properties.md`: A template for your local configuration (which is gitignored).
 
-The orchestrator will be created with:
-- `.claude/commands/` - 11 command definitions for AI (warm-up, products, engineer, quality)
-- `context-manifest.json` - Repository manifest with your MetaSpecs already configured
-- `ai.properties.md` - Configuration template (gitignored, each dev has their own)
-- `.sessions/` - Session data directory (gitignored)
+### Step 2: Configure Your Local Environment
 
-### Step 2: Add Application Repositories
-
-Navigate into your orchestrator directory and add your application repositories.
+Navigate into the new orchestrator directory and tell the CLI where your code is located.
 
 ```bash
-cd my-project-orchestrator/
-
-# Add your backend repository
-npx context-first-cli@latest add:repo
-# You'll be asked for: ID, URL, description, role, dependencies
-
-# Add your frontend repository
-npx context-first-cli@latest add:repo
-
-# Add more repositories as needed
-npx context-first-cli@latest add:repo
-```
-
-Each repository will be added to `context-manifest.json` with its configuration.
-
-### Step 3: Configure Local Environment
-
-Run `config:setup` to interactively configure your local `ai.properties.md` file.
-
-```bash
-cd my-project-orchestrator/
+cd your-orchestrator-name/
 npx context-first-cli@latest config:setup
 ```
 
-This will ask for:
-1.  **Base workspace path** (where repositories will be cloned, e.g., `~/workspace`)
-2.  **Auto-clone** (whether to clone missing repositories automatically)
-3.  **Task manager** settings (Jira, Linear, etc.)
+This will ask for your **`base_path`**, which is the absolute path to the folder where you keep all your git repositories (e.g., `~/workspace` or `~/dev`). It also asks if you want to enable `auto_clone`.
 
-This generates an `ai.properties.md` file tailored to your machine, following the convention-over-configuration principle.
+### Step 3: Add Your Repositories
 
-**Note**: This file is gitignored because it contains local paths specific to each developer.
-
-### Step 4: Initialize Your Application Repositories
-
-For each of your application repositories, run `init` to link it to the orchestrator.
+Now, define the repositories that make up your project.
 
 ```bash
-cd /path/to/your/backend/
-npx context-first-cli@latest init
+# Still inside the orchestrator directory
+npx context-first-cli@latest add:repo
 ```
 
-This will ask for:
-1.  The Git URL of your orchestrator repository
-2.  Your AI provider (Claude, Cursor, etc.)
+Run this command for each repository (e.g., `backend`, `frontend`, `admin`). It will interactively ask for the repository's ID, Git URL, and role, and save it to `context-manifest.json`.
 
-A `.contextrc.json` file will be created linking this project to the orchestrator.
+### Step 4: Start a Feature
 
-### Step 5: Start Working on a Feature
-
-Now you can start working on a feature from any of your configured repositories.
+That's it for setup! Now you can start working on a feature. **From the orchestrator directory**, run:
 
 ```bash
-cd /path/to/your/backend/
-npx context-first-cli@latest feature:start FIN-123
+npx context-first-cli@latest feature start <issue-id>
+# Example: npx context-first-cli@latest feature start FIN-123
 ```
 
-This will:
-1.  Create a new workspace directory (e.g., `~/workspaces/FIN-123/`)
-2.  Use `git worktree` to check out branches for all required repositories
-3.  Set up the workspace with proper structure
+This command will:
+1.  Read your `context-manifest.json`.
+2.  Look for your repositories in the `base_path` you configured.
+3.  If a repository isn't found and `auto_clone` is true, it will clone it for you.
+4.  Create a new, isolated workspace (e.g., `~/.context-workspaces/FIN-123/`).
+5.  Use `git worktree` to efficiently check out a new feature branch for each selected repository into the workspace.
 
-### Step 6: Manage Your Workspaces
+Your isolated, multi-repo development environment is ready!
+
+### Step 5: Manage Your Workspaces
 
 ```bash
 # List all active workspaces
@@ -225,42 +194,37 @@ This structure ensures a clean separation of concerns:
 ## 📝 Example: Complete Setup for a New Project
 
 ```bash
-# 1. Create orchestrator
+# 1. Create the orchestrator (once per project)
 npx context-first-cli@latest create:orchestrator
-# Name: my-saas-orchestrator
-# MetaSpecs URL: git@github.com:myorg/my-saas-metaspecs.git
+# Follow prompts: name, description, metaspecs URL...
 
-# 2. Add repositories
+# 2. Enter the orchestrator and configure your local environment
 cd my-saas-orchestrator/
+npx context-first-cli@latest config:setup
+# Base path: ~/dev
+# Auto-clone: Yes
+
+# 3. Add all your project's repositories to the manifest
 npx context-first-cli@latest add:repo
 # ID: backend, URL: git@github.com:myorg/my-saas-backend.git
 
 npx context-first-cli@latest add:repo
 # ID: frontend, URL: git@github.com:myorg/my-saas-frontend.git
 
-npx context-first-cli@latest add:repo
-# ID: admin, URL: git@github.com:myorg/my-saas-admin.git
-
-# 3. Configure local environment
-npx context-first-cli@latest config:setup
-# Base path: ~/workspace
-# Auto-clone: Yes
-# Task manager: Jira
-
-# 4. Push orchestrator to Git
+# 4. Commit and push your orchestrator setup
+git add .
+git commit -m "feat: configure orchestrator with project repositories"
 git remote add origin git@github.com:myorg/my-saas-orchestrator.git
 git push -u origin main
 
-# 5. Initialize each application repo
-cd ~/projects/my-saas-backend/
-npx context-first-cli@latest init
-# Orchestrator URL: git@github.com:myorg/my-saas-orchestrator.git
-# AI Provider: claude
+# 5. Start working on a feature!
+# (Make sure your repos like 'my-saas-backend' exist in '~/dev' or enable auto_clone)
+npx context-first-cli@latest feature start PROJ-123
 
-# 6. Start working on a feature
-npx context-first-cli@latest feature:start PROJ-123
-cd ~/workspaces/PROJ-123/
-# All repositories are now checked out and ready to work!
+# 6. Switch to the new workspace directory to begin work
+cd ~/.context-workspaces/PROJ-123/
+code .
+# All selected repositories are now checked out here!
 ```
 
 ---
