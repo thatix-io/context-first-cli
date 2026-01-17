@@ -71,8 +71,6 @@ export async function scaffoldOrchestratorCommand() {
     await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
     await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
     await fs.mkdir(path.join(targetDir, '.sessions'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'specs', 'business'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'specs', 'technical'), { recursive: true });
 
     // Create README.md
     const readme = generateReadme(answers);
@@ -103,7 +101,6 @@ ai.properties.md
     console.log(chalk.blue('\n📁 Structure created:'));
     console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
     console.log(chalk.gray('  .sessions/               - Feature session data'));
-    console.log(chalk.gray('  specs/                   - Business and technical specifications'));
     console.log(chalk.gray('  ai.properties.md         - Configuration template (gitignored)'));
     console.log(chalk.gray('  context-manifest.json    - Repository manifest'));
 
@@ -192,9 +189,6 @@ ${answers.projectName}/
 │       ├── quality/         # Quality commands (observe, metrics)
 │       └── warm-up.md       # Context loading command
 ├── .sessions/               # Feature session data (gitignored)
-├── specs/
-│   ├── business/            # Business specifications
-│   └── technical/           # Technical specifications
 ├── ai.properties.md         # Configuration (gitignored - each dev has their own)
 └── context-manifest.json    # Repository manifest
 \`\`\`

@@ -65,8 +65,6 @@ async function scaffoldOrchestratorCommand() {
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.sessions'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'business'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'technical'), { recursive: true });
         // Create README.md
         const readme = generateReadme(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'README.md'), readme, 'utf-8');
@@ -91,7 +89,6 @@ ai.properties.md
         console.log(chalk_1.default.blue('\n📁 Structure created:'));
         console.log(chalk_1.default.gray('  .claude/commands/        - Command definitions for AI'));
         console.log(chalk_1.default.gray('  .sessions/               - Feature session data'));
-        console.log(chalk_1.default.gray('  specs/                   - Business and technical specifications'));
         console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template (gitignored)'));
         console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest'));
         // Initialize Git if requested
@@ -161,9 +158,6 @@ ${answers.projectName}/
 │       ├── quality/         # Quality commands (observe, metrics)
 │       └── warm-up.md       # Context loading command
 ├── .sessions/               # Feature session data (gitignored)
-├── specs/
-│   ├── business/            # Business specifications
-│   └── technical/           # Technical specifications
 ├── ai.properties.md         # Configuration (gitignored - each dev has their own)
 └── context-manifest.json    # Repository manifest
 \`\`\`
