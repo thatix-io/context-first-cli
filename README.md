@@ -127,27 +127,27 @@ This command will:
 1.  Read your `context-manifest.json`.
 2.  Look for your repositories in the `base_path` you configured.
 3.  If a repository isn't found and `auto_clone` is true, it will clone it for you.
-4.  Create a new, isolated workspace (e.g., `~/.context-workspaces/FIN-123/`).
+4.  Create a new, isolated workspace in the orchestrator (e.g., `orchestrator/.sessions/FIN-123/`).
 5.  Use `git worktree` to efficiently check out a new feature branch for each selected repository into the workspace.
 
-Your isolated, multi-repo development environment is ready!
+Your isolated, multi-repo development environment is ready, organized within your orchestrator!
 
 ### Step 5: Manage Your Workspaces
 
 ```bash
 # List all active workspaces
-npx context-first-cli@latest feature:list
+npx context-first-cli@latest feature list
 
 # Get the command to switch to a workspace
-npx context-first-cli@latest feature:switch FIN-123
-# Then run the displayed command: cd ~/workspaces/FIN-123
+npx context-first-cli@latest feature switch FIN-123
+# Then run the displayed command: cd orchestrator/.sessions/FIN-123
 
 # Check the status of your current workspace
-cd ~/workspaces/FIN-123/
+cd orchestrator/.sessions/FIN-123/
 npx context-first-cli@latest status
 
 # Clean up a finished workspace
-npx context-first-cli@latest feature:end FIN-123
+npx context-first-cli@latest feature end FIN-123
 ```
 
 ---
@@ -222,9 +222,9 @@ git push -u origin main
 npx context-first-cli@latest feature start PROJ-123
 
 # 6. Switch to the new workspace directory to begin work
-cd ~/.context-workspaces/PROJ-123/
+cd .sessions/PROJ-123/
 code .
-# All selected repositories are now checked out here!
+# All selected repositories are now checked out here as worktrees!
 ```
 
 ---
