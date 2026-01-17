@@ -3,7 +3,9 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { initCommand } from './commands/init';
-import { scaffoldOrchestratorCommand } from './commands/scaffold-orchestrator';
+import { createOrchestratorCommand } from './commands/create-orchestrator';
+import { addRepoCommand } from './commands/add-repo';
+import { addRepoMetaspecCommand } from './commands/add-repo-metaspec';
 import { featureCommands } from './commands/feature';
 import { doctorCommand } from './commands/doctor';
 import { statusCommand } from './commands/status';
@@ -22,9 +24,19 @@ program
   .action(initCommand);
 
 program
-  .command('scaffold:orchestrator')
+  .command('create:orchestrator')
   .description('Create a new orchestrator repository from a template')
-  .action(scaffoldOrchestratorCommand);
+  .action(createOrchestratorCommand);
+
+program
+  .command('add:repo')
+  .description('Add a new code repository to context-manifest.json')
+  .action(addRepoCommand);
+
+program
+  .command('add:repo-metaspec')
+  .description('Add or update the MetaSpecs repository in context-manifest.json')
+  .action(addRepoMetaspecCommand);
 
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');

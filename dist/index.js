@@ -3,7 +3,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const init_1 = require("./commands/init");
-const scaffold_orchestrator_1 = require("./commands/scaffold-orchestrator");
+const create_orchestrator_1 = require("./commands/create-orchestrator");
+const add_repo_1 = require("./commands/add-repo");
+const add_repo_metaspec_1 = require("./commands/add-repo-metaspec");
 const feature_1 = require("./commands/feature");
 const doctor_1 = require("./commands/doctor");
 const status_1 = require("./commands/status");
@@ -18,9 +20,17 @@ program
     .description('Initialize Context-First in an existing project')
     .action(init_1.initCommand);
 program
-    .command('scaffold:orchestrator')
+    .command('create:orchestrator')
     .description('Create a new orchestrator repository from a template')
-    .action(scaffold_orchestrator_1.scaffoldOrchestratorCommand);
+    .action(create_orchestrator_1.createOrchestratorCommand);
+program
+    .command('add:repo')
+    .description('Add a new code repository to context-manifest.json')
+    .action(add_repo_1.addRepoCommand);
+program
+    .command('add:repo-metaspec')
+    .description('Add or update the MetaSpecs repository in context-manifest.json')
+    .action(add_repo_metaspec_1.addRepoMetaspecCommand);
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');
 feature

@@ -7,12 +7,13 @@ import { simpleGit } from 'simple-git';
 interface ScaffoldAnswers {
   projectName: string;
   description: string;
+  metaspecsUrl: string;
   taskManager: 'jira' | 'linear' | 'github' | 'none';
   initGit: boolean;
 }
 
-export async function scaffoldOrchestratorCommand() {
-  console.log(chalk.blue.bold('\n🏗️  Scaffolding a new Orchestrator repository\n'));
+export async function createOrchestratorCommand() {
+  console.log(chalk.blue.bold('\n🏗️  Creating a new Orchestrator repository\n'));
 
   try {
     const answers = await inquirer.prompt<ScaffoldAnswers>([
@@ -35,6 +36,20 @@ export async function scaffoldOrchestratorCommand() {
         name: 'description',
         message: 'Project description:',
         default: 'Orchestrator for Context-First development',
+      },
+      {
+        type: 'input',
+        name: 'metaspecsUrl',
+        message: 'MetaSpecs repository URL (Git):',
+        validate: (input: string) => {
+          if (!input.trim()) {
+            return 'MetaSpecs repository URL is required';
+          }
+          if (!input.includes('git') && !input.includes('.git')) {
+            return 'Please provide a valid Git repository URL';
+          }
+          return true;
+        },
       },
       {
         type: 'list',
@@ -97,7 +112,7 @@ ai.properties.md
 `;
     await fs.writeFile(path.join(targetDir, '.gitignore'), gitignore, 'utf-8');
 
-    console.log(chalk.green(`\n✅ Orchestrator scaffolded successfully at: ${targetDir}`));
+    console.log(chalk.green(`\n✅ Orchestrator created successfully at: ${targetDir}`));
     console.log(chalk.blue('\n📁 Structure created:'));
     console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
     console.log(chalk.gray('  .sessions/               - Feature session data'));
@@ -110,7 +125,7 @@ ai.properties.md
       const git = simpleGit(targetDir);
       await git.init();
       await git.add('.');
-      await git.commit('chore: initial commit - orchestrator scaffolded by context-cli');
+      await git.commit('chore: initial commit - orchestrator created by context-cli');
       console.log(chalk.green('✅ Git repository initialized and initial commit created'));
     }
 
@@ -126,7 +141,7 @@ ai.properties.md
     }
 
   } catch (error) {
-    console.error(chalk.red('\n❌ Error during scaffolding:'), error);
+    console.error(chalk.red('\n❌ Error during creation:'), error);
     process.exit(1);
   }
 }
@@ -263,7 +278,7 @@ function generateManifest(answers: ScaffoldAnswers) {
       {
         id: 'metaspecs',
         role: 'specs-provider',
-        url: 'git@github.com:your-org/your-metaspecs.git',
+        url: answers.metaspecsUrl,
         description: 'MetaSpecs repository with technical and business specifications',
       },
       {
