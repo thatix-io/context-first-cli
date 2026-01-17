@@ -140,9 +140,20 @@ Se houver desvios justificados:
 - **Documentação**: [Onde foi documentado]
 ```
 
-## 📄 Relatório de Validação
+## 📄 Salvamento do Relatório de Validação
 
-Crie `./.sessions/<ISSUE-ID>/check-report.md`:
+**PRIORIDADE 1: Usar MCP (Model Context Protocol)**
+
+- Leia `ai.properties.md` do orchestrator para identificar o `task_management_system`
+- Use o MCP apropriado para adicionar o relatório à issue:
+  - Adicione como comentário na issue
+  - Atualize labels/tags conforme resultado (ex: "validated", "needs-adjustment", "blocked")
+  - Se houver conflitos críticos, atualize status da issue
+- Informe ao usuário: "✅ Relatório de validação adicionado à issue [ID]"
+
+**FALLBACK: Criar arquivo .md apenas se MCP falhar**
+
+Se o MCP não estiver disponível ou falhar, crie `./.sessions/<ISSUE-ID>/check-report.md`:
 
 ```markdown
 # Relatório de Validação - [ISSUE-ID]
@@ -174,14 +185,17 @@ Crie `./.sessions/<ISSUE-ID>/check-report.md`:
 - [ ] Bloqueado
 ```
 
+Informe ao usuário: "⚠️ Relatório salvo localmente em .sessions/ (task manager não disponível)"
+
 ## 🚨 Ação em Caso de Conflitos
 
 Se conflitos críticos forem encontrados:
 1. 🛑 **PARE** o processo atual
 2. 📝 **DOCUMENTE** todos os conflitos
 3. 💬 **ALERTE** o usuário e stakeholders
-4. 🔄 **AJUSTE** o plano/implementação conforme necessário
-5. ✅ **REVALIDE** após ajustes
+4. **Via MCP**: Atualize status da issue para "Bloqueado" ou "Requer Ajustes"
+5. 🔄 **AJUSTE** o plano/implementação conforme necessário
+6. ✅ **REVALIDE** após ajustes
 
 ---
 

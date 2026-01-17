@@ -28,11 +28,19 @@ Refinar a issue coletada, esclarecendo:
 
 ### 1. Carregar Issue
 
-**Se task manager configurado**:
-- Leia a issue usando o MCP apropriado
+**PRIORIDADE 1: Usar MCP (Model Context Protocol)**
 
-**Senão**:
+- Leia `ai.properties.md` do orchestrator para identificar o `task_management_system`
+- Use o MCP apropriado para buscar a issue:
+  - `task_management_system=jira`: Use MCP do Jira
+  - `task_management_system=linear`: Use MCP do Linear
+  - `task_management_system=github`: Use MCP do GitHub
+- Carregue todos os dados da issue (título, descrição, labels, etc.)
+
+**FALLBACK: Se MCP não estiver disponível ou falhar**
+
 - Leia `./.sessions/<ISSUE-ID>/collect.md`
+- Se o arquivo não existir, informe o erro ao usuário
 
 ### 2. Análise de Escopo
 
@@ -110,9 +118,19 @@ Forneça estimativa de esforço:
 
 Liste perguntas que ainda precisam ser respondidas antes de iniciar a implementação.
 
-## 📄 Documentação do Refinamento
+## 📄 Salvamento do Refinamento
 
-Crie/atualize `./.sessions/<ISSUE-ID>/refine.md`:
+**PRIORIDADE 1: Atualizar via MCP**
+
+- Use o MCP do task manager para atualizar a issue
+- Adicione os critérios de aceitação como comentário ou campo customizado
+- Atualize labels/tags se necessário (ex: "refined", "ready-for-spec")
+- Adicione estimativa se o task manager suportar
+- Informe ao usuário: "✅ Issue [ID] atualizada com refinamento"
+
+**FALLBACK: Criar arquivo .md apenas se MCP falhar**
+
+Se o MCP não estiver disponível ou falhar, crie/atualize `./.sessions/<ISSUE-ID>/refine.md`:
 
 ```markdown
 # [Título da Issue] - Refinamento
@@ -152,6 +170,8 @@ Crie/atualize `./.sessions/<ISSUE-ID>/refine.md`:
 - [Risco 1 e mitigação]
 - [Risco 2 e mitigação]
 ```
+
+Informe ao usuário: "⚠️ Refinamento salvo localmente em .sessions/ (task manager não disponível)"
 
 ## 🔍 Validação
 

@@ -203,12 +203,20 @@ Justificativa: [Por que ficam para depois]
 
 ## 📄 Salvamento do PRD
 
-**Se task manager configurado**:
-- Adicione o PRD como comentário na issue
-- Ou anexe como arquivo
+**PRIORIDADE 1: Usar MCP (Model Context Protocol)**
 
-**Senão**:
+- Leia `ai.properties.md` do orchestrator para identificar o `task_management_system`
+- Use o MCP apropriado para atualizar a issue com o PRD:
+  - Adicione o PRD completo como comentário na issue
+  - Ou anexe como arquivo (se o task manager suportar)
+  - Atualize status/labels (ex: "spec-ready", "ready-for-dev")
+- Informe ao usuário: "✅ PRD adicionado à issue [ID]"
+
+**FALLBACK: Criar arquivo .md apenas se MCP falhar**
+
+Se o MCP não estiver disponível ou falhar:
 - Salve em `./.sessions/<ISSUE-ID>/prd.md`
+- Informe ao usuário: "⚠️ PRD salvo localmente em .sessions/ (task manager não disponível)"
 
 ## 🔍 Revisão e Aprovação
 
@@ -216,7 +224,8 @@ Antes de finalizar:
 1. Revise o PRD com stakeholders
 2. Valide contra metaspecs (se disponíveis)
 3. Obtenha aprovação para iniciar implementação
-4. Atualize a issue no task manager com status "Pronto para Desenvolvimento"
+4. **Via MCP**: Atualize a issue no task manager com status "Pronto para Desenvolvimento"
+5. **Fallback**: Documente aprovação em `./.sessions/<ISSUE-ID>/prd.md`
 
 ---
 

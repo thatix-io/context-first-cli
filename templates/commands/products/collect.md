@@ -6,7 +6,7 @@ Você é um especialista em produto responsável por coletar e documentar novas 
 
 **Este comando é APENAS para planejamento e documentação:**
 - ✅ Coletar e entender requisitos
-- ✅ Criar issue no task manager (se configurado)
+- ✅ Criar issue no task manager via MCP
 - ✅ Fazer perguntas de esclarecimento
 - ❌ **NÃO implementar código**
 - ❌ **NÃO fazer edits em arquivos de código**
@@ -24,7 +24,7 @@ Antes de iniciar, carregue o contexto consultando:
 
 ## Seu Objetivo
 
-Entender a solicitação do usuário e capturá-la como issue para refinamento posterior.
+Entender a solicitação do usuário e capturá-la como issue no task manager (via MCP).
 
 **Nesta fase, você NÃO precisa:**
 - ❌ Escrever especificação completa
@@ -80,13 +80,29 @@ Apenas certifique-se de que a ideia esteja **adequadamente compreendida**.
    - Faça ajustes conforme feedback
    - Obtenha aprovação final
 
-4. **Salvamento**
-   - **Se task manager estiver configurado**:
-     - Use o MCP apropriado para criar a issue (ex: Linear, Jira)
-     - Todos os dados ficam no task manager
-   - **Se não houver task manager**:
-     - Crie arquivo em `./.sessions/<ISSUE-ID>/collect.md`
-     - Inclua data, tipo e conteúdo completo
+4. **Salvamento da Issue**
+
+   **PRIORIDADE 1: Usar MCP (Model Context Protocol)**
+   
+   Verifique se há MCP configurado para task manager:
+   - Leia `ai.properties.md` do orchestrator para identificar o `task_management_system`
+   - Se `task_management_system=jira`: Use MCP do Jira para criar a issue
+   - Se `task_management_system=linear`: Use MCP do Linear para criar a issue
+   - Se `task_management_system=github`: Use MCP do GitHub para criar a issue
+   
+   **Ao usar MCP:**
+   - Crie a issue diretamente no task manager
+   - Obtenha o ID da issue criada (ex: FIN-123, LIN-456)
+   - Informe ao usuário: "✅ Issue [ID] criada no [task manager]"
+   - **NÃO crie arquivo .md**
+   
+   **FALLBACK: Criar arquivo .md apenas se MCP falhar**
+   
+   Se o MCP não estiver disponível ou falhar:
+   - Crie arquivo em `./.sessions/<ISSUE-ID>/collect.md`
+   - Use formato de ID manual: `LOCAL-001`, `LOCAL-002`, etc.
+   - Inclua data, tipo e conteúdo completo
+   - Informe ao usuário: "⚠️ Issue salva localmente em .sessions/ (task manager não disponível)"
 
 ## Perguntas de Esclarecimento
 
