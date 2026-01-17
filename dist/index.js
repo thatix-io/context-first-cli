@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
-const chalk_1 = __importDefault(require("chalk"));
 const init_1 = require("./commands/init");
 const scaffold_orchestrator_1 = require("./commands/scaffold-orchestrator");
 const feature_1 = require("./commands/feature");
+const doctor_1 = require("./commands/doctor");
+const status_1 = require("./commands/status");
 const program = new commander_1.Command();
 program
     .name('context-cli')
@@ -41,46 +39,16 @@ feature
 feature
     .command('end <issue-id>')
     .description('Archive and clean up a completed feature workspace')
+    .option('-f, --force', 'Force cleanup without confirmation')
     .action(feature_1.featureCommands.end);
-// Process commands (to be implemented)
-program
-    .command('collect <message>')
-    .description('Collect a new idea or bug')
-    .action((message) => {
-    console.log(chalk_1.default.yellow('🚧 Command "collect" is not yet implemented'));
-    console.log(chalk_1.default.gray(`Message: ${message}`));
-});
-program
-    .command('spec')
-    .description('Generate specification (PRD) for the current feature')
-    .action(() => {
-    console.log(chalk_1.default.yellow('🚧 Command "spec" is not yet implemented'));
-});
-program
-    .command('work <message>')
-    .description('Record a unit of work and commit')
-    .action((message) => {
-    console.log(chalk_1.default.yellow('🚧 Command "work" is not yet implemented'));
-    console.log(chalk_1.default.gray(`Message: ${message}`));
-});
-program
-    .command('pr')
-    .description('Create Pull Requests for the current feature')
-    .action(() => {
-    console.log(chalk_1.default.yellow('🚧 Command "pr" is not yet implemented'));
-});
 // Diagnostic commands
 program
     .command('doctor')
     .description('Check environment and configuration')
-    .action(() => {
-    console.log(chalk_1.default.yellow('🚧 Command "doctor" is not yet implemented'));
-});
+    .action(doctor_1.doctorCommand);
 program
     .command('status')
     .description('Show detailed status of the current workspace')
-    .action(() => {
-    console.log(chalk_1.default.yellow('🚧 Command "status" is not yet implemented'));
-});
+    .action(status_1.statusCommand);
 program.parse(process.argv);
 //# sourceMappingURL=index.js.map

@@ -5,6 +5,8 @@ import chalk from 'chalk';
 import { initCommand } from './commands/init';
 import { scaffoldOrchestratorCommand } from './commands/scaffold-orchestrator';
 import { featureCommands } from './commands/feature';
+import { doctorCommand } from './commands/doctor';
+import { statusCommand } from './commands/status';
 
 const program = new Command();
 
@@ -46,52 +48,18 @@ feature
 feature
   .command('end <issue-id>')
   .description('Archive and clean up a completed feature workspace')
+  .option('-f, --force', 'Force cleanup without confirmation')
   .action(featureCommands.end);
-
-// Process commands (to be implemented)
-program
-  .command('collect <message>')
-  .description('Collect a new idea or bug')
-  .action((message: string) => {
-    console.log(chalk.yellow('🚧 Command "collect" is not yet implemented'));
-    console.log(chalk.gray(`Message: ${message}`));
-  });
-
-program
-  .command('spec')
-  .description('Generate specification (PRD) for the current feature')
-  .action(() => {
-    console.log(chalk.yellow('🚧 Command "spec" is not yet implemented'));
-  });
-
-program
-  .command('work <message>')
-  .description('Record a unit of work and commit')
-  .action((message: string) => {
-    console.log(chalk.yellow('🚧 Command "work" is not yet implemented'));
-    console.log(chalk.gray(`Message: ${message}`));
-  });
-
-program
-  .command('pr')
-  .description('Create Pull Requests for the current feature')
-  .action(() => {
-    console.log(chalk.yellow('🚧 Command "pr" is not yet implemented'));
-  });
 
 // Diagnostic commands
 program
   .command('doctor')
   .description('Check environment and configuration')
-  .action(() => {
-    console.log(chalk.yellow('🚧 Command "doctor" is not yet implemented'));
-  });
+  .action(doctorCommand);
 
 program
   .command('status')
   .description('Show detailed status of the current workspace')
-  .action(() => {
-    console.log(chalk.yellow('🚧 Command "status" is not yet implemented'));
-  });
+  .action(statusCommand);
 
 program.parse(process.argv);
