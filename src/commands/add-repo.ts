@@ -20,6 +20,8 @@ interface ContextManifest {
 
 export async function addRepoCommand() {
   console.log(chalk.blue.bold('\n📦 Adding a new repository to context-manifest.json\n'));
+  console.log(chalk.gray('💡 Tip: The folder name must match the directory name in your base_path'));
+  console.log(chalk.gray('   Example: if your repo is at ~/dev/my-backend/, use "my-backend"\n'));
 
   try {
     // Check if context-manifest.json exists
@@ -43,13 +45,13 @@ export async function addRepoCommand() {
       {
         type: 'input',
         name: 'id',
-        message: 'Repository ID (unique identifier):',
+        message: 'Repository folder name (must match the local directory name in base_path):',
         validate: (input: string) => {
           if (!input.trim()) {
-            return 'Repository ID is required';
+            return 'Repository folder name is required';
           }
           if (!/^[a-z0-9-]+$/.test(input)) {
-            return 'Repository ID must contain only lowercase letters, numbers, and hyphens';
+            return 'Folder name must contain only lowercase letters, numbers, and hyphens';
           }
           return true;
         },

@@ -10,6 +10,8 @@ const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 async function addRepoCommand() {
     console.log(chalk_1.default.blue.bold('\n📦 Adding a new repository to context-manifest.json\n'));
+    console.log(chalk_1.default.gray('💡 Tip: The folder name must match the directory name in your base_path'));
+    console.log(chalk_1.default.gray('   Example: if your repo is at ~/dev/my-backend/, use "my-backend"\n'));
     try {
         // Check if context-manifest.json exists
         const manifestPath = path_1.default.join(process.cwd(), 'context-manifest.json');
@@ -28,13 +30,13 @@ async function addRepoCommand() {
             {
                 type: 'input',
                 name: 'id',
-                message: 'Repository ID (unique identifier):',
+                message: 'Repository folder name (must match the local directory name in base_path):',
                 validate: (input) => {
                     if (!input.trim()) {
-                        return 'Repository ID is required';
+                        return 'Repository folder name is required';
                     }
                     if (!/^[a-z0-9-]+$/.test(input)) {
-                        return 'Repository ID must contain only lowercase letters, numbers, and hyphens';
+                        return 'Folder name must contain only lowercase letters, numbers, and hyphens';
                     }
                     return true;
                 },
