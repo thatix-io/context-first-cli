@@ -67,7 +67,7 @@ export async function configSetupCommand() {
       {
         type: 'input',
         name: 'basePath',
-        message: 'Base workspace path (where repositories are cloned):',
+        message: 'Base workspace path (where repositories will be cloned):',
         default: defaultBasePath,
         validate: (input: string) => {
           if (!input.trim()) {
@@ -76,27 +76,13 @@ export async function configSetupCommand() {
           return true;
         },
       },
+      {
+        type: 'confirm',
+        name: 'autoClone',
+        message: 'Automatically clone missing repositories?',
+        default: true,
+      },
     ]);
-
-    // Get paths for each repository
-    const repoPaths: Record<string, string> = {};
-    
-    console.log(chalk.blue('\n📂 Configure local paths for each repository:\n'));
-    
-    for (const repo of manifest.repositories) {
-      const defaultPath = path.join(baseAnswers.basePath, repo.id);
-      
-      const { repoPath } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'repoPath',
-          message: `Path for ${chalk.cyan(repo.id)} (${repo.role}):`,
-          default: defaultPath,
-        },
-      ]);
-      
-      repoPaths[repo.id] = repoPath;
-    }
 
     // Get task manager configuration
     console.log(chalk.blue('\n🎯 Task Manager Configuration:\n'));
@@ -141,13 +127,12 @@ export async function configSetupCommand() {
     content += `## Project Information\n\n`;
     content += `project_name=${manifest.project}\n`;
     content += `project_description=${manifest.description}\n\n`;
-    content += `## Repository Paths\n\n`;
+    content += `## Repository Configuration\n\n`;
+    content += `# Base path where all repositories will be cloned\n`;
+    content += `# Each repository will be at: {base_path}/{repository-id}/\n`;
     content += `base_path=${baseAnswers.basePath}\n\n`;
-
-    for (const repo of manifest.repositories) {
-      const varName = repo.id.replace(/-/g, '_') + '_path';
-      content += `${varName}=${repoPaths[repo.id]}\n`;
-    }
+    content += `# Automatically clone repositories if they don't exist\n`;
+    content += `auto_clone=${baseAnswers.autoClone}\n`;
 
     content += `\n## Task Management\n\n`;
     content += `task_management_system=${taskAnswers.taskManager}\n`;
@@ -182,12 +167,13 @@ export async function configSetupCommand() {
     console.log(chalk.green('\n✅ ai.properties.md created successfully!'));
     console.log(chalk.blue('\n📝 Configuration summary:'));
     console.log(chalk.gray(`  Base path: ${baseAnswers.basePath}`));
+    console.log(chalk.gray(`  Auto-clone: ${baseAnswers.autoClone ? 'enabled' : 'disabled'}`));
     console.log(chalk.gray(`  Task manager: ${taskAnswers.taskManager}`));
-    console.log(chalk.gray(`  Repositories configured: ${manifest.repositories.length}`));
+    console.log(chalk.gray(`  Repositories: ${manifest.repositories.length}`));
     
     console.log(chalk.blue('\n💡 Next steps:'));
     console.log(chalk.gray('  1. Review and edit ai.properties.md to add repository commands'));
-    console.log(chalk.gray('  2. Ensure all repository paths exist or clone them'));
+    console.log(chalk.gray(`  2. Repositories will be auto-cloned to: ${baseAnswers.basePath}/{repo-id}/`));
     console.log(chalk.gray('  3. This file is gitignored - each developer should run this command'));
 
   } catch (error) {
