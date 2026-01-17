@@ -53,6 +53,7 @@ npm install -g context-first-cli
 | `context-cli create:orchestrator` | Create a new orchestrator repository from a template with all necessary structure. |
 | `context-cli add:repo` | Add a new code repository to `context-manifest.json` interactively. |
 | `context-cli add:repo-metaspec` | Add or update the MetaSpecs repository in `context-manifest.json`. |
+| `context-cli config:setup` | Interactively configure `ai.properties.md` for local development. |
 
 ### Workspace Commands
 
@@ -115,22 +116,21 @@ npx context-first-cli@latest add:repo
 
 Each repository will be added to `context-manifest.json` with its configuration.
 
-### Step 3: Configure Local Paths
+### Step 3: Configure Local Environment
 
-Edit `ai.properties.md` in your orchestrator to set up local paths and credentials:
+Run `config:setup` to interactively configure your local `ai.properties.md` file.
 
-```markdown
-# Paths dos Projetos
-base_path=/path/to/your/workspace
-meta_specs_path=/path/to/your/meta-specs
-backend_path=/path/to/your/backend
-frontend_path=/path/to/your/frontend
-
-# Task Manager Configuration
-task_management_system=jira
-jira_site=https://your-org.atlassian.net
-...
+```bash
+cd my-project-orchestrator/
+npx context-first-cli@latest config:setup
 ```
+
+This will ask for:
+1.  **Base workspace path** (where repositories will be cloned, e.g., `~/workspace`)
+2.  **Auto-clone** (whether to clone missing repositories automatically)
+3.  **Task manager** settings (Jira, Linear, etc.)
+
+This generates an `ai.properties.md` file tailored to your machine, following the convention-over-configuration principle.
 
 **Note**: This file is gitignored because it contains local paths specific to each developer.
 
@@ -241,9 +241,11 @@ npx context-first-cli@latest add:repo
 npx context-first-cli@latest add:repo
 # ID: admin, URL: git@github.com:myorg/my-saas-admin.git
 
-# 3. Configure local paths
-nano ai.properties.md
-# Edit paths to match your local setup
+# 3. Configure local environment
+npx context-first-cli@latest config:setup
+# Base path: ~/workspace
+# Auto-clone: Yes
+# Task manager: Jira
 
 # 4. Push orchestrator to Git
 git remote add origin git@github.com:myorg/my-saas-orchestrator.git
