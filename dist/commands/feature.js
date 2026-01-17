@@ -20,6 +20,13 @@ async function getOrchestratorPath() {
         return null;
     }
     const { configDir } = configResult;
+    // Check if we're already in the orchestrator
+    const aiPropertiesInConfigDir = path_1.default.join(configDir, 'ai.properties.md');
+    if (await (0, config_1.pathExists)(aiPropertiesInConfigDir)) {
+        // We're already in the orchestrator
+        return configDir;
+    }
+    // We're in a different repo, use .context-orchestrator
     return path_1.default.join(configDir, '.context-orchestrator');
 }
 /**
