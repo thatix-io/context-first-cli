@@ -8,7 +8,6 @@ exports.findConfig = findConfig;
 exports.loadManifest = loadManifest;
 exports.loadWorkspaceMetadata = loadWorkspaceMetadata;
 exports.saveWorkspaceMetadata = saveWorkspaceMetadata;
-exports.getWorkspacesDir = getWorkspacesDir;
 exports.ensureDir = ensureDir;
 exports.pathExists = pathExists;
 exports.exitWithError = exitWithError;
@@ -78,12 +77,6 @@ async function loadWorkspaceMetadata(workspacePath) {
 async function saveWorkspaceMetadata(workspacePath, metadata) {
     const metadataPath = path_1.default.join(workspacePath, '.workspace.json');
     await promises_1.default.writeFile(metadataPath, JSON.stringify(metadata, null, 2), 'utf-8');
-}
-/**
- * Get the workspaces directory path
- */
-function getWorkspacesDir() {
-    return path_1.default.join(process.env.HOME || process.env.USERPROFILE || '/tmp', '.context-workspaces');
 }
 /**
  * Ensure a directory exists

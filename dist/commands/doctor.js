@@ -233,21 +233,31 @@ async function checkMainRepositories() {
     }
 }
 async function checkWorkspacesDirectory() {
-    const workspacesDir = (0, config_1.getWorkspacesDir)();
-    if (!(await (0, config_1.pathExists)(workspacesDir))) {
+    const configResult = await (0, config_1.findConfig)();
+    if (!configResult) {
         return {
             name: 'Workspaces Directory',
             status: 'warn',
-            message: `No workspaces created yet (${workspacesDir})`,
+            message: 'No configuration found',
+        };
+    }
+    const { configDir } = configResult;
+    const orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+    const sessionsDir = path_1.default.join(orchestratorPath, '.sessions');
+    if (!(await (0, config_1.pathExists)(sessionsDir))) {
+        return {
+            name: 'Workspaces Directory',
+            status: 'warn',
+            message: `No workspaces created yet (${sessionsDir})`,
         };
     }
     const fs = await Promise.resolve().then(() => __importStar(require('fs/promises')));
-    const entries = await fs.readdir(workspacesDir, { withFileTypes: true });
+    const entries = await fs.readdir(sessionsDir, { withFileTypes: true });
     const workspaceCount = entries.filter(e => e.isDirectory()).length;
     return {
         name: 'Workspaces Directory',
         status: 'pass',
-        message: `${workspaceCount} workspace(s) found at ${workspacesDir}`,
+        message: `${workspaceCount} workspace(s) found at ${sessionsDir}`,
     };
 }
 //# sourceMappingURL=doctor.js.map

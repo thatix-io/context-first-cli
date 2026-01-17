@@ -49,10 +49,6 @@ export declare function loadWorkspaceMetadata(workspacePath: string): Promise<Wo
  */
 export declare function saveWorkspaceMetadata(workspacePath: string, metadata: WorkspaceMetadata): Promise<void>;
 /**
- * Get the workspaces directory path
- */
-export declare function getWorkspacesDir(): string;
-/**
  * Ensure a directory exists
  */
 export declare function ensureDir(dirPath: string): Promise<void>;

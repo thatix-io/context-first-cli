@@ -5,7 +5,6 @@ import {
   findConfig,
   loadManifest,
   pathExists,
-  getWorkspacesDir,
 } from '../utils/config';
 import { isGitRepo } from '../utils/git';
 
@@ -229,23 +228,34 @@ async function checkMainRepositories(): Promise<CheckResult | null> {
 }
 
 async function checkWorkspacesDirectory(): Promise<CheckResult> {
-  const workspacesDir = getWorkspacesDir();
-
-  if (!(await pathExists(workspacesDir))) {
+  const configResult = await findConfig();
+  if (!configResult) {
     return {
       name: 'Workspaces Directory',
       status: 'warn',
-      message: `No workspaces created yet (${workspacesDir})`,
+      message: 'No configuration found',
+    };
+  }
+
+  const { configDir } = configResult;
+  const orchestratorPath = path.join(configDir, '.context-orchestrator');
+  const sessionsDir = path.join(orchestratorPath, '.sessions');
+
+  if (!(await pathExists(sessionsDir))) {
+    return {
+      name: 'Workspaces Directory',
+      status: 'warn',
+      message: `No workspaces created yet (${sessionsDir})`,
     };
   }
 
   const fs = await import('fs/promises');
-  const entries = await fs.readdir(workspacesDir, { withFileTypes: true });
+  const entries = await fs.readdir(sessionsDir, { withFileTypes: true });
   const workspaceCount = entries.filter(e => e.isDirectory()).length;
 
   return {
     name: 'Workspaces Directory',
     status: 'pass',
-    message: `${workspaceCount} workspace(s) found at ${workspacesDir}`,
+    message: `${workspaceCount} workspace(s) found at ${sessionsDir}`,
   };
 }

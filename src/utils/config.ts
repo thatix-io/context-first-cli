@@ -102,13 +102,6 @@ export async function saveWorkspaceMetadata(workspacePath: string, metadata: Wor
 }
 
 /**
- * Get the workspaces directory path
- */
-export function getWorkspacesDir(): string {
-  return path.join(process.env.HOME || process.env.USERPROFILE || '/tmp', '.context-workspaces');
-}
-
-/**
  * Ensure a directory exists
  */
 export async function ensureDir(dirPath: string): Promise<void> {

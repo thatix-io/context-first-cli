@@ -5,7 +5,6 @@ import inquirer from 'inquirer';
 import {
   findConfig,
   loadManifest,
-  getWorkspacesDir,
   ensureDir,
   pathExists,
   exitWithError,
@@ -24,6 +23,31 @@ import {
   getBasePath,
   isAutoCloneEnabled,
 } from '../utils/ai-properties';
+
+/**
+ * Get orchestrator path from config
+ */
+async function getOrchestratorPath(): Promise<string | null> {
+  const configResult = await findConfig();
+  if (!configResult) {
+    return null;
+  }
+  
+  const { configDir } = configResult;
+  return path.join(configDir, '.context-orchestrator');
+}
+
+/**
+ * Get sessions directory from orchestrator
+ */
+async function getSessionsDir(): Promise<string | null> {
+  const orchestratorPath = await getOrchestratorPath();
+  if (!orchestratorPath) {
+    return null;
+  }
+  
+  return path.join(orchestratorPath, '.sessions');
+}
 
 export const featureCommands = {
   start: async (issueId: string, options: { repos?: string }) => {
@@ -110,11 +134,11 @@ export const featureCommands = {
       repoIds = selectedRepos;
     }
 
-    // Create workspace directory
-    const workspacesDir = getWorkspacesDir();
-    await ensureDir(workspacesDir);
+    // Create workspace directory in orchestrator/.sessions/
+    const sessionsDir = path.join(orchestratorPath, '.sessions');
+    await ensureDir(sessionsDir);
     
-    const workspacePath = path.join(workspacesDir, issueId);
+    const workspacePath = path.join(sessionsDir, issueId);
     if (await pathExists(workspacePath)) {
       exitWithError(`Workspace for ${issueId} already exists at ${workspacePath}`);
     }
@@ -191,14 +215,18 @@ export const featureCommands = {
   list: async () => {
     console.log(chalk.blue.bold('\n📋 Active Feature Workspaces\n'));
 
-    const workspacesDir = getWorkspacesDir();
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      console.log(chalk.yellow('No configuration found. Run "context-cli init" first.'));
+      return;
+    }
     
-    if (!(await pathExists(workspacesDir))) {
+    if (!(await pathExists(sessionsDir))) {
       console.log(chalk.yellow('No workspaces found. Create one with "context-cli feature start <issue-id>"'));
       return;
     }
 
-    const entries = await fs.readdir(workspacesDir, { withFileTypes: true });
+    const entries = await fs.readdir(sessionsDir, { withFileTypes: true });
     const workspaceDirs = entries.filter(e => e.isDirectory()).map(e => e.name);
 
     if (workspaceDirs.length === 0) {
@@ -209,7 +237,7 @@ export const featureCommands = {
     const workspaces: Array<{ issueId: string; metadata: WorkspaceMetadata | null }> = [];
     
     for (const issueId of workspaceDirs) {
-      const workspacePath = path.join(workspacesDir, issueId);
+      const workspacePath = path.join(sessionsDir, issueId);
       const metadata = await loadWorkspaceMetadata(workspacePath);
       workspaces.push({ issueId, metadata });
     }
@@ -232,8 +260,12 @@ export const featureCommands = {
   },
 
   switch: async (issueId: string) => {
-    const workspacesDir = getWorkspacesDir();
-    const workspacePath = path.join(workspacesDir, issueId);
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      exitWithError('No configuration found. Run "context-cli init" first.');
+    }
+
+    const workspacePath = path.join(sessionsDir, issueId);
 
     if (!(await pathExists(workspacePath))) {
       exitWithError(`Workspace for ${issueId} not found`);
@@ -248,8 +280,12 @@ export const featureCommands = {
   remove: async (issueId: string, options: { force?: boolean }) => {
     console.log(chalk.blue.bold(`\n🗑️  Removing workspace: ${issueId}\n`));
 
-    const workspacesDir = getWorkspacesDir();
-    const workspacePath = path.join(workspacesDir, issueId);
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      exitWithError('No configuration found. Run "context-cli init" first.');
+    }
+
+    const workspacePath = path.join(sessionsDir, issueId);
 
     if (!(await pathExists(workspacePath))) {
       exitWithError(`Workspace for ${issueId} not found`);
@@ -314,11 +350,14 @@ export const featureCommands = {
   },
 
   status: async (issueId?: string) => {
-    const workspacesDir = getWorkspacesDir();
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      exitWithError('No configuration found. Run "context-cli init" first.');
+    }
     
     if (issueId) {
       // Show status for specific workspace
-      const workspacePath = path.join(workspacesDir, issueId);
+      const workspacePath = path.join(sessionsDir, issueId);
       if (!(await pathExists(workspacePath))) {
         exitWithError(`Workspace for ${issueId} not found`);
       }
@@ -344,12 +383,12 @@ export const featureCommands = {
       // Show current workspace status (if in workspace)
       const cwd = process.cwd();
       
-      // Check if we're in a workspace
-      if (cwd.includes('.context-workspaces')) {
+      // Check if we're in a .sessions workspace
+      if (cwd.includes('.sessions')) {
         const parts = cwd.split(path.sep);
-        const workspaceIndex = parts.indexOf('.context-workspaces');
-        if (workspaceIndex >= 0 && parts.length > workspaceIndex + 1) {
-          const currentIssueId = parts[workspaceIndex + 1];
+        const sessionIndex = parts.indexOf('.sessions');
+        if (sessionIndex >= 0 && parts.length > sessionIndex + 1) {
+          const currentIssueId = parts[sessionIndex + 1];
           await featureCommands.status(currentIssueId);
           return;
         }
