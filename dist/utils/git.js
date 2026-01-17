@@ -40,15 +40,19 @@ async function createWorktree(mainRepoPath, worktreePath, branchName) {
     const branches = await git.branch();
     const branchExists = branches.all.includes(branchName) || branches.all.includes(`remotes/origin/${branchName}`);
     if (!branchExists) {
-        // Create new branch from current HEAD
-        await git.checkoutLocalBranch(branchName);
-        console.log(chalk_1.default.gray(`  Created new branch: ${branchName}`));
+        // Create new branch WITHOUT checking it out in main repo
+        // The worktree will be created with this new branch
+        console.log(chalk_1.default.gray(`  Will create new branch: ${branchName} (in worktree only)`));
     }
     // Create worktree
-    console.log(chalk_1.default.gray(`    Executing: git worktree add "${worktreePath}" "${branchName}"`));
+    // Use -b flag if branch doesn't exist to create it in the worktree
+    const worktreeCmd = branchExists
+        ? `git worktree add "${worktreePath}" "${branchName}"`
+        : `git worktree add -b "${branchName}" "${worktreePath}"`;
+    console.log(chalk_1.default.gray(`    Executing: ${worktreeCmd}`));
     console.log(chalk_1.default.gray(`    Working directory: ${mainRepoPath}`));
     try {
-        const output = (0, child_process_1.execSync)(`git worktree add "${worktreePath}" "${branchName}"`, {
+        const output = (0, child_process_1.execSync)(worktreeCmd, {
             cwd: mainRepoPath,
             stdio: 'pipe',
             encoding: 'utf-8',
