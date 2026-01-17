@@ -275,7 +275,17 @@ exports.featureCommands = {
         const configResult = await (0, config_1.findConfig)();
         if (configResult) {
             const { configDir } = configResult;
-            const orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+            // Determine orchestrator path (same logic as feature start)
+            let orchestratorPath;
+            const aiPropertiesInConfigDir = path_1.default.join(configDir, 'ai.properties.md');
+            if (await (0, config_1.pathExists)(aiPropertiesInConfigDir)) {
+                // We're already in the orchestrator
+                orchestratorPath = configDir;
+            }
+            else {
+                // We're in a different repo
+                orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+            }
             const aiProperties = await (0, ai_properties_1.loadAiProperties)(orchestratorPath);
             const basePath = (0, ai_properties_1.getBasePath)(aiProperties);
             if (basePath) {
