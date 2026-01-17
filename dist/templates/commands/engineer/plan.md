@@ -1,0 +1,251 @@
+# Planejamento Técnico
+
+Este comando cria o plano técnico detalhado para implementação da feature.
+
+## 📋 Pré-requisitos
+
+- PRD criado via `/spec`
+- Análise inicial feita via `/start`
+- Contexto técnico carregado
+
+## 🎯 Objetivo
+
+Criar um plano técnico detalhado que guiará a implementação, dividindo o trabalho em unidades menores e sequenciais.
+
+## 📝 Estrutura do Plano
+
+### 1. Visão Geral Técnica
+
+```markdown
+# Plano Técnico - [Título da Feature]
+
+## Resumo
+[Breve descrição técnica do que será implementado]
+
+## Repositórios Envolvidos
+- **<repo-1>**: [Papel nesta feature]
+- **<repo-2>**: [Papel nesta feature]
+
+## Abordagem Técnica
+[Estratégia geral de implementação]
+```
+
+### 2. Arquitetura da Solução
+
+```markdown
+## Arquitetura
+
+### Diagrama de Componentes
+[Descrição textual ou ASCII art dos componentes e suas relações]
+
+### Fluxo de Dados
+1. [Passo 1 do fluxo]
+2. [Passo 2 do fluxo]
+3. [Passo 3 do fluxo]
+
+### Integrações
+- **<repo-1> → <repo-2>**: [Como se comunicam]
+- **Sistema → API Externa**: [Se houver]
+```
+
+### 3. Decisões Técnicas
+
+```markdown
+## Decisões Técnicas
+
+### Decisão 1: [Título]
+**Contexto**: [Por que precisamos decidir isso]
+**Opções consideradas**:
+- Opção A: [Prós e contras]
+- Opção B: [Prós e contras]
+**Decisão**: [Opção escolhida]
+**Justificativa**: [Por que escolhemos esta opção]
+
+### Decisão 2: [Título]
+[Mesmo formato acima]
+```
+
+### 4. Plano de Implementação
+
+Divida o trabalho em unidades pequenas e sequenciais:
+
+```markdown
+## Plano de Implementação
+
+### Fase 1: [Nome da Fase]
+**Objetivo**: [O que será alcançado nesta fase]
+**Repositórios**: [repos afetados]
+
+#### Tarefa 1.1: [Descrição]
+- **Repo**: <repo-1>
+- **Arquivos**: [arquivos a criar/modificar]
+- **Descrição**: [O que fazer]
+- **Testes**: [Testes a implementar]
+- **Estimativa**: [tempo estimado]
+
+#### Tarefa 1.2: [Descrição]
+- **Repo**: <repo-2>
+- **Arquivos**: [arquivos a criar/modificar]
+- **Descrição**: [O que fazer]
+- **Testes**: [Testes a implementar]
+- **Estimativa**: [tempo estimado]
+
+### Fase 2: [Nome da Fase]
+[Mesmo formato acima]
+
+### Fase 3: [Nome da Fase]
+[Mesmo formato acima]
+```
+
+### 5. Estrutura de Arquivos
+
+Para cada repositório, defina a estrutura:
+
+```markdown
+## Estrutura de Arquivos
+
+### <repo-1>
+```
+src/
+├── components/
+│   ├── NewComponent.tsx (CRIAR)
+│   └── ExistingComponent.tsx (MODIFICAR)
+├── services/
+│   └── NewService.ts (CRIAR)
+└── tests/
+    └── NewComponent.test.tsx (CRIAR)
+```
+
+### <repo-2>
+```
+src/
+├── controllers/
+│   └── NewController.ts (CRIAR)
+└── tests/
+    └── NewController.test.ts (CRIAR)
+```
+```
+
+### 6. APIs e Contratos
+
+```markdown
+## APIs e Contratos
+
+### Endpoints Novos
+
+#### POST /api/resource
+**Request**:
+```json
+{
+  "field1": "string",
+  "field2": "number"
+}
+```
+
+**Response**:
+```json
+{
+  "id": "string",
+  "status": "string"
+}
+```
+
+### Endpoints Modificados
+
+#### GET /api/resource/:id
+**Mudanças**: [O que muda]
+**Breaking Change**: Sim / Não
+```
+
+### 7. Estratégia de Testes
+
+```markdown
+## Estratégia de Testes
+
+### Testes Unitários
+- **<repo-1>**: [Componentes/funções a testar]
+- **<repo-2>**: [Componentes/funções a testar]
+
+### Testes de Integração
+- **Cenário 1**: [Descrição e repos envolvidos]
+- **Cenário 2**: [Descrição e repos envolvidos]
+
+### Testes E2E (se aplicável)
+- **Fluxo 1**: [Descrição]
+- **Fluxo 2**: [Descrição]
+```
+
+### 8. Riscos Técnicos
+
+```markdown
+## Riscos Técnicos
+
+### Risco 1: [Descrição]
+- **Impacto**: Alto / Médio / Baixo
+- **Probabilidade**: Alta / Média / Baixa
+- **Mitigação**: [Como mitigar]
+- **Plano B**: [Alternativa se ocorrer]
+
+### Risco 2: [Descrição]
+[Mesmo formato acima]
+```
+
+### 9. Checklist de Implementação
+
+```markdown
+## Checklist de Implementação
+
+### Fase 1
+- [ ] Tarefa 1.1
+- [ ] Tarefa 1.2
+- [ ] Testes da Fase 1
+
+### Fase 2
+- [ ] Tarefa 2.1
+- [ ] Tarefa 2.2
+- [ ] Testes da Fase 2
+
+### Fase 3
+- [ ] Tarefa 3.1
+- [ ] Tarefa 3.2
+- [ ] Testes da Fase 3
+
+### Finalização
+- [ ] Documentação atualizada
+- [ ] Code review
+- [ ] Testes de integração
+- [ ] PR criado
+```
+
+## 📄 Salvamento do Plano
+
+Salve em `./.context-sessions/<ISSUE-ID>/plan.md`
+
+## 🔍 Revisão
+
+Revise o plano verificando:
+- Todas as tarefas estão claras e executáveis
+- Dependências entre tarefas estão identificadas
+- Estimativas são realistas
+- Riscos foram considerados
+- Estratégia de testes é adequada
+
+---
+
+**Argumentos fornecidos**:
+
+```
+#$ARGUMENTS
+```
+
+---
+
+## 🎯 Próximo Passo
+
+Após aprovação do plano:
+
+```bash
+/work
+```
+
+Este comando iniciará a execução da primeira unidade de trabalho do plano.

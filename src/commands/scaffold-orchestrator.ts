@@ -59,11 +59,12 @@ export async function scaffoldOrchestratorCommand() {
 
     // Create directory structure
     await fs.mkdir(targetDir, { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'commands', 'definitions', 'product'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'commands', 'definitions', 'engineer'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'commands', 'definitions', 'feature'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'scripts', 'worktree'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, 'sessions'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'products'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, '.context-sessions'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, 'specs', 'business'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, 'specs', 'technical'), { recursive: true });
 
     // Create README.md
     const readme = generateReadme(answers);
@@ -77,15 +78,18 @@ export async function scaffoldOrchestratorCommand() {
     const manifest = generateManifest(answers);
     await fs.writeFile(path.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
 
+    // Copy command templates
+    await copyCommandTemplates(targetDir);
+
     // Create .gitignore
-    const gitignore = `node_modules/\n.env\n.ia.env\nsessions/*/\n*.log\n`;
+    const gitignore = `node_modules/\n.env\n.ia.env\n.context-sessions/*/\n*.log\n`;
     await fs.writeFile(path.join(targetDir, '.gitignore'), gitignore, 'utf-8');
 
     console.log(chalk.green(`\n✅ Orchestrator scaffolded successfully at: ${targetDir}`));
     console.log(chalk.blue('\n📁 Structure created:'));
-    console.log(chalk.gray('  commands/definitions/    - Command definitions for AI'));
-    console.log(chalk.gray('  scripts/worktree/        - Worktree management scripts'));
-    console.log(chalk.gray('  sessions/                - Feature session data'));
+    console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
+    console.log(chalk.gray('  .context-sessions/       - Feature session data'));
+    console.log(chalk.gray('  specs/                   - Business and technical specifications'));
     console.log(chalk.gray('  ai.properties.md         - Configuration template'));
     console.log(chalk.gray('  context-manifest.json    - Repository manifest'));
 
@@ -98,6 +102,35 @@ export async function scaffoldOrchestratorCommand() {
   } catch (error) {
     console.error(chalk.red('\n❌ Error during scaffolding:'), error);
     process.exit(1);
+  }
+}
+
+async function copyCommandTemplates(targetDir: string): Promise<void> {
+  const templatesDir = path.join(__dirname, '..', '..', 'templates', 'commands');
+  const targetCommandsDir = path.join(targetDir, '.claude', 'commands');
+
+  // Copy warm-up.md
+  await fs.copyFile(
+    path.join(templatesDir, 'warm-up.md'),
+    path.join(targetCommandsDir, 'warm-up.md')
+  );
+
+  // Copy products commands
+  const productsCommands = ['collect.md', 'refine.md', 'spec.md', 'check.md'];
+  for (const cmd of productsCommands) {
+    await fs.copyFile(
+      path.join(templatesDir, 'products', cmd),
+      path.join(targetCommandsDir, 'products', cmd)
+    );
+  }
+
+  // Copy engineer commands
+  const engineerCommands = ['start.md', 'plan.md', 'work.md', 'pre-pr.md', 'pr.md'];
+  for (const cmd of engineerCommands) {
+    await fs.copyFile(
+      path.join(templatesDir, 'engineer', cmd),
+      path.join(targetCommandsDir, 'engineer', cmd)
+    );
   }
 }
 
@@ -114,14 +147,15 @@ This orchestrator manages the Context-First development methodology for the proj
 
 \`\`\`
 ${answers.projectName}/
-├── commands/
-│   └── definitions/          # Command definitions for AI
-│       ├── product/         # Product commands
-│       ├── engineer/        # Engineering commands
-│       └── feature/         # Feature management commands
-├── scripts/
-│   └── worktree/            # Worktree management scripts
-├── sessions/                # Feature session data
+├── .claude/
+│   └── commands/            # Command definitions for AI
+│       ├── products/        # Product commands (collect, refine, spec, check)
+│       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)
+│       └── warm-up.md       # Context loading command
+├── .context-sessions/       # Feature session data
+├── specs/
+│   ├── business/            # Business specifications
+│   └── technical/           # Technical specifications
 ├── ai.properties.md         # Configuration
 └── context-manifest.json    # Repository manifest
 \`\`\`

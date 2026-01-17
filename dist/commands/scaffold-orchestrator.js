@@ -54,11 +54,12 @@ async function scaffoldOrchestratorCommand() {
         }
         // Create directory structure
         await promises_1.default.mkdir(targetDir, { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'commands', 'definitions', 'product'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'commands', 'definitions', 'engineer'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'commands', 'definitions', 'feature'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'scripts', 'worktree'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, 'sessions'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'products'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, '.context-sessions'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'business'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'technical'), { recursive: true });
         // Create README.md
         const readme = generateReadme(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'README.md'), readme, 'utf-8');
@@ -68,14 +69,16 @@ async function scaffoldOrchestratorCommand() {
         // Create context-manifest.json
         const manifest = generateManifest(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
+        // Copy command templates
+        await copyCommandTemplates(targetDir);
         // Create .gitignore
-        const gitignore = `node_modules/\n.env\n.ia.env\nsessions/*/\n*.log\n`;
+        const gitignore = `node_modules/\n.env\n.ia.env\n.context-sessions/*/\n*.log\n`;
         await promises_1.default.writeFile(path_1.default.join(targetDir, '.gitignore'), gitignore, 'utf-8');
         console.log(chalk_1.default.green(`\n✅ Orchestrator scaffolded successfully at: ${targetDir}`));
         console.log(chalk_1.default.blue('\n📁 Structure created:'));
-        console.log(chalk_1.default.gray('  commands/definitions/    - Command definitions for AI'));
-        console.log(chalk_1.default.gray('  scripts/worktree/        - Worktree management scripts'));
-        console.log(chalk_1.default.gray('  sessions/                - Feature session data'));
+        console.log(chalk_1.default.gray('  .claude/commands/        - Command definitions for AI'));
+        console.log(chalk_1.default.gray('  .context-sessions/       - Feature session data'));
+        console.log(chalk_1.default.gray('  specs/                   - Business and technical specifications'));
         console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template'));
         console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest'));
         console.log(chalk_1.default.blue('\n💡 Next steps:'));
@@ -87,6 +90,22 @@ async function scaffoldOrchestratorCommand() {
     catch (error) {
         console.error(chalk_1.default.red('\n❌ Error during scaffolding:'), error);
         process.exit(1);
+    }
+}
+async function copyCommandTemplates(targetDir) {
+    const templatesDir = path_1.default.join(__dirname, '..', '..', 'templates', 'commands');
+    const targetCommandsDir = path_1.default.join(targetDir, '.claude', 'commands');
+    // Copy warm-up.md
+    await promises_1.default.copyFile(path_1.default.join(templatesDir, 'warm-up.md'), path_1.default.join(targetCommandsDir, 'warm-up.md'));
+    // Copy products commands
+    const productsCommands = ['collect.md', 'refine.md', 'spec.md', 'check.md'];
+    for (const cmd of productsCommands) {
+        await promises_1.default.copyFile(path_1.default.join(templatesDir, 'products', cmd), path_1.default.join(targetCommandsDir, 'products', cmd));
+    }
+    // Copy engineer commands
+    const engineerCommands = ['start.md', 'plan.md', 'work.md', 'pre-pr.md', 'pr.md'];
+    for (const cmd of engineerCommands) {
+        await promises_1.default.copyFile(path_1.default.join(templatesDir, 'engineer', cmd), path_1.default.join(targetCommandsDir, 'engineer', cmd));
     }
 }
 function generateReadme(answers) {
@@ -102,14 +121,15 @@ This orchestrator manages the Context-First development methodology for the proj
 
 \`\`\`
 ${answers.projectName}/
-├── commands/
-│   └── definitions/          # Command definitions for AI
-│       ├── product/         # Product commands
-│       ├── engineer/        # Engineering commands
-│       └── feature/         # Feature management commands
-├── scripts/
-│   └── worktree/            # Worktree management scripts
-├── sessions/                # Feature session data
+├── .claude/
+│   └── commands/            # Command definitions for AI
+│       ├── products/        # Product commands (collect, refine, spec, check)
+│       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)
+│       └── warm-up.md       # Context loading command
+├── .context-sessions/       # Feature session data
+├── specs/
+│   ├── business/            # Business specifications
+│   └── technical/           # Technical specifications
 ├── ai.properties.md         # Configuration
 └── context-manifest.json    # Repository manifest
 \`\`\`

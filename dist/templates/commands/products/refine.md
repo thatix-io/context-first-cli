@@ -1,0 +1,182 @@
+# Refinamento de Requisitos
+
+Este comando refina uma issue coletada, transformando-a em requisitos claros e validados.
+
+## ⚠️ IMPORTANTE: Este Comando NÃO Implementa Código
+
+Este comando é para refinamento de requisitos, não implementação.
+
+**Próximo passo**: `/spec [ISSUE-ID]` para criar a especificação completa (PRD).
+
+---
+
+## 📋 Pré-requisitos
+
+- Issue já coletada via `/collect`
+- Contexto do projeto carregado (execute `/warm-up` se necessário)
+
+## 🎯 Objetivo
+
+Refinar a issue coletada, esclarecendo:
+- Escopo exato (o que entra e o que não entra)
+- Critérios de aceitação claros
+- Impacto em cada repositório
+- Dependências técnicas
+- Riscos e restrições
+
+## 📝 Processo de Refinamento
+
+### 1. Carregar Issue
+
+**Se task manager configurado**:
+- Leia a issue usando o MCP apropriado
+
+**Senão**:
+- Leia `./.context-sessions/<ISSUE-ID>/collect.md`
+
+### 2. Análise de Escopo
+
+Defina claramente:
+
+**O que ESTÁ no escopo**:
+- Funcionalidades específicas a serem implementadas
+- Repositórios que serão modificados
+- Integrações necessárias
+
+**O que NÃO ESTÁ no escopo**:
+- Funcionalidades relacionadas mas que ficam para depois
+- Otimizações futuras
+- Features "nice to have"
+
+### 3. Critérios de Aceitação
+
+Defina critérios mensuráveis e testáveis:
+
+```markdown
+## Critérios de Aceitação
+
+### Funcional
+- [ ] [Critério 1 - específico e testável]
+- [ ] [Critério 2 - específico e testável]
+
+### Técnico
+- [ ] [Critério técnico 1]
+- [ ] [Critério técnico 2]
+
+### Qualidade
+- [ ] Testes unitários implementados
+- [ ] Testes de integração implementados
+- [ ] Documentação atualizada
+```
+
+### 4. Análise de Impacto
+
+Para cada repositório afetado:
+
+```markdown
+## Impacto por Repositório
+
+### <repo-1>
+- **Componentes afetados**: [lista]
+- **Tipo de mudança**: Nova feature / Modificação / Refatoração
+- **Complexidade estimada**: Baixa / Média / Alta
+- **Riscos**: [riscos específicos]
+
+### <repo-2>
+- **Componentes afetados**: [lista]
+- **Tipo de mudança**: Nova feature / Modificação / Refatoração
+- **Complexidade estimada**: Baixa / Média / Alta
+- **Riscos**: [riscos específicos]
+```
+
+### 5. Dependências e Restrições
+
+Identifique:
+- Dependências entre repositórios
+- Dependências de outras features/issues
+- Restrições técnicas
+- Restrições de negócio
+- Bloqueadores conhecidos
+
+### 6. Estimativa Inicial
+
+Forneça estimativa de esforço:
+- **Pequeno**: < 1 dia
+- **Médio**: 1-3 dias
+- **Grande**: 3-5 dias
+- **Muito Grande**: > 5 dias (considere quebrar em issues menores)
+
+### 7. Perguntas Pendentes
+
+Liste perguntas que ainda precisam ser respondidas antes de iniciar a implementação.
+
+## 📄 Documentação do Refinamento
+
+Crie/atualize `./.context-sessions/<ISSUE-ID>/refine.md`:
+
+```markdown
+# [Título da Issue] - Refinamento
+
+## Escopo
+
+### Incluído
+- [Item 1]
+- [Item 2]
+
+### Excluído
+- [Item 1]
+- [Item 2]
+
+## Critérios de Aceitação
+[Conforme seção 3 acima]
+
+## Impacto por Repositório
+[Conforme seção 4 acima]
+
+## Dependências
+- [Dependência 1]
+- [Dependência 2]
+
+## Restrições
+- [Restrição 1]
+- [Restrição 2]
+
+## Estimativa
+[Pequeno/Médio/Grande/Muito Grande] - [Justificativa]
+
+## Perguntas Pendentes
+1. [Pergunta 1]
+2. [Pergunta 2]
+
+## Riscos Identificados
+- [Risco 1 e mitigação]
+- [Risco 2 e mitigação]
+```
+
+## 🔍 Validação
+
+Valide o refinamento contra:
+- Estratégia do produto (se documentada)
+- Arquitetura técnica (se documentada)
+- Capacidade do time
+- Prioridades do roadmap
+
+---
+
+**Argumentos fornecidos**:
+
+```
+#$ARGUMENTS
+```
+
+---
+
+## 🎯 Próximo Passo
+
+Após refinamento aprovado:
+
+```bash
+/spec [ISSUE-ID]
+```
+
+Este comando criará a especificação completa (PRD) da feature.
