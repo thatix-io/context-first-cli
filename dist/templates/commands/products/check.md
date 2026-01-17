@@ -25,30 +25,30 @@ Execute este comando:
 Navegue até o diretório do orchestrator e identifique quais metaspecs existem:
 
 ```bash
-ls -la ../.context-orchestrator/specs/
+ls -la repositório de MetaSpecs
 ```
 
 ### 2. Validação de Negócio
 
-Se existirem metaspecs de negócio (`specs/business/`):
+Se existirem metaspecs de negócio (`repositório de MetaSpecs (seção de negócio)`):
 
 ```markdown
 ## Validação de Negócio
 
 ### Estratégia de Produto
-- **Arquivo**: `specs/business/PRODUCT_STRATEGY.md`
+- **Arquivo**: `repositório de MetaSpecs (seção de negócio)PRODUCT_STRATEGY.md`
 - **Validação**: [Esta feature está alinhada com a estratégia?]
 - **Status**: ✅ Alinhado / ⚠️ Parcialmente / ❌ Desalinhado
 - **Notas**: [Observações]
 
 ### Personas
-- **Arquivo**: `specs/business/CUSTOMER_PERSONAS.md`
+- **Arquivo**: `repositório de MetaSpecs (seção de negócio)CUSTOMER_PERSONAS.md`
 - **Validação**: [Atende a persona correta?]
 - **Status**: ✅ Alinhado / ⚠️ Parcialmente / ❌ Desalinhado
 - **Notas**: [Observações]
 
 ### Métricas
-- **Arquivo**: `specs/business/PRODUCT_METRICS.md`
+- **Arquivo**: `repositório de MetaSpecs (seção de negócio)PRODUCT_METRICS.md`
 - **Validação**: [Métrica de sucesso está documentada?]
 - **Status**: ✅ Alinhado / ⚠️ Parcialmente / ❌ Desalinhado
 - **Notas**: [Observações]
@@ -56,32 +56,32 @@ Se existirem metaspecs de negócio (`specs/business/`):
 
 ### 3. Validação Técnica
 
-Se existirem metaspecs técnicas (`specs/technical/`):
+Se existirem metaspecs técnicas (`repositório de MetaSpecs (seção técnica)`):
 
 ```markdown
 ## Validação Técnica
 
 ### Stack Tecnológica
-- **Arquivo**: `specs/technical/meta/stack.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)meta/stack.md`
 - **Validação**: [Usa apenas tecnologias aprovadas?]
 - **Status**: ✅ Conforme / ⚠️ Exceção justificada / ❌ Não conforme
 - **Notas**: [Tecnologias usadas e justificativas]
 
 ### Arquitetura
-- **Arquivo**: `specs/technical/ARCHITECTURE.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)ARCHITECTURE.md`
 - **Validação**: [Segue padrões arquiteturais?]
 - **Status**: ✅ Conforme / ⚠️ Parcialmente / ❌ Não conforme
 - **Notas**: [Observações]
 
 ### ADRs (Architecture Decision Records)
-- **Diretório**: `specs/technical/adr/`
+- **Diretório**: `repositório de MetaSpecs (seção técnica)adr/`
 - **Validação**: [Respeita decisões arquiteturais documentadas?]
 - **ADRs Relevantes**: [Lista de ADRs verificados]
 - **Status**: ✅ Conforme / ⚠️ Conflito menor / ❌ Conflito crítico
 - **Notas**: [Observações]
 
 ### Regras de Negócio
-- **Arquivo**: `specs/technical/BUSINESS_LOGIC.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)BUSINESS_LOGIC.md`
 - **Validação**: [Implementa regras de negócio corretamente?]
 - **Status**: ✅ Conforme / ⚠️ Parcialmente / ❌ Não conforme
 - **Notas**: [Observações]
@@ -93,17 +93,17 @@ Se existirem metaspecs técnicas (`specs/technical/`):
 ## Validação de Padrões
 
 ### Código
-- **Arquivo**: `specs/technical/CODE_STANDARDS.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)CODE_STANDARDS.md`
 - **Validação**: [Segue padrões de código?]
 - **Status**: ✅ Conforme / ⚠️ Pequenos desvios / ❌ Não conforme
 
 ### Testes
-- **Arquivo**: `specs/technical/TEST_STANDARDS.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)TEST_STANDARDS.md`
 - **Validação**: [Estratégia de testes adequada?]
 - **Status**: ✅ Conforme / ⚠️ Parcialmente / ❌ Não conforme
 
 ### Documentação
-- **Arquivo**: `specs/technical/DOC_STANDARDS.md`
+- **Arquivo**: `repositório de MetaSpecs (seção técnica)DOC_STANDARDS.md`
 - **Validação**: [Documentação adequada?]
 - **Status**: ✅ Conforme / ⚠️ Parcialmente / ❌ Não conforme
 ```

@@ -7,7 +7,7 @@ Este comando executa uma unidade de trabalho no workspace atual, implementando p
 Antes de executar, certifique-se de que:
 - Executou `/warm-up` para carregar o contexto
 - Executou `/start` e `/plan` para ter o planejamento técnico
-- Está no workspace correto (verifique `.workspace.json`)
+- Está no workspace correto (verifique `diretório do workspace`)
 - Tem o arquivo `./.sessions/<ISSUE-ID>/plan.md` disponível
 
 ## 🎯 Objetivo

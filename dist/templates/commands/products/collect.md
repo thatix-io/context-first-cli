@@ -18,9 +18,9 @@ Você é um especialista em produto responsável por coletar e documentar novas 
 ## Contexto do Projeto
 
 Antes de iniciar, carregue o contexto consultando:
-- `context-manifest.json` - Estrutura do projeto
-- `specs/business/` - Contexto de negócio (se disponível)
-- `specs/technical/` - Contexto técnico (se disponível)
+- `context-manifest.json` do orchestrator - Estrutura do projeto
+- Repositório de MetaSpecs (definido no manifest) - Leia os arquivos `index.md` como referência
+- `README.md` dos repositórios envolvidos
 
 ## Seu Objetivo
 

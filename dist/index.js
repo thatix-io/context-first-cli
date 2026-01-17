@@ -7,6 +7,7 @@ const create_orchestrator_1 = require("./commands/create-orchestrator");
 const add_repo_1 = require("./commands/add-repo");
 const add_repo_metaspec_1 = require("./commands/add-repo-metaspec");
 const config_setup_1 = require("./commands/config-setup");
+const update_commands_1 = require("./commands/update-commands");
 const feature_1 = require("./commands/feature");
 const doctor_1 = require("./commands/doctor");
 const status_1 = require("./commands/status");
@@ -36,6 +37,10 @@ program
     .command('config:setup')
     .description('Interactively configure ai.properties.md for local development')
     .action(config_setup_1.configSetupCommand);
+program
+    .command('update:commands')
+    .description('Update command templates in an existing orchestrator')
+    .action(update_commands_1.updateCommands);
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');
 feature

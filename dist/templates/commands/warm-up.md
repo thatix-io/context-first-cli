@@ -7,51 +7,64 @@ Este comando prepara o ambiente carregando o contexto completo do projeto e do w
 Verifique se você está dentro de um workspace criado pelo `context-cli`:
 
 ```bash
-# Procurar pelo arquivo .workspace.json no diretório atual ou pais
+# Verificar se está em um diretório de workspace
 pwd
-ls -la .workspace.json 2>/dev/null || echo "Não está em um workspace"
+# O workspace geralmente está em ~/workspaces/<ISSUE-ID>/
 ```
 
-Se não estiver em um workspace, pergunte ao usuário qual workspace usar ou se deve criar um novo.
+Se não estiver em um workspace, pergunte ao usuário qual workspace usar ou se deve criar um novo com `feature:start`.
 
-## 2. Carregar Configuração do Orchestrator
+## 2. Carregar Configuração do Projeto
 
-Leia o arquivo `.workspace.json` para identificar:
-- Issue ID do workspace
-- Repositórios incluídos neste workspace
-- Data de criação e última atualização
+Identifique o orchestrator do projeto:
 
-## 3. Carregar Metaspecs (se disponíveis)
+1. **Procure o arquivo `.contextrc.json`** em qualquer um dos repositórios do workspace
+2. Este arquivo contém a URL do repositório orchestrator
+3. Se o orchestrator ainda não estiver clonado localmente, clone-o
 
-Navegue até o diretório do orchestrator (geralmente `../.context-orchestrator/`) e leia:
+## 3. Carregar Manifesto do Projeto
 
-1. **Manifesto do Projeto**: `context-manifest.json`
-   - Entenda a estrutura de repositórios
-   - Identifique dependências entre repos
+Leia o `context-manifest.json` do orchestrator para entender:
+- Lista completa de repositórios do ecossistema
+- URL do repositório de MetaSpecs
+- Dependências entre repositórios
+- Roles de cada repositório (application, library, service, specs-provider)
 
-2. **Índices de Documentação** (se existirem):
-   - `specs/business/index.md` - Contexto de negócio
-   - `specs/technical/index.md` - Contexto técnico
-   - `README.md` - Visão geral do projeto
+## 4. Carregar MetaSpecs
 
-3. **Especificações Core** (se existirem):
-   - `specs/business/PRODUCT_STRATEGY.md` - Estratégia do produto
-   - `specs/technical/meta/intent.md` - Objetivos e constraints
-   - `specs/technical/meta/stack.md` - Stack tecnológica e ADRs
+O repositório de MetaSpecs está definido no `context-manifest.json` (geralmente com `role: "specs-provider"`).
 
-## 4. Contexto dos Repositórios
+**Leia sempre os arquivos de índice primeiro:**
 
-Para cada repositório no workspace, leia:
-- `README.md` - Entenda o propósito do repositório
-- `package.json` ou arquivo equivalente - Identifique dependências e scripts
+1. **`README.md`** - Visão geral do projeto e estrutura de documentação
+2. **`index.md`** (na raiz ou em subpastas) - Índice de especificações disponíveis
 
-## 5. Navegação Inteligente
+**Use os índices como referência** para navegar até as especificações específicas que você precisa. Não assuma que arquivos específicos existem - sempre consulte os índices primeiro.
+
+## 5. Carregar Sessão Atual (se existir)
+
+Verifique se existe uma sessão salva para este workspace:
+
+```bash
+# Procurar por sessão no orchestrator
+ls -la .sessions/<ISSUE-ID>/ 2>/dev/null
+```
+
+Se existir, leia os arquivos de sessão para recuperar o contexto da última execução.
+
+## 6. Contexto dos Repositórios
+
+Para cada repositório presente no workspace, leia:
+- `README.md` - Propósito e visão geral do repositório
+- Arquivo de configuração principal (`package.json`, `pom.xml`, `requirements.txt`, etc.)
+
+## 7. Navegação Inteligente
 
 - **Código**: Use ferramentas de busca (glob, grep) para localizar arquivos relevantes
-- **Documentação**: Use os índices carregados para encontrar especificações
+- **Documentação**: Use os índices dos MetaSpecs como referência
 - **Aguarde Instruções**: NÃO leia outros arquivos agora. Aguarde o próximo comando.
 
-## 6. Princípio Jidoka (Parar ao Detectar Problemas)
+## 8. Princípio Jidoka (Parar ao Detectar Problemas)
 
 Se detectar desalinhamento, conflitos ou problemas:
 1. 🛑 **PARE** imediatamente

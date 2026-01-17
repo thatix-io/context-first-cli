@@ -6,14 +6,14 @@ Este comando inicia o desenvolvimento de uma funcionalidade no workspace atual.
 
 Antes de iniciar, carregue o contexto consultando:
 - `context-manifest.json` - Estrutura de repositórios
-- `specs/business/index.md` - Contexto de negócio
-- `specs/technical/index.md` - Stack, arquitetura e padrões técnicos
-- `.workspace.json` - Informações do workspace atual
+- `repositório de MetaSpecs (seção de negócio)index.md` - Contexto de negócio
+- `repositório de MetaSpecs (seção técnica)index.md` - Stack, arquitetura e padrões técnicos
+- `diretório do workspace` - Informações do workspace atual
 
 ## ⚙️ Configuração Inicial
 
 1. **Verificar Workspace**:
-   - Confirme que está no workspace correto (verifique `.workspace.json`)
+   - Confirme que está no workspace correto (verifique `diretório do workspace`)
    - Liste os repositórios disponíveis no workspace
 
 2. **Verificar Branches**:

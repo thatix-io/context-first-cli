@@ -7,6 +7,7 @@ import { createOrchestratorCommand } from './commands/create-orchestrator';
 import { addRepoCommand } from './commands/add-repo';
 import { addRepoMetaspecCommand } from './commands/add-repo-metaspec';
 import { configSetupCommand } from './commands/config-setup';
+import { updateCommands } from './commands/update-commands';
 import { featureCommands } from './commands/feature';
 import { doctorCommand } from './commands/doctor';
 import { statusCommand } from './commands/status';
@@ -43,6 +44,11 @@ program
   .command('config:setup')
   .description('Interactively configure ai.properties.md for local development')
   .action(configSetupCommand);
+
+program
+  .command('update:commands')
+  .description('Update command templates in an existing orchestrator')
+  .action(updateCommands);
 
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');
