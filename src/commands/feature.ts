@@ -63,18 +63,29 @@ export const featureCommands = {
     console.log(chalk.gray(`✓ Found configuration in ${configDir}`));
 
     // Determine orchestrator path
-    const orchestratorPath = path.join(configDir, '.context-orchestrator');
+    // If we're already in the orchestrator (has ai.properties.md), use configDir
+    // Otherwise, use .context-orchestrator subdirectory
+    let orchestratorPath: string;
+    const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
     
-    // Clone orchestrator if needed
-    if (!(await pathExists(orchestratorPath))) {
-      console.log(chalk.blue('\n📦 Cloning orchestrator repository...'));
-      try {
-        await ensureRepoCloned(config.orchestratorRepo, orchestratorPath);
-      } catch (error: any) {
-        exitWithError(`Failed to clone orchestrator: ${error.message}`);
-      }
+    if (await pathExists(aiPropertiesInConfigDir)) {
+      // We're already in the orchestrator
+      orchestratorPath = configDir;
+      console.log(chalk.gray('✓ Running from orchestrator directory'));
     } else {
-      console.log(chalk.gray('✓ Orchestrator repository already cloned'));
+      // We're in a different repo, need to clone orchestrator
+      orchestratorPath = path.join(configDir, '.context-orchestrator');
+      
+      if (!(await pathExists(orchestratorPath))) {
+        console.log(chalk.blue('\n📦 Cloning orchestrator repository...'));
+        try {
+          await ensureRepoCloned(config.orchestratorRepo, orchestratorPath);
+        } catch (error: any) {
+          exitWithError(`Failed to clone orchestrator: ${error.message}`);
+        }
+      } else {
+        console.log(chalk.gray('✓ Orchestrator repository already cloned'));
+      }
     }
 
     // Load ai.properties.md

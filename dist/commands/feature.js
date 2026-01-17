@@ -43,19 +43,30 @@ exports.featureCommands = {
         const { config, configDir } = configResult;
         console.log(chalk_1.default.gray(`✓ Found configuration in ${configDir}`));
         // Determine orchestrator path
-        const orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
-        // Clone orchestrator if needed
-        if (!(await (0, config_1.pathExists)(orchestratorPath))) {
-            console.log(chalk_1.default.blue('\n📦 Cloning orchestrator repository...'));
-            try {
-                await (0, git_1.ensureRepoCloned)(config.orchestratorRepo, orchestratorPath);
-            }
-            catch (error) {
-                (0, config_1.exitWithError)(`Failed to clone orchestrator: ${error.message}`);
-            }
+        // If we're already in the orchestrator (has ai.properties.md), use configDir
+        // Otherwise, use .context-orchestrator subdirectory
+        let orchestratorPath;
+        const aiPropertiesInConfigDir = path_1.default.join(configDir, 'ai.properties.md');
+        if (await (0, config_1.pathExists)(aiPropertiesInConfigDir)) {
+            // We're already in the orchestrator
+            orchestratorPath = configDir;
+            console.log(chalk_1.default.gray('✓ Running from orchestrator directory'));
         }
         else {
-            console.log(chalk_1.default.gray('✓ Orchestrator repository already cloned'));
+            // We're in a different repo, need to clone orchestrator
+            orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+            if (!(await (0, config_1.pathExists)(orchestratorPath))) {
+                console.log(chalk_1.default.blue('\n📦 Cloning orchestrator repository...'));
+                try {
+                    await (0, git_1.ensureRepoCloned)(config.orchestratorRepo, orchestratorPath);
+                }
+                catch (error) {
+                    (0, config_1.exitWithError)(`Failed to clone orchestrator: ${error.message}`);
+                }
+            }
+            else {
+                console.log(chalk_1.default.gray('✓ Orchestrator repository already cloned'));
+            }
         }
         // Load ai.properties.md
         console.log(chalk_1.default.blue('\n⚙️  Loading configuration from ai.properties.md...'));
