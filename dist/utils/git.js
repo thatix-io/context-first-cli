@@ -45,16 +45,30 @@ async function createWorktree(mainRepoPath, worktreePath, branchName) {
         console.log(chalk_1.default.gray(`  Created new branch: ${branchName}`));
     }
     // Create worktree
+    console.log(chalk_1.default.gray(`    Executing: git worktree add "${worktreePath}" "${branchName}"`));
+    console.log(chalk_1.default.gray(`    Working directory: ${mainRepoPath}`));
     try {
-        (0, child_process_1.execSync)(`git worktree add "${worktreePath}" "${branchName}"`, {
+        const output = (0, child_process_1.execSync)(`git worktree add "${worktreePath}" "${branchName}"`, {
             cwd: mainRepoPath,
             stdio: 'pipe',
+            encoding: 'utf-8',
         });
-        console.log(chalk_1.default.green(`✓ Created worktree at ${worktreePath}`));
+        console.log(chalk_1.default.green(`    ✓ Created worktree at ${worktreePath}`));
+        if (output) {
+            console.log(chalk_1.default.gray(`    Git output: ${output.toString().trim()}`));
+        }
     }
     catch (error) {
+        console.log(chalk_1.default.red(`    ✗ Failed to create worktree`));
+        console.log(chalk_1.default.red(`    Error: ${error.message}`));
+        if (error.stderr) {
+            console.log(chalk_1.default.red(`    Stderr: ${error.stderr.toString()}`));
+        }
+        if (error.stdout) {
+            console.log(chalk_1.default.gray(`    Stdout: ${error.stdout.toString()}`));
+        }
         if (error.message.includes('already exists')) {
-            console.log(chalk_1.default.yellow(`  Worktree already exists at ${worktreePath}`));
+            console.log(chalk_1.default.yellow(`    Worktree already exists at ${worktreePath}`));
         }
         else {
             throw error;

@@ -42,15 +42,31 @@ export async function createWorktree(
   }
   
   // Create worktree
+  console.log(chalk.gray(`    Executing: git worktree add "${worktreePath}" "${branchName}"`));
+  console.log(chalk.gray(`    Working directory: ${mainRepoPath}`));
+  
   try {
-    execSync(`git worktree add "${worktreePath}" "${branchName}"`, {
+    const output = execSync(`git worktree add "${worktreePath}" "${branchName}"`, {
       cwd: mainRepoPath,
       stdio: 'pipe',
+      encoding: 'utf-8',
     });
-    console.log(chalk.green(`✓ Created worktree at ${worktreePath}`));
+    console.log(chalk.green(`    ✓ Created worktree at ${worktreePath}`));
+    if (output) {
+      console.log(chalk.gray(`    Git output: ${output.toString().trim()}`));
+    }
   } catch (error: any) {
+    console.log(chalk.red(`    ✗ Failed to create worktree`));
+    console.log(chalk.red(`    Error: ${error.message}`));
+    if (error.stderr) {
+      console.log(chalk.red(`    Stderr: ${error.stderr.toString()}`));
+    }
+    if (error.stdout) {
+      console.log(chalk.gray(`    Stdout: ${error.stdout.toString()}`));
+    }
+    
     if (error.message.includes('already exists')) {
-      console.log(chalk.yellow(`  Worktree already exists at ${worktreePath}`));
+      console.log(chalk.yellow(`    Worktree already exists at ${worktreePath}`));
     } else {
       throw error;
     }
