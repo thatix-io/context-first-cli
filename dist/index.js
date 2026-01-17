@@ -6,6 +6,7 @@ const init_1 = require("./commands/init");
 const create_orchestrator_1 = require("./commands/create-orchestrator");
 const add_repo_1 = require("./commands/add-repo");
 const add_repo_metaspec_1 = require("./commands/add-repo-metaspec");
+const config_setup_1 = require("./commands/config-setup");
 const feature_1 = require("./commands/feature");
 const doctor_1 = require("./commands/doctor");
 const status_1 = require("./commands/status");
@@ -31,6 +32,10 @@ program
     .command('add:repo-metaspec')
     .description('Add or update the MetaSpecs repository in context-manifest.json')
     .action(add_repo_metaspec_1.addRepoMetaspecCommand);
+program
+    .command('config:setup')
+    .description('Interactively configure ai.properties.md for local development')
+    .action(config_setup_1.configSetupCommand);
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');
 feature

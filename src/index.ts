@@ -6,6 +6,7 @@ import { initCommand } from './commands/init';
 import { createOrchestratorCommand } from './commands/create-orchestrator';
 import { addRepoCommand } from './commands/add-repo';
 import { addRepoMetaspecCommand } from './commands/add-repo-metaspec';
+import { configSetupCommand } from './commands/config-setup';
 import { featureCommands } from './commands/feature';
 import { doctorCommand } from './commands/doctor';
 import { statusCommand } from './commands/status';
@@ -37,6 +38,11 @@ program
   .command('add:repo-metaspec')
   .description('Add or update the MetaSpecs repository in context-manifest.json')
   .action(addRepoMetaspecCommand);
+
+program
+  .command('config:setup')
+  .description('Interactively configure ai.properties.md for local development')
+  .action(configSetupCommand);
 
 // Feature management commands
 const feature = program.command('feature').description('Manage feature workspaces');
