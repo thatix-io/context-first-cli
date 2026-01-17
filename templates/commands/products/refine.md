@@ -32,7 +32,7 @@ Refinar a issue coletada, esclarecendo:
 - Leia a issue usando o MCP apropriado
 
 **Senão**:
-- Leia `./.context-sessions/<ISSUE-ID>/collect.md`
+- Leia `./.sessions/<ISSUE-ID>/collect.md`
 
 ### 2. Análise de Escopo
 
@@ -112,7 +112,7 @@ Liste perguntas que ainda precisam ser respondidas antes de iniciar a implementa
 
 ## 📄 Documentação do Refinamento
 
-Crie/atualize `./.context-sessions/<ISSUE-ID>/refine.md`:
+Crie/atualize `./.sessions/<ISSUE-ID>/refine.md`:
 
 ```markdown
 # [Título da Issue] - Refinamento

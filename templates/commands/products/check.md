@@ -142,7 +142,7 @@ Se houver desvios justificados:
 
 ## 📄 Relatório de Validação
 
-Crie `./.context-sessions/<ISSUE-ID>/check-report.md`:
+Crie `./.sessions/<ISSUE-ID>/check-report.md`:
 
 ```markdown
 # Relatório de Validação - [ISSUE-ID]

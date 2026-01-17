@@ -8,7 +8,7 @@ Antes de executar, certifique-se de que:
 - Executou `/warm-up` para carregar o contexto
 - Executou `/start` e `/plan` para ter o planejamento técnico
 - Está no workspace correto (verifique `.workspace.json`)
-- Tem o arquivo `./.context-sessions/<ISSUE-ID>/plan.md` disponível
+- Tem o arquivo `./.sessions/<ISSUE-ID>/plan.md` disponível
 
 ## 🎯 Objetivo
 
@@ -22,7 +22,7 @@ Implementar uma unidade de trabalho específica do plano, que pode envolver:
 
 ### 1. Identificar Unidade de Trabalho
 
-Com base no plano técnico (`./.context-sessions/<ISSUE-ID>/plan.md`), identifique:
+Com base no plano técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
 - Qual tarefa específica será implementada agora
 - Em qual(is) repositório(s) do workspace
 - Quais arquivos serão criados/modificados
@@ -62,7 +62,7 @@ Refs: <ISSUE-ID>"
 
 ### 5. Documentação da Sessão
 
-Atualize `./.context-sessions/<ISSUE-ID>/work.md`:
+Atualize `./.sessions/<ISSUE-ID>/work.md`:
 
 ```markdown
 # [Título da Feature] - Trabalho Executado

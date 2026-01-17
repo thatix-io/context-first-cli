@@ -168,7 +168,7 @@ Se múltiplos repositórios foram modificados:
 
 ## 📄 Preparação da Descrição do PR
 
-Crie `./.context-sessions/<ISSUE-ID>/pr-description.md`:
+Crie `./.sessions/<ISSUE-ID>/pr-description.md`:
 
 ```markdown
 ## 🎯 Objetivo
@@ -212,7 +212,7 @@ Se alguma validação falhar:
 
 ## 📊 Relatório de Validação
 
-Crie `./.context-sessions/<ISSUE-ID>/pre-pr-report.md`:
+Crie `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 
 ```markdown
 # Relatório de Validação Pre-PR

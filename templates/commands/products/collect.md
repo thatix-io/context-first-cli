@@ -85,7 +85,7 @@ Apenas certifique-se de que a ideia esteja **adequadamente compreendida**.
      - Use o MCP apropriado para criar a issue (ex: Linear, Jira)
      - Todos os dados ficam no task manager
    - **Se não houver task manager**:
-     - Crie arquivo em `./.context-sessions/<ISSUE-ID>/collect.md`
+     - Crie arquivo em `./.sessions/<ISSUE-ID>/collect.md`
      - Inclua data, tipo e conteúdo completo
 
 ## Perguntas de Esclarecimento

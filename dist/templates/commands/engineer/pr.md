@@ -37,7 +37,7 @@ Para cada repositório, crie um PR usando o GitHub CLI ou interface web:
 ```bash
 cd <repositório>
 gh pr create --title "[ISSUE-ID] Título da Feature" \
-  --body "$(cat ../.context-sessions/<ISSUE-ID>/pr-description.md)" \
+  --body "$(cat ../.sessions/<ISSUE-ID>/pr-description.md)" \
   --base main
 ```
 
@@ -104,7 +104,7 @@ Se task manager estiver configurado:
 
 ### 6. Documentação da Sessão
 
-Atualize `./.context-sessions/<ISSUE-ID>/pr.md`:
+Atualize `./.sessions/<ISSUE-ID>/pr.md`:
 
 ```markdown
 # [Título da Feature] - Pull Requests

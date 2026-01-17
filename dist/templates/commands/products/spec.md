@@ -208,7 +208,7 @@ Justificativa: [Por que ficam para depois]
 - Ou anexe como arquivo
 
 **Senão**:
-- Salve em `./.context-sessions/<ISSUE-ID>/prd.md`
+- Salve em `./.sessions/<ISSUE-ID>/prd.md`
 
 ## 🔍 Revisão e Aprovação
 

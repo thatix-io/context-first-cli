@@ -8,6 +8,7 @@ const inquirer_1 = __importDefault(require("inquirer"));
 const chalk_1 = __importDefault(require("chalk"));
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
+const simple_git_1 = require("simple-git");
 async function scaffoldOrchestratorCommand() {
     console.log(chalk_1.default.blue.bold('\n🏗️  Scaffolding a new Orchestrator repository\n'));
     try {
@@ -44,6 +45,12 @@ async function scaffoldOrchestratorCommand() {
                 ],
                 default: 'jira',
             },
+            {
+                type: 'confirm',
+                name: 'initGit',
+                message: 'Initialize Git repository and create initial commit?',
+                default: true,
+            },
         ]);
         const targetDir = path_1.default.join(process.cwd(), answers.projectName);
         // Check if directory already exists
@@ -57,7 +64,7 @@ async function scaffoldOrchestratorCommand() {
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'products'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
-        await promises_1.default.mkdir(path_1.default.join(targetDir, '.context-sessions'), { recursive: true });
+        await promises_1.default.mkdir(path_1.default.join(targetDir, '.sessions'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'business'), { recursive: true });
         await promises_1.default.mkdir(path_1.default.join(targetDir, 'specs', 'technical'), { recursive: true });
         // Create README.md
@@ -72,20 +79,41 @@ async function scaffoldOrchestratorCommand() {
         // Copy command templates
         await copyCommandTemplates(targetDir);
         // Create .gitignore
-        const gitignore = `node_modules/\n.env\n.ia.env\n.context-sessions/*/\n*.log\n`;
+        const gitignore = `node_modules/
+.env
+.ia.env
+ai.properties.md
+.sessions/*/
+*.log
+`;
         await promises_1.default.writeFile(path_1.default.join(targetDir, '.gitignore'), gitignore, 'utf-8');
         console.log(chalk_1.default.green(`\n✅ Orchestrator scaffolded successfully at: ${targetDir}`));
         console.log(chalk_1.default.blue('\n📁 Structure created:'));
         console.log(chalk_1.default.gray('  .claude/commands/        - Command definitions for AI'));
-        console.log(chalk_1.default.gray('  .context-sessions/       - Feature session data'));
+        console.log(chalk_1.default.gray('  .sessions/               - Feature session data'));
         console.log(chalk_1.default.gray('  specs/                   - Business and technical specifications'));
-        console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template'));
+        console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template (gitignored)'));
         console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest'));
+        // Initialize Git if requested
+        if (answers.initGit) {
+            console.log(chalk_1.default.blue('\n🔧 Initializing Git repository...'));
+            const git = (0, simple_git_1.simpleGit)(targetDir);
+            await git.init();
+            await git.add('.');
+            await git.commit('chore: initial commit - orchestrator scaffolded by context-cli');
+            console.log(chalk_1.default.green('✅ Git repository initialized and initial commit created'));
+        }
         console.log(chalk_1.default.blue('\n💡 Next steps:'));
         console.log(chalk_1.default.gray(`  1. cd ${answers.projectName}`));
         console.log(chalk_1.default.gray('  2. Edit ai.properties.md with your project paths'));
         console.log(chalk_1.default.gray('  3. Edit context-manifest.json to define your repositories'));
-        console.log(chalk_1.default.gray('  4. Initialize as a Git repository and push to remote'));
+        if (answers.initGit) {
+            console.log(chalk_1.default.gray('  4. Add remote: git remote add origin <your-repo-url>'));
+            console.log(chalk_1.default.gray('  5. Push to remote: git push -u origin main'));
+        }
+        else {
+            console.log(chalk_1.default.gray('  4. Initialize as a Git repository and push to remote'));
+        }
     }
     catch (error) {
         console.error(chalk_1.default.red('\n❌ Error during scaffolding:'), error);
@@ -107,6 +135,11 @@ async function copyCommandTemplates(targetDir) {
     for (const cmd of engineerCommands) {
         await promises_1.default.copyFile(path_1.default.join(templatesDir, 'engineer', cmd), path_1.default.join(targetCommandsDir, 'engineer', cmd));
     }
+    // Copy quality commands
+    const qualityCommands = ['observe.md', 'metrics.md'];
+    for (const cmd of qualityCommands) {
+        await promises_1.default.copyFile(path_1.default.join(templatesDir, 'quality', cmd), path_1.default.join(targetCommandsDir, 'quality', cmd));
+    }
 }
 function generateReadme(answers) {
     return `# ${answers.projectName}
@@ -125,22 +158,25 @@ ${answers.projectName}/
 │   └── commands/            # Command definitions for AI
 │       ├── products/        # Product commands (collect, refine, spec, check)
 │       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)
+│       ├── quality/         # Quality commands (observe, metrics)
 │       └── warm-up.md       # Context loading command
-├── .context-sessions/       # Feature session data
+├── .sessions/               # Feature session data (gitignored)
 ├── specs/
 │   ├── business/            # Business specifications
 │   └── technical/           # Technical specifications
-├── ai.properties.md         # Configuration
+├── ai.properties.md         # Configuration (gitignored - each dev has their own)
 └── context-manifest.json    # Repository manifest
 \`\`\`
 
 ## ⚙️ Configuration
 
 Edit \`ai.properties.md\` to configure:
-- Project paths
+- Project paths (specific to each developer)
 - Task manager credentials (${answers.taskManager})
 - Branch conventions
 - Repository-specific commands
+
+**Note**: \`ai.properties.md\` is gitignored because it contains local paths and credentials specific to each developer.
 
 ## 🚀 Usage
 

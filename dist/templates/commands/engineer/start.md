@@ -68,7 +68,7 @@ Após análise inicial, formule **3-5 clarificações mais importantes**:
 
 ## 📝 Documentação da Sessão
 
-Crie arquivo `./.context-sessions/<ISSUE-ID>/start.md` com:
+Crie arquivo `./.sessions/<ISSUE-ID>/start.md` com:
 
 ```markdown
 # [Título da Feature] - Início

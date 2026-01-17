@@ -219,7 +219,7 @@ src/
 
 ## 📄 Salvamento do Plano
 
-Salve em `./.context-sessions/<ISSUE-ID>/plan.md`
+Salve em `./.sessions/<ISSUE-ID>/plan.md`
 
 ## 🔍 Revisão
 

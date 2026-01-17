@@ -2,11 +2,13 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import fs from 'fs/promises';
 import path from 'path';
+import { simpleGit } from 'simple-git';
 
 interface ScaffoldAnswers {
   projectName: string;
   description: string;
   taskManager: 'jira' | 'linear' | 'github' | 'none';
+  initGit: boolean;
 }
 
 export async function scaffoldOrchestratorCommand() {
@@ -46,6 +48,12 @@ export async function scaffoldOrchestratorCommand() {
         ],
         default: 'jira',
       },
+      {
+        type: 'confirm',
+        name: 'initGit',
+        message: 'Initialize Git repository and create initial commit?',
+        default: true,
+      },
     ]);
 
     const targetDir = path.join(process.cwd(), answers.projectName);
@@ -62,7 +70,7 @@ export async function scaffoldOrchestratorCommand() {
     await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'products'), { recursive: true });
     await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'engineer'), { recursive: true });
     await fs.mkdir(path.join(targetDir, '.claude', 'commands', 'quality'), { recursive: true });
-    await fs.mkdir(path.join(targetDir, '.context-sessions'), { recursive: true });
+    await fs.mkdir(path.join(targetDir, '.sessions'), { recursive: true });
     await fs.mkdir(path.join(targetDir, 'specs', 'business'), { recursive: true });
     await fs.mkdir(path.join(targetDir, 'specs', 'technical'), { recursive: true });
 
@@ -82,22 +90,43 @@ export async function scaffoldOrchestratorCommand() {
     await copyCommandTemplates(targetDir);
 
     // Create .gitignore
-    const gitignore = `node_modules/\n.env\n.ia.env\n.context-sessions/*/\n*.log\n`;
+    const gitignore = `node_modules/
+.env
+.ia.env
+ai.properties.md
+.sessions/*/
+*.log
+`;
     await fs.writeFile(path.join(targetDir, '.gitignore'), gitignore, 'utf-8');
 
     console.log(chalk.green(`\n✅ Orchestrator scaffolded successfully at: ${targetDir}`));
     console.log(chalk.blue('\n📁 Structure created:'));
     console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
-    console.log(chalk.gray('  .context-sessions/       - Feature session data'));
+    console.log(chalk.gray('  .sessions/               - Feature session data'));
     console.log(chalk.gray('  specs/                   - Business and technical specifications'));
-    console.log(chalk.gray('  ai.properties.md         - Configuration template'));
+    console.log(chalk.gray('  ai.properties.md         - Configuration template (gitignored)'));
     console.log(chalk.gray('  context-manifest.json    - Repository manifest'));
+
+    // Initialize Git if requested
+    if (answers.initGit) {
+      console.log(chalk.blue('\n🔧 Initializing Git repository...'));
+      const git = simpleGit(targetDir);
+      await git.init();
+      await git.add('.');
+      await git.commit('chore: initial commit - orchestrator scaffolded by context-cli');
+      console.log(chalk.green('✅ Git repository initialized and initial commit created'));
+    }
 
     console.log(chalk.blue('\n💡 Next steps:'));
     console.log(chalk.gray(`  1. cd ${answers.projectName}`));
     console.log(chalk.gray('  2. Edit ai.properties.md with your project paths'));
     console.log(chalk.gray('  3. Edit context-manifest.json to define your repositories'));
-    console.log(chalk.gray('  4. Initialize as a Git repository and push to remote'));
+    if (answers.initGit) {
+      console.log(chalk.gray('  4. Add remote: git remote add origin <your-repo-url>'));
+      console.log(chalk.gray('  5. Push to remote: git push -u origin main'));
+    } else {
+      console.log(chalk.gray('  4. Initialize as a Git repository and push to remote'));
+    }
 
   } catch (error) {
     console.error(chalk.red('\n❌ Error during scaffolding:'), error);
@@ -132,6 +161,15 @@ async function copyCommandTemplates(targetDir: string): Promise<void> {
       path.join(targetCommandsDir, 'engineer', cmd)
     );
   }
+
+  // Copy quality commands
+  const qualityCommands = ['observe.md', 'metrics.md'];
+  for (const cmd of qualityCommands) {
+    await fs.copyFile(
+      path.join(templatesDir, 'quality', cmd),
+      path.join(targetCommandsDir, 'quality', cmd)
+    );
+  }
 }
 
 function generateReadme(answers: ScaffoldAnswers): string {
@@ -151,22 +189,25 @@ ${answers.projectName}/
 │   └── commands/            # Command definitions for AI
 │       ├── products/        # Product commands (collect, refine, spec, check)
 │       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)
+│       ├── quality/         # Quality commands (observe, metrics)
 │       └── warm-up.md       # Context loading command
-├── .context-sessions/       # Feature session data
+├── .sessions/               # Feature session data (gitignored)
 ├── specs/
 │   ├── business/            # Business specifications
 │   └── technical/           # Technical specifications
-├── ai.properties.md         # Configuration
+├── ai.properties.md         # Configuration (gitignored - each dev has their own)
 └── context-manifest.json    # Repository manifest
 \`\`\`
 
 ## ⚙️ Configuration
 
 Edit \`ai.properties.md\` to configure:
-- Project paths
+- Project paths (specific to each developer)
 - Task manager credentials (${answers.taskManager})
 - Branch conventions
 - Repository-specific commands
+
+**Note**: \`ai.properties.md\` is gitignored because it contains local paths and credentials specific to each developer.
 
 ## 🚀 Usage
 
