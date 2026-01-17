@@ -1,5 +1,5 @@
 {
-  "name": "@thatix/context-first-cli",
+  "name": "context-first-cli",
   "version": "1.0.0",
   "description": "A generic CLI to manage the Context-First development methodology across any project.",
   "main": "dist/index.js",
@@ -35,7 +35,7 @@
     "automation",
     "ai-assisted"
   ],
-  "author": "Thatix <contato@thatix.io>",
+  "author": "Thiago Abreu <thiagoabreu.dev>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/thatix-io/context-first-cli/issues"
