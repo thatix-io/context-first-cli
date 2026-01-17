@@ -102,6 +102,18 @@ export async function createOrchestratorCommand() {
     // Copy command templates
     await copyCommandTemplates(targetDir);
 
+    // Create .contextrc.json pointing to itself
+    const contextrc = {
+      orchestratorRepo: `file://${path.resolve(targetDir)}`,
+      aiProvider: 'claude',
+      commandsDir: '.claude/commands'
+    };
+    await fs.writeFile(
+      path.join(targetDir, '.contextrc.json'),
+      JSON.stringify(contextrc, null, 2),
+      'utf-8'
+    );
+
     // Create .gitignore
     const gitignore = `node_modules/
 .env
@@ -116,6 +128,7 @@ ai.properties.md
     console.log(chalk.blue('\n📁 Structure created:'));
     console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
     console.log(chalk.gray('  .sessions/               - Feature session data'));
+    console.log(chalk.gray('  .contextrc.json          - CLI configuration'));
     console.log(chalk.gray('  ai.properties.md         - Configuration template (gitignored)'));
     console.log(chalk.gray('  context-manifest.json    - Repository manifest'));
 
@@ -131,8 +144,9 @@ ai.properties.md
 
     console.log(chalk.blue('\n💡 Next steps:'));
     console.log(chalk.gray(`  1. cd ${answers.projectName}`));
-    console.log(chalk.gray('  2. Edit ai.properties.md with your project paths'));
-    console.log(chalk.gray('  3. Edit context-manifest.json to define your repositories'));
+    console.log(chalk.gray('  2. Run "context-cli config:setup" to configure ai.properties.md'));
+    console.log(chalk.gray('  3. Run "context-cli add:repo" to add your code repositories'));
+    console.log(chalk.gray('  4. Run "context-cli feature start <issue-id>" to begin working'));
     if (answers.initGit) {
       console.log(chalk.gray('  4. Add remote: git remote add origin <your-repo-url>'));
       console.log(chalk.gray('  5. Push to remote: git push -u origin main'));
@@ -235,9 +249,7 @@ function generateAiProperties(answers: ScaffoldAnswers): string {
 
 ## Paths dos Projetos
 base_path=/path/to/your/workspace
-meta_specs_path=/path/to/your/meta-specs
-backend_path=/path/to/your/backend
-frontend_path=/path/to/your/frontend
+auto_clone=true
 
 ## Configuração ${answers.taskManager === 'jira' ? 'Jira' : answers.taskManager === 'linear' ? 'Linear' : 'Task Manager'}
 task_management_system=${answers.taskManager}

@@ -4,6 +4,10 @@ export declare const featureCommands: {
     }) => Promise<void>;
     list: () => Promise<void>;
     switch: (issueId: string) => Promise<void>;
+    remove: (issueId: string, options: {
+        force?: boolean;
+    }) => Promise<void>;
+    status: (issueId?: string) => Promise<void>;
     end: (issueId: string, options: {
         force?: boolean;
     }) => Promise<void>;

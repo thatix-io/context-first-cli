@@ -19,6 +19,11 @@ import {
   removeWorktree,
   listWorktrees,
 } from '../utils/git';
+import {
+  loadAiProperties,
+  getBasePath,
+  isAutoCloneEnabled,
+} from '../utils/ai-properties';
 
 export const featureCommands = {
   start: async (issueId: string, options: { repos?: string }) => {
@@ -47,6 +52,28 @@ export const featureCommands = {
     } else {
       console.log(chalk.gray('✓ Orchestrator repository already cloned'));
     }
+
+    // Load ai.properties.md
+    console.log(chalk.blue('\n⚙️  Loading configuration from ai.properties.md...'));
+    const aiProperties = await loadAiProperties(orchestratorPath);
+    if (!aiProperties) {
+      exitWithError(
+        'Could not load ai.properties.md from orchestrator.\n' +
+        'Run "context-cli config:setup" to create it.'
+      );
+    }
+
+    const basePath = getBasePath(aiProperties);
+    if (!basePath) {
+      exitWithError(
+        'base_path not configured in ai.properties.md.\n' +
+        'Run "context-cli config:setup" to configure it.'
+      );
+    }
+
+    const autoClone = isAutoCloneEnabled(aiProperties);
+    console.log(chalk.gray(`✓ base_path: ${basePath}`));
+    console.log(chalk.gray(`✓ auto_clone: ${autoClone}`));
 
     // Load manifest
     const manifest = await loadManifest(orchestratorPath);
@@ -95,40 +122,50 @@ export const featureCommands = {
     await ensureDir(workspacePath);
     console.log(chalk.green(`\n✓ Created workspace directory: ${workspacePath}`));
 
-    // Ensure main repositories are cloned
-    console.log(chalk.blue('\n📦 Ensuring main repositories are cloned...'));
-    const mainReposDir = path.join(configDir, '.context-repos');
-    await ensureDir(mainReposDir);
-
+    // Process each repository
+    console.log(chalk.blue('\n🌳 Setting up repositories...'));
     const selectedRepos = manifest.repositories.filter(repo => repoIds.includes(repo.id));
-    
-    for (const repo of selectedRepos) {
-      const mainRepoPath = path.join(mainReposDir, repo.id);
-      if (!(await pathExists(mainRepoPath))) {
-        console.log(chalk.blue(`\n  Cloning ${repo.id}...`));
-        try {
-          await ensureRepoCloned(repo.url, mainRepoPath);
-        } catch (error: any) {
-          exitWithError(`Failed to clone ${repo.id}: ${error.message}`);
-        }
-      } else {
-        console.log(chalk.gray(`  ✓ ${repo.id} already cloned`));
-      }
-    }
-
-    // Create worktrees
-    console.log(chalk.blue('\n🌳 Creating worktrees...'));
     const branchName = `feature/${issueId}`;
 
     for (const repo of selectedRepos) {
-      const mainRepoPath = path.join(mainReposDir, repo.id);
-      const worktreePath = path.join(workspacePath, repo.id);
+      console.log(chalk.blue(`\n  Processing ${repo.id}...`));
       
-      console.log(chalk.blue(`\n  Creating worktree for ${repo.id}...`));
+      // Check if repo exists at base_path
+      const mainRepoPath = path.join(basePath, repo.id);
+      const repoExists = await pathExists(mainRepoPath);
+
+      if (!repoExists) {
+        if (autoClone) {
+          // Clone the repository
+          console.log(chalk.blue(`    Cloning ${repo.id} to ${mainRepoPath}...`));
+          try {
+            await ensureRepoCloned(repo.url, mainRepoPath);
+            console.log(chalk.green(`    ✓ Cloned ${repo.id}`));
+          } catch (error: any) {
+            console.log(chalk.yellow(`    ⚠ Failed to clone ${repo.id}: ${error.message}`));
+            console.log(chalk.yellow(`    Skipping ${repo.id}...`));
+            continue;
+          }
+        } else {
+          // Skip if auto_clone is disabled
+          console.log(chalk.yellow(`    ⚠ Repository not found at ${mainRepoPath}`));
+          console.log(chalk.yellow(`    Set auto_clone=true in ai.properties.md to enable automatic cloning`));
+          console.log(chalk.yellow(`    Skipping ${repo.id}...`));
+          continue;
+        }
+      } else {
+        console.log(chalk.gray(`    ✓ Repository exists at ${mainRepoPath}`));
+      }
+
+      // Create worktree
+      const worktreePath = path.join(workspacePath, repo.id);
+      console.log(chalk.blue(`    Creating worktree at ${worktreePath}...`));
+      
       try {
         await createWorktree(mainRepoPath, worktreePath, branchName);
+        console.log(chalk.green(`    ✓ Created worktree for ${repo.id}`));
       } catch (error: any) {
-        console.log(chalk.yellow(`  Warning: ${error.message}`));
+        console.log(chalk.yellow(`    ⚠ Failed to create worktree: ${error.message}`));
       }
     }
 
@@ -157,7 +194,7 @@ export const featureCommands = {
     const workspacesDir = getWorkspacesDir();
     
     if (!(await pathExists(workspacesDir))) {
-      console.log(chalk.yellow('No workspaces found. Create one with "context-cli feature:start <issue-id>"'));
+      console.log(chalk.yellow('No workspaces found. Create one with "context-cli feature start <issue-id>"'));
       return;
     }
 
@@ -191,7 +228,7 @@ export const featureCommands = {
       }
     }
 
-    console.log(chalk.gray('\n💡 Use "context-cli feature:switch <issue-id>" to switch to a workspace'));
+    console.log(chalk.gray('\n💡 Use "context-cli feature switch <issue-id>" to switch to a workspace'));
   },
 
   switch: async (issueId: string) => {
@@ -199,24 +236,26 @@ export const featureCommands = {
     const workspacePath = path.join(workspacesDir, issueId);
 
     if (!(await pathExists(workspacePath))) {
-      exitWithError(`Workspace for ${issueId} not found. Use "context-cli feature:list" to see available workspaces.`);
+      exitWithError(`Workspace for ${issueId} not found`);
     }
 
-    console.log(chalk.green(`\n✓ Workspace found: ${issueId}`));
-    console.log(chalk.blue('\n💡 To switch to this workspace, run:'));
-    console.log(chalk.white(`   cd ${workspacePath}`));
+    console.log(chalk.green(`\n✓ Workspace found: ${workspacePath}`));
+    console.log(chalk.blue('\n💡 To switch to this workspace:'));
+    console.log(chalk.gray(`   cd ${workspacePath}`));
+    console.log(chalk.gray('   code .'));
   },
 
-  end: async (issueId: string, options: { force?: boolean }) => {
-    console.log(chalk.blue.bold(`\n🧹 Ending feature workspace: ${issueId}\n`));
+  remove: async (issueId: string, options: { force?: boolean }) => {
+    console.log(chalk.blue.bold(`\n🗑️  Removing workspace: ${issueId}\n`));
 
     const workspacesDir = getWorkspacesDir();
     const workspacePath = path.join(workspacesDir, issueId);
 
     if (!(await pathExists(workspacePath))) {
-      exitWithError(`Workspace for ${issueId} not found.`);
+      exitWithError(`Workspace for ${issueId} not found`);
     }
 
+    // Load metadata to get repository list
     const metadata = await loadWorkspaceMetadata(workspacePath);
     if (!metadata) {
       exitWithError('Could not load workspace metadata');
@@ -228,42 +267,100 @@ export const featureCommands = {
         {
           type: 'confirm',
           name: 'confirm',
-          message: `Are you sure you want to end workspace ${issueId}? This will remove all worktrees.`,
+          message: `Are you sure you want to remove workspace ${issueId}?`,
           default: false,
         },
       ]);
 
       if (!confirm) {
-        console.log(chalk.yellow('✋ Operation cancelled'));
+        console.log(chalk.yellow('✋ Removal cancelled'));
         return;
       }
     }
 
-    // Find configuration to locate main repos
-    const configResult = await findConfig();
-    if (!configResult) {
-      exitWithError('No .contextrc.json found');
-    }
-
-    const { configDir } = configResult;
-    const mainReposDir = path.join(configDir, '.context-repos');
-
     // Remove worktrees
-    console.log(chalk.blue('🌳 Removing worktrees...'));
-    for (const repoId of metadata.repositories) {
-      const mainRepoPath = path.join(mainReposDir, repoId);
-      const worktreePath = path.join(workspacePath, repoId);
+    console.log(chalk.blue('Removing worktrees...'));
+    
+    // Load ai.properties to get base_path
+    const configResult = await findConfig();
+    if (configResult) {
+      const { configDir } = configResult;
+      const orchestratorPath = path.join(configDir, '.context-orchestrator');
+      const aiProperties = await loadAiProperties(orchestratorPath);
+      const basePath = getBasePath(aiProperties);
       
-      if (await pathExists(mainRepoPath)) {
-        console.log(chalk.gray(`  Removing worktree for ${repoId}...`));
-        await removeWorktree(mainRepoPath, worktreePath);
+      if (basePath) {
+        for (const repoId of metadata.repositories) {
+          const worktreePath = path.join(workspacePath, repoId);
+          const mainRepoPath = path.join(basePath, repoId);
+          
+          if (await pathExists(worktreePath)) {
+            try {
+              console.log(chalk.gray(`  Removing worktree for ${repoId}...`));
+              await removeWorktree(mainRepoPath, worktreePath);
+            } catch (error: any) {
+              console.log(chalk.yellow(`  Warning: ${error.message}`));
+            }
+          }
+        }
       }
     }
 
     // Remove workspace directory
-    console.log(chalk.blue('\n🗑️  Removing workspace directory...'));
+    console.log(chalk.blue('Removing workspace directory...'));
     await fs.rm(workspacePath, { recursive: true, force: true });
 
-    console.log(chalk.green.bold('\n✅ Workspace ended successfully!'));
+    console.log(chalk.green(`\n✅ Workspace ${issueId} removed successfully`));
+  },
+
+  status: async (issueId?: string) => {
+    const workspacesDir = getWorkspacesDir();
+    
+    if (issueId) {
+      // Show status for specific workspace
+      const workspacePath = path.join(workspacesDir, issueId);
+      if (!(await pathExists(workspacePath))) {
+        exitWithError(`Workspace for ${issueId} not found`);
+      }
+
+      const metadata = await loadWorkspaceMetadata(workspacePath);
+      if (!metadata) {
+        exitWithError('Could not load workspace metadata');
+      }
+
+      console.log(chalk.blue.bold(`\n📊 Workspace Status: ${issueId}\n`));
+      console.log(chalk.gray(`Created: ${new Date(metadata.createdAt).toLocaleString()}`));
+      console.log(chalk.gray(`Last Updated: ${new Date(metadata.lastUpdated).toLocaleString()}`));
+      console.log(chalk.gray(`Status: ${metadata.status}`));
+      console.log(chalk.gray(`\nRepositories:`));
+      
+      for (const repoId of metadata.repositories) {
+        const worktreePath = path.join(workspacePath, repoId);
+        const exists = await pathExists(worktreePath);
+        const status = exists ? chalk.green('✓') : chalk.red('✗');
+        console.log(`  ${status} ${repoId}`);
+      }
+    } else {
+      // Show current workspace status (if in workspace)
+      const cwd = process.cwd();
+      
+      // Check if we're in a workspace
+      if (cwd.includes('.context-workspaces')) {
+        const parts = cwd.split(path.sep);
+        const workspaceIndex = parts.indexOf('.context-workspaces');
+        if (workspaceIndex >= 0 && parts.length > workspaceIndex + 1) {
+          const currentIssueId = parts[workspaceIndex + 1];
+          await featureCommands.status(currentIssueId);
+          return;
+        }
+      }
+
+      console.log(chalk.yellow('Not in a feature workspace. Use "context-cli feature list" to see all workspaces.'));
+    }
+  },
+
+  end: async (issueId: string, options: { force?: boolean }) => {
+    // Alias for remove command
+    await featureCommands.remove(issueId, options);
   },
 };

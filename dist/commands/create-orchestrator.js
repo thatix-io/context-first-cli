@@ -90,6 +90,13 @@ async function createOrchestratorCommand() {
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
         // Copy command templates
         await copyCommandTemplates(targetDir);
+        // Create .contextrc.json pointing to itself
+        const contextrc = {
+            orchestratorRepo: `file://${path_1.default.resolve(targetDir)}`,
+            aiProvider: 'claude',
+            commandsDir: '.claude/commands'
+        };
+        await promises_1.default.writeFile(path_1.default.join(targetDir, '.contextrc.json'), JSON.stringify(contextrc, null, 2), 'utf-8');
         // Create .gitignore
         const gitignore = `node_modules/
 .env
@@ -103,6 +110,7 @@ ai.properties.md
         console.log(chalk_1.default.blue('\n📁 Structure created:'));
         console.log(chalk_1.default.gray('  .claude/commands/        - Command definitions for AI'));
         console.log(chalk_1.default.gray('  .sessions/               - Feature session data'));
+        console.log(chalk_1.default.gray('  .contextrc.json          - CLI configuration'));
         console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template (gitignored)'));
         console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest'));
         // Initialize Git if requested
@@ -116,8 +124,9 @@ ai.properties.md
         }
         console.log(chalk_1.default.blue('\n💡 Next steps:'));
         console.log(chalk_1.default.gray(`  1. cd ${answers.projectName}`));
-        console.log(chalk_1.default.gray('  2. Edit ai.properties.md with your project paths'));
-        console.log(chalk_1.default.gray('  3. Edit context-manifest.json to define your repositories'));
+        console.log(chalk_1.default.gray('  2. Run "context-cli config:setup" to configure ai.properties.md'));
+        console.log(chalk_1.default.gray('  3. Run "context-cli add:repo" to add your code repositories'));
+        console.log(chalk_1.default.gray('  4. Run "context-cli feature start <issue-id>" to begin working'));
         if (answers.initGit) {
             console.log(chalk_1.default.gray('  4. Add remote: git remote add origin <your-repo-url>'));
             console.log(chalk_1.default.gray('  5. Push to remote: git push -u origin main'));
@@ -202,9 +211,7 @@ function generateAiProperties(answers) {
 
 ## Paths dos Projetos
 base_path=/path/to/your/workspace
-meta_specs_path=/path/to/your/meta-specs
-backend_path=/path/to/your/backend
-frontend_path=/path/to/your/frontend
+auto_clone=true
 
 ## Configuração ${answers.taskManager === 'jira' ? 'Jira' : answers.taskManager === 'linear' ? 'Linear' : 'Task Manager'}
 task_management_system=${answers.taskManager}

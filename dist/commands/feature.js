@@ -10,6 +10,7 @@ const promises_1 = __importDefault(require("fs/promises"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const config_1 = require("../utils/config");
 const git_1 = require("../utils/git");
+const ai_properties_1 = require("../utils/ai-properties");
 exports.featureCommands = {
     start: async (issueId, options) => {
         console.log(chalk_1.default.blue.bold(`\n🚀 Starting feature workspace for: ${issueId}\n`));
@@ -35,6 +36,21 @@ exports.featureCommands = {
         else {
             console.log(chalk_1.default.gray('✓ Orchestrator repository already cloned'));
         }
+        // Load ai.properties.md
+        console.log(chalk_1.default.blue('\n⚙️  Loading configuration from ai.properties.md...'));
+        const aiProperties = await (0, ai_properties_1.loadAiProperties)(orchestratorPath);
+        if (!aiProperties) {
+            (0, config_1.exitWithError)('Could not load ai.properties.md from orchestrator.\n' +
+                'Run "context-cli config:setup" to create it.');
+        }
+        const basePath = (0, ai_properties_1.getBasePath)(aiProperties);
+        if (!basePath) {
+            (0, config_1.exitWithError)('base_path not configured in ai.properties.md.\n' +
+                'Run "context-cli config:setup" to configure it.');
+        }
+        const autoClone = (0, ai_properties_1.isAutoCloneEnabled)(aiProperties);
+        console.log(chalk_1.default.gray(`✓ base_path: ${basePath}`));
+        console.log(chalk_1.default.gray(`✓ auto_clone: ${autoClone}`));
         // Load manifest
         const manifest = await (0, config_1.loadManifest)(orchestratorPath);
         if (!manifest) {
@@ -77,38 +93,49 @@ exports.featureCommands = {
         }
         await (0, config_1.ensureDir)(workspacePath);
         console.log(chalk_1.default.green(`\n✓ Created workspace directory: ${workspacePath}`));
-        // Ensure main repositories are cloned
-        console.log(chalk_1.default.blue('\n📦 Ensuring main repositories are cloned...'));
-        const mainReposDir = path_1.default.join(configDir, '.context-repos');
-        await (0, config_1.ensureDir)(mainReposDir);
+        // Process each repository
+        console.log(chalk_1.default.blue('\n🌳 Setting up repositories...'));
         const selectedRepos = manifest.repositories.filter(repo => repoIds.includes(repo.id));
+        const branchName = `feature/${issueId}`;
         for (const repo of selectedRepos) {
-            const mainRepoPath = path_1.default.join(mainReposDir, repo.id);
-            if (!(await (0, config_1.pathExists)(mainRepoPath))) {
-                console.log(chalk_1.default.blue(`\n  Cloning ${repo.id}...`));
-                try {
-                    await (0, git_1.ensureRepoCloned)(repo.url, mainRepoPath);
+            console.log(chalk_1.default.blue(`\n  Processing ${repo.id}...`));
+            // Check if repo exists at base_path
+            const mainRepoPath = path_1.default.join(basePath, repo.id);
+            const repoExists = await (0, config_1.pathExists)(mainRepoPath);
+            if (!repoExists) {
+                if (autoClone) {
+                    // Clone the repository
+                    console.log(chalk_1.default.blue(`    Cloning ${repo.id} to ${mainRepoPath}...`));
+                    try {
+                        await (0, git_1.ensureRepoCloned)(repo.url, mainRepoPath);
+                        console.log(chalk_1.default.green(`    ✓ Cloned ${repo.id}`));
+                    }
+                    catch (error) {
+                        console.log(chalk_1.default.yellow(`    ⚠ Failed to clone ${repo.id}: ${error.message}`));
+                        console.log(chalk_1.default.yellow(`    Skipping ${repo.id}...`));
+                        continue;
+                    }
                 }
-                catch (error) {
-                    (0, config_1.exitWithError)(`Failed to clone ${repo.id}: ${error.message}`);
+                else {
+                    // Skip if auto_clone is disabled
+                    console.log(chalk_1.default.yellow(`    ⚠ Repository not found at ${mainRepoPath}`));
+                    console.log(chalk_1.default.yellow(`    Set auto_clone=true in ai.properties.md to enable automatic cloning`));
+                    console.log(chalk_1.default.yellow(`    Skipping ${repo.id}...`));
+                    continue;
                 }
             }
             else {
-                console.log(chalk_1.default.gray(`  ✓ ${repo.id} already cloned`));
+                console.log(chalk_1.default.gray(`    ✓ Repository exists at ${mainRepoPath}`));
             }
-        }
-        // Create worktrees
-        console.log(chalk_1.default.blue('\n🌳 Creating worktrees...'));
-        const branchName = `feature/${issueId}`;
-        for (const repo of selectedRepos) {
-            const mainRepoPath = path_1.default.join(mainReposDir, repo.id);
+            // Create worktree
             const worktreePath = path_1.default.join(workspacePath, repo.id);
-            console.log(chalk_1.default.blue(`\n  Creating worktree for ${repo.id}...`));
+            console.log(chalk_1.default.blue(`    Creating worktree at ${worktreePath}...`));
             try {
                 await (0, git_1.createWorktree)(mainRepoPath, worktreePath, branchName);
+                console.log(chalk_1.default.green(`    ✓ Created worktree for ${repo.id}`));
             }
             catch (error) {
-                console.log(chalk_1.default.yellow(`  Warning: ${error.message}`));
+                console.log(chalk_1.default.yellow(`    ⚠ Failed to create worktree: ${error.message}`));
             }
         }
         // Save workspace metadata
@@ -132,7 +159,7 @@ exports.featureCommands = {
         console.log(chalk_1.default.blue.bold('\n📋 Active Feature Workspaces\n'));
         const workspacesDir = (0, config_1.getWorkspacesDir)();
         if (!(await (0, config_1.pathExists)(workspacesDir))) {
-            console.log(chalk_1.default.yellow('No workspaces found. Create one with "context-cli feature:start <issue-id>"'));
+            console.log(chalk_1.default.yellow('No workspaces found. Create one with "context-cli feature start <issue-id>"'));
             return;
         }
         const entries = await promises_1.default.readdir(workspacesDir, { withFileTypes: true });
@@ -160,25 +187,27 @@ exports.featureCommands = {
                 console.log(`${chalk_1.default.cyan(issueId.padEnd(14))} | ${chalk_1.default.gray('(no metadata)')}`);
             }
         }
-        console.log(chalk_1.default.gray('\n💡 Use "context-cli feature:switch <issue-id>" to switch to a workspace'));
+        console.log(chalk_1.default.gray('\n💡 Use "context-cli feature switch <issue-id>" to switch to a workspace'));
     },
     switch: async (issueId) => {
         const workspacesDir = (0, config_1.getWorkspacesDir)();
         const workspacePath = path_1.default.join(workspacesDir, issueId);
         if (!(await (0, config_1.pathExists)(workspacePath))) {
-            (0, config_1.exitWithError)(`Workspace for ${issueId} not found. Use "context-cli feature:list" to see available workspaces.`);
+            (0, config_1.exitWithError)(`Workspace for ${issueId} not found`);
         }
-        console.log(chalk_1.default.green(`\n✓ Workspace found: ${issueId}`));
-        console.log(chalk_1.default.blue('\n💡 To switch to this workspace, run:'));
-        console.log(chalk_1.default.white(`   cd ${workspacePath}`));
+        console.log(chalk_1.default.green(`\n✓ Workspace found: ${workspacePath}`));
+        console.log(chalk_1.default.blue('\n💡 To switch to this workspace:'));
+        console.log(chalk_1.default.gray(`   cd ${workspacePath}`));
+        console.log(chalk_1.default.gray('   code .'));
     },
-    end: async (issueId, options) => {
-        console.log(chalk_1.default.blue.bold(`\n🧹 Ending feature workspace: ${issueId}\n`));
+    remove: async (issueId, options) => {
+        console.log(chalk_1.default.blue.bold(`\n🗑️  Removing workspace: ${issueId}\n`));
         const workspacesDir = (0, config_1.getWorkspacesDir)();
         const workspacePath = path_1.default.join(workspacesDir, issueId);
         if (!(await (0, config_1.pathExists)(workspacePath))) {
-            (0, config_1.exitWithError)(`Workspace for ${issueId} not found.`);
+            (0, config_1.exitWithError)(`Workspace for ${issueId} not found`);
         }
+        // Load metadata to get repository list
         const metadata = await (0, config_1.loadWorkspaceMetadata)(workspacePath);
         if (!metadata) {
             (0, config_1.exitWithError)('Could not load workspace metadata');
@@ -189,36 +218,88 @@ exports.featureCommands = {
                 {
                     type: 'confirm',
                     name: 'confirm',
-                    message: `Are you sure you want to end workspace ${issueId}? This will remove all worktrees.`,
+                    message: `Are you sure you want to remove workspace ${issueId}?`,
                     default: false,
                 },
             ]);
             if (!confirm) {
-                console.log(chalk_1.default.yellow('✋ Operation cancelled'));
+                console.log(chalk_1.default.yellow('✋ Removal cancelled'));
                 return;
             }
         }
-        // Find configuration to locate main repos
-        const configResult = await (0, config_1.findConfig)();
-        if (!configResult) {
-            (0, config_1.exitWithError)('No .contextrc.json found');
-        }
-        const { configDir } = configResult;
-        const mainReposDir = path_1.default.join(configDir, '.context-repos');
         // Remove worktrees
-        console.log(chalk_1.default.blue('🌳 Removing worktrees...'));
-        for (const repoId of metadata.repositories) {
-            const mainRepoPath = path_1.default.join(mainReposDir, repoId);
-            const worktreePath = path_1.default.join(workspacePath, repoId);
-            if (await (0, config_1.pathExists)(mainRepoPath)) {
-                console.log(chalk_1.default.gray(`  Removing worktree for ${repoId}...`));
-                await (0, git_1.removeWorktree)(mainRepoPath, worktreePath);
+        console.log(chalk_1.default.blue('Removing worktrees...'));
+        // Load ai.properties to get base_path
+        const configResult = await (0, config_1.findConfig)();
+        if (configResult) {
+            const { configDir } = configResult;
+            const orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+            const aiProperties = await (0, ai_properties_1.loadAiProperties)(orchestratorPath);
+            const basePath = (0, ai_properties_1.getBasePath)(aiProperties);
+            if (basePath) {
+                for (const repoId of metadata.repositories) {
+                    const worktreePath = path_1.default.join(workspacePath, repoId);
+                    const mainRepoPath = path_1.default.join(basePath, repoId);
+                    if (await (0, config_1.pathExists)(worktreePath)) {
+                        try {
+                            console.log(chalk_1.default.gray(`  Removing worktree for ${repoId}...`));
+                            await (0, git_1.removeWorktree)(mainRepoPath, worktreePath);
+                        }
+                        catch (error) {
+                            console.log(chalk_1.default.yellow(`  Warning: ${error.message}`));
+                        }
+                    }
+                }
             }
         }
         // Remove workspace directory
-        console.log(chalk_1.default.blue('\n🗑️  Removing workspace directory...'));
+        console.log(chalk_1.default.blue('Removing workspace directory...'));
         await promises_1.default.rm(workspacePath, { recursive: true, force: true });
-        console.log(chalk_1.default.green.bold('\n✅ Workspace ended successfully!'));
+        console.log(chalk_1.default.green(`\n✅ Workspace ${issueId} removed successfully`));
+    },
+    status: async (issueId) => {
+        const workspacesDir = (0, config_1.getWorkspacesDir)();
+        if (issueId) {
+            // Show status for specific workspace
+            const workspacePath = path_1.default.join(workspacesDir, issueId);
+            if (!(await (0, config_1.pathExists)(workspacePath))) {
+                (0, config_1.exitWithError)(`Workspace for ${issueId} not found`);
+            }
+            const metadata = await (0, config_1.loadWorkspaceMetadata)(workspacePath);
+            if (!metadata) {
+                (0, config_1.exitWithError)('Could not load workspace metadata');
+            }
+            console.log(chalk_1.default.blue.bold(`\n📊 Workspace Status: ${issueId}\n`));
+            console.log(chalk_1.default.gray(`Created: ${new Date(metadata.createdAt).toLocaleString()}`));
+            console.log(chalk_1.default.gray(`Last Updated: ${new Date(metadata.lastUpdated).toLocaleString()}`));
+            console.log(chalk_1.default.gray(`Status: ${metadata.status}`));
+            console.log(chalk_1.default.gray(`\nRepositories:`));
+            for (const repoId of metadata.repositories) {
+                const worktreePath = path_1.default.join(workspacePath, repoId);
+                const exists = await (0, config_1.pathExists)(worktreePath);
+                const status = exists ? chalk_1.default.green('✓') : chalk_1.default.red('✗');
+                console.log(`  ${status} ${repoId}`);
+            }
+        }
+        else {
+            // Show current workspace status (if in workspace)
+            const cwd = process.cwd();
+            // Check if we're in a workspace
+            if (cwd.includes('.context-workspaces')) {
+                const parts = cwd.split(path_1.default.sep);
+                const workspaceIndex = parts.indexOf('.context-workspaces');
+                if (workspaceIndex >= 0 && parts.length > workspaceIndex + 1) {
+                    const currentIssueId = parts[workspaceIndex + 1];
+                    await exports.featureCommands.status(currentIssueId);
+                    return;
+                }
+            }
+            console.log(chalk_1.default.yellow('Not in a feature workspace. Use "context-cli feature list" to see all workspaces.'));
+        }
+    },
+    end: async (issueId, options) => {
+        // Alias for remove command
+        await exports.featureCommands.remove(issueId, options);
     },
 };
 //# sourceMappingURL=feature.js.map

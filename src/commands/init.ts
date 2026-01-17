@@ -93,8 +93,9 @@ export async function initCommand() {
     console.log(chalk.gray(`  Commands Directory: ${config.commandsDir}`));
 
     console.log(chalk.blue('\n💡 Next steps:'));
-    console.log(chalk.gray('  1. Run "context-cli link" to create command delegation files'));
-    console.log(chalk.gray('  2. Run "context-cli feature:start <issue-id>" to begin working on a feature'));
+    console.log(chalk.gray('  1. Run "context-cli config:setup" to configure ai.properties.md in orchestrator'));
+    console.log(chalk.gray('  2. Run "context-cli add:repo" to add your code repositories'));
+    console.log(chalk.gray('  3. Run "context-cli feature start <issue-id>" to begin working on a feature'));
 
   } catch (error) {
     console.error(chalk.red('\n❌ Error during initialization:'), error);
