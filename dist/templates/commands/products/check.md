@@ -18,14 +18,22 @@ Execute este comando:
 - Durante `/work` - validar decisões de implementação
 - Antes de `/pr` - validação final
 
+## 📚 Carregar MetaSpecs
+
+**Localizar MetaSpecs automaticamente**:
+1. Leia `context-manifest.json` do orchestrator
+2. Encontre o repositório com `"role": "metaspecs"`
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+
 ## 🔍 Processo de Validação
 
 ### 1. Identificar Metaspecs Disponíveis
 
-Navegue até o diretório do orchestrator e identifique quais metaspecs existem:
+Navegue até o diretório de metaspecs e identifique quais metaspecs existem:
 
 ```bash
-ls -la repositório de MetaSpecs
+ls -la {base_path}/{metaspecs-repo-id}/
 ```
 
 ### 2. Validação de Negócio

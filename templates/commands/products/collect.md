@@ -18,9 +18,17 @@ Você é um especialista em produto responsável por coletar e documentar novas 
 ## Contexto do Projeto
 
 Antes de iniciar, carregue o contexto consultando:
-- `context-manifest.json` do orchestrator - Estrutura do projeto
-- Repositório de MetaSpecs (definido no manifest) - Leia os arquivos `index.md` como referência
-- `README.md` dos repositórios envolvidos
+
+1. **Localizar MetaSpecs automaticamente**:
+   - Leia `context-manifest.json` do orchestrator
+   - Encontre o repositório com `"role": "metaspecs"`
+   - Leia `ai.properties.md` para obter o `base_path`
+   - O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+   - Leia os arquivos `index.md` como referência
+
+2. **Estrutura do projeto**:
+   - `context-manifest.json` - Lista de repositórios e suas funções
+   - `README.md` dos repositórios envolvidos
 
 ## Seu Objetivo
 

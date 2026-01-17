@@ -13,7 +13,7 @@ Este comando é para refinamento de requisitos, não implementação.
 ## 📋 Pré-requisitos
 
 - Issue já coletada via `/collect`
-- Contexto do projeto carregado (execute `/warm-up` se necessário)
+- Contexto do projeto será carregado automaticamente (veja seção "Carregar MetaSpecs" abaixo)
 
 ## 🎯 Objetivo
 
@@ -42,7 +42,20 @@ Refinar a issue coletada, esclarecendo:
 - Leia `./.sessions/<ISSUE-ID>/collect.md`
 - Se o arquivo não existir, informe o erro ao usuário
 
-### 2. Análise de Escopo
+### 2. Carregar MetaSpecs
+
+**Localizar MetaSpecs automaticamente**:
+1. Leia `context-manifest.json` do orchestrator
+2. Encontre o repositório com `"role": "metaspecs"`
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+5. Leia os arquivos `index.md` relevantes para entender:
+   - Arquitetura do sistema
+   - Padrões de design
+   - Restrições técnicas
+   - Convenções do projeto
+
+### 3. Análise de Escopo
 
 Defina claramente:
 
@@ -56,7 +69,7 @@ Defina claramente:
 - Otimizações futuras
 - Features "nice to have"
 
-### 3. Critérios de Aceitação
+### 4. Critérios de Aceitação
 
 Defina critérios mensuráveis e testáveis:
 
@@ -77,7 +90,7 @@ Defina critérios mensuráveis e testáveis:
 - [ ] Documentação atualizada
 ```
 
-### 4. Análise de Impacto
+### 5. Análise de Impacto
 
 Para cada repositório afetado:
 
@@ -97,7 +110,7 @@ Para cada repositório afetado:
 - **Riscos**: [riscos específicos]
 ```
 
-### 5. Dependências e Restrições
+### 6. Dependências e Restrições
 
 Identifique:
 - Dependências entre repositórios
@@ -106,7 +119,7 @@ Identifique:
 - Restrições de negócio
 - Bloqueadores conhecidos
 
-### 6. Estimativa Inicial
+### 7. Estimativa Inicial
 
 Forneça estimativa de esforço:
 - **Pequeno**: < 1 dia
@@ -114,7 +127,7 @@ Forneça estimativa de esforço:
 - **Grande**: 3-5 dias
 - **Muito Grande**: > 5 dias (considere quebrar em issues menores)
 
-### 7. Perguntas Pendentes
+### 8. Perguntas Pendentes
 
 Liste perguntas que ainda precisam ser respondidas antes de iniciar a implementação.
 

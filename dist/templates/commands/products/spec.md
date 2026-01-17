@@ -13,8 +13,20 @@ Este comando é para documentação de requisitos, não implementação.
 ## 📋 Pré-requisitos
 
 - Issue refinada via `/refine`
-- Contexto do projeto carregado
 - Aprovação para prosseguir com a feature
+
+## 📚 Carregar MetaSpecs
+
+**Localizar MetaSpecs automaticamente**:
+1. Leia `context-manifest.json` do orchestrator
+2. Encontre o repositório com `"role": "metaspecs"`
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+5. Leia os arquivos `index.md` relevantes para garantir conformidade com:
+   - Arquitetura do sistema
+   - Padrões de design
+   - Restrições técnicas
+   - Convenções do projeto
 
 ## 🎯 Objetivo
 

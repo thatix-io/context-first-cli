@@ -5,10 +5,21 @@ Este comando executa uma unidade de trabalho no workspace atual, implementando p
 ## 📋 Pré-requisitos
 
 Antes de executar, certifique-se de que:
-- Executou `/warm-up` para carregar o contexto
 - Executou `/start` e `/plan` para ter o planejamento técnico
 - Está no workspace correto (verifique `diretório do workspace`)
 - Tem o arquivo `./.sessions/<ISSUE-ID>/plan.md` disponível
+
+## 📚 Carregar MetaSpecs
+
+**Localizar MetaSpecs automaticamente**:
+1. Leia `context-manifest.json` do orchestrator
+2. Encontre o repositório com `"role": "metaspecs"`
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+5. Leia os arquivos `index.md` relevantes durante a implementação para:
+   - Seguir padrões de código
+   - Respeitar arquitetura definida
+   - Usar convenções corretas
 
 ## 🎯 Objetivo
 

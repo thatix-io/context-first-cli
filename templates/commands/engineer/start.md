@@ -2,12 +2,23 @@
 
 Este comando inicia o desenvolvimento de uma funcionalidade no workspace atual.
 
+## 📚 Carregar MetaSpecs
+
+**Localizar MetaSpecs automaticamente**:
+1. Leia `context-manifest.json` do orchestrator
+2. Encontre o repositório com `"role": "metaspecs"`
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O metaspecs está em: `{base_path}/{metaspecs-repo-id}/`
+5. Leia os arquivos `index.md` relevantes:
+   - Contexto de negócio
+   - Stack, arquitetura e padrões técnicos
+   - Convenções do projeto
+
 ## 🎯 Contexto do Projeto
 
 Antes de iniciar, carregue o contexto consultando:
 - `context-manifest.json` - Estrutura de repositórios
-- `repositório de MetaSpecs (seção de negócio)index.md` - Contexto de negócio
-- `repositório de MetaSpecs (seção técnica)index.md` - Stack, arquitetura e padrões técnicos
+- MetaSpecs (localizado acima) - Arquitetura e padrões
 - `diretório do workspace` - Informações do workspace atual
 
 ## ⚙️ Configuração Inicial
