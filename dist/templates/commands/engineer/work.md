@@ -7,7 +7,21 @@ Este comando executa uma unidade de trabalho no workspace atual, implementando p
 Antes de executar, certifique-se de que:
 - Executou `/start` e `/plan` para ter o planejamento técnico
 - Está no workspace correto (verifique `diretório do workspace`)
-- Tem o arquivo `./.sessions/<ISSUE-ID>/plan.md` disponível
+- Tem os arquivos `.sessions/<ISSUE-ID>/` disponíveis:
+  - `context.md` (imutável)
+  - `architecture.md` (imutável)
+  - `plan.md` (mutável)
+
+## ⚠️ IMPORTANTE: Arquivos Imutáveis
+
+**Este comando deve LER mas NÃO MODIFICAR:**
+- ✅ **LER** `.sessions/<ISSUE-ID>/context.md` (imutável)
+- ✅ **LER** `.sessions/<ISSUE-ID>/architecture.md` (imutável)
+- ✅ **ATUALIZAR** `.sessions/<ISSUE-ID>/plan.md` (marcar progresso)
+- ✅ **IMPLEMENTAR** código nos repositórios do workspace
+- ✅ **FAZER COMMITS** nos repositórios do workspace
+- ❌ **NÃO modificar `context.md` ou `architecture.md`**
+- ❌ **NÃO fazer checkout de branches nos repositórios principais (fora do workspace)**
 
 ## 📚 Carregar MetaSpecs
 

@@ -6,6 +6,15 @@ Este comando cria o plano técnico detalhado para implementação da feature.
 
 - PRD criado via `/spec`
 - Análise inicial feita via `/start`
+- Arquivos `context.md` e `architecture.md` criados e aprovados
+
+## ⚠️ IMPORTANTE: Arquivos Imutáveis
+
+**Este comando deve LER mas NÃO MODIFICAR:**
+- ✅ **LER** `.sessions/<ISSUE-ID>/context.md` (imutável)
+- ✅ **LER** `.sessions/<ISSUE-ID>/architecture.md` (imutável)
+- ✅ **CRIAR** `.sessions/<ISSUE-ID>/plan.md` (mutável - será atualizado durante `/work`)
+- ❌ **NÃO modificar `context.md` ou `architecture.md`**
 
 ## 📚 Carregar MetaSpecs
 

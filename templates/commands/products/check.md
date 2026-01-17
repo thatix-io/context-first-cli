@@ -2,6 +2,16 @@
 
 Este comando valida requisitos, decisões ou implementações contra as metaspecs do projeto.
 
+## ⚠️ IMPORTANTE: Modo de Operação
+
+**Este comando é para VALIDAÇÃO:**
+- ✅ Validar contra metaspecs
+- ✅ **LER** arquivos dos repositórios (read-only)
+- ✅ Gerar relatório de validação
+- ❌ **NÃO fazer checkout de branches nos repositórios principais**
+- ❌ **NÃO modificar código**
+- ❌ **NÃO modificar `context.md` ou `architecture.md`**
+
 ## 🎯 Objetivo
 
 Garantir alinhamento com:

@@ -13,6 +13,7 @@ Este comando inicia o desenvolvimento de uma funcionalidade no workspace atual.
    - Contexto de negócio
    - Stack, arquitetura e padrões técnicos
    - Convenções do projeto
+   - ADRs (Architecture Decision Records)
 
 ## 🎯 Contexto do Projeto
 
@@ -77,33 +78,153 @@ Após análise inicial, formule **3-5 clarificações mais importantes**:
 - Qual a ordem de implementação recomendada?
 - Há impacto em APIs ou contratos entre serviços?
 
-## 📝 Documentação da Sessão
+## 💾 Criação do Context.md
 
-Crie arquivo `./.sessions/<ISSUE-ID>/start.md` com:
+**IMPORTANTE**: Este arquivo é **IMUTÁVEL** após aprovação. Não deve ser modificado por comandos subsequentes.
+
+Crie arquivo `./.sessions/<ISSUE-ID>/context.md` com:
 
 ```markdown
-# [Título da Feature] - Início
+# Context: [Nome da Feature]
 
-## Entendimento
-[Resumo do que será construído e por quê]
+## Por Que
+[Valor de negócio, persona atendida, métrica impactada]
 
-## Repositórios Afetados
-- **repo-1**: [O que será feito]
-- **repo-2**: [O que será feito]
+## O Que
+[Funcionalidades principais, comportamento esperado]
 
-## Perguntas Pendentes
-1. [Pergunta 1]
-2. [Pergunta 2]
+## Como
+[Abordagem técnica, componentes, repositórios afetados]
 
-## Validações Realizadas
-- [x] Alinhado com estratégia
-- [x] Stack aprovada
-- [ ] Pendente: [algo a validar]
+## Validação contra Metaspecs
+- [x] Alinhado com estratégia de produto
+- [x] Atende persona correta
+- [x] Métrica impactada documentada
+- [x] Usa stack aprovada
+- [x] Respeita ADRs
+- [x] Sem conflitos com limitações conhecidas
 
-## Próximos Passos
-1. Aguardar respostas das perguntas
-2. Executar `/plan` para planejamento técnico detalhado
+## Dependências
+[Bibliotecas, APIs, componentes existentes]
+
+## Restrições
+[Limitações técnicas, performance targets, budget]
+
+## Testes
+[E2E críticos, unit tests necessários, cobertura esperada]
 ```
+
+**Após criar `context.md`, peça revisão e aprovação do usuário antes de prosseguir.**
+
+---
+
+## 🏗️ Criação do Architecture.md
+
+**IMPORTANTE**: Este arquivo é **IMUTÁVEL** após aprovação. Não deve ser modificado por comandos subsequentes.
+
+### Princípios Arquiteturais (OBRIGATÓRIO)
+
+**ANTES de criar a arquitetura, você DEVE:**
+
+1. **Ler ADRs (Architecture Decision Records)**:
+   - Liste ADRs em metaspecs
+   - Leia TODOS os ADRs relevantes para a feature
+   - Identifique restrições e padrões obrigatórios
+
+2. **Consultar padrões arquiteturais**:
+   - Leia guias de estrutura do projeto em metaspecs
+   - Leia padrões de código em metaspecs
+   - Identifique padrões existentes no código (use Glob/Grep para encontrar exemplos similares)
+
+3. **Validar compliance com ADRs**:
+   - Para cada ADR relevante, verifique se a solução proposta respeita as decisões
+   - Documente compliance no architecture.md
+   - Se houver violação, justifique ou proponha correção
+
+4. **Analisar código existente**:
+   - Use Glob/Grep para encontrar componentes/módulos similares
+   - Entenda padrões e estruturas existentes
+   - Alinhe nova implementação com padrões do projeto
+
+### Estrutura do Documento de Arquitetura
+
+Crie arquivo `./.sessions/<ISSUE-ID>/architecture.md` com:
+
+```markdown
+# Architecture: [Nome da Feature]
+
+## Visão Geral
+[Visão de alto nível do sistema antes e depois da mudança]
+
+## Componentes Afetados
+[Lista de componentes e suas relações, dependências]
+
+### Diagrama de Componentes
+[Descrição textual ou diagrama Mermaid dos componentes]
+
+### Fluxo de Dados
+1. [Passo 1 do fluxo]
+2. [Passo 2 do fluxo]
+3. [Passo 3 do fluxo]
+
+## Estrutura de Diretórios Proposta
+[Baseada em padrões do projeto]
+
+```
+repo-1/
+├── src/
+│   ├── components/
+│   │   └── NewComponent.tsx (CRIAR)
+│   └── services/
+│       └── NewService.ts (CRIAR)
+```
+
+## Padrões e Melhores Práticas
+[Padrões que serão mantidos ou introduzidos]
+
+## Validação de ADRs
+[Lista de ADRs consultados e compliance]
+
+- [x] ADR-001: [Nome] - Compliant
+- [x] ADR-002: [Nome] - Compliant
+
+## Dependências Externas
+[Bibliotecas que serão usadas ou adicionadas]
+
+## Decisões Técnicas
+
+### Decisão 1: [Título]
+**Contexto**: [Por que precisamos decidir isso]
+**Opções consideradas**:
+- Opção A: [Prós e contras]
+- Opção B: [Prós e contras]
+**Decisão**: [Opção escolhida]
+**Justificativa**: [Por que escolhemos esta opção]
+
+## Restrições e Suposições
+[Limitações técnicas e premissas]
+
+## Trade-offs
+[Alternativas consideradas e por que não foram escolhidas]
+
+## Consequências
+**Positivas**:
+- [Benefício 1]
+- [Benefício 2]
+
+**Negativas**:
+- [Custo/limitação 1]
+- [Custo/limitação 2]
+
+## Arquivos Principais
+[Lista dos principais arquivos a serem editados/criados]
+
+- `repo-1/src/components/NewComponent.tsx` (CRIAR)
+- `repo-1/src/services/NewService.ts` (CRIAR)
+- `repo-2/src/controllers/NewController.ts` (CRIAR)
+```
+
+**Após criar `architecture.md`, peça revisão e aprovação do usuário antes de prosseguir.**
 
 ---
 
@@ -117,10 +238,20 @@ Crie arquivo `./.sessions/<ISSUE-ID>/start.md` com:
 
 ## 🎯 Próximo Passo
 
-Após esclarecimentos e aprovação:
+**Após aprovação do usuário dos arquivos `context.md` e `architecture.md`**:
 
 ```bash
 /plan
 ```
 
 Este comando criará o planejamento técnico detalhado da implementação.
+
+---
+
+## ⚠️ IMPORTANTE: Arquivos Imutáveis
+
+**`context.md` e `architecture.md` são IMUTÁVEIS após aprovação.**
+
+- ✅ Podem ser LIDOS por comandos subsequentes (`/plan`, `/work`)
+- ❌ NÃO devem ser MODIFICADOS por nenhum comando
+- ❌ Se houver necessidade de mudança, discuta com o usuário e crie novos arquivos ou atualize a issue no task manager

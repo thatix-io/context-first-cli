@@ -4,7 +4,14 @@ Este comando refina uma issue coletada, transformando-a em requisitos claros e v
 
 ## ⚠️ IMPORTANTE: Este Comando NÃO Implementa Código
 
-Este comando é para refinamento de requisitos, não implementação.
+**Este comando é APENAS para refinamento de requisitos:**
+- ✅ Refinar e validar requisitos
+- ✅ Atualizar issue no task manager via MCP
+- ✅ **LER** arquivos dos repositórios principais (read-only)
+- ❌ **NÃO implementar código**
+- ❌ **NÃO fazer edits em arquivos de código**
+- ❌ **NÃO fazer checkout de branches nos repositórios principais**
+- ❌ **NÃO fazer commits**
 
 **Próximo passo**: `/spec [ISSUE-ID]` para criar a especificação completa (PRD).
 

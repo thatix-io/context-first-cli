@@ -4,7 +4,14 @@ Este comando cria a especificação completa (Product Requirements Document) da 
 
 ## ⚠️ IMPORTANTE: Este Comando NÃO Implementa Código
 
-Este comando é para documentação de requisitos, não implementação.
+**Este comando é APENAS para documentação de requisitos:**
+- ✅ Criar PRD (Product Requirements Document)
+- ✅ Atualizar issue no task manager via MCP
+- ✅ **LER** arquivos dos repositórios principais (read-only)
+- ❌ **NÃO implementar código**
+- ❌ **NÃO fazer edits em arquivos de código**
+- ❌ **NÃO fazer checkout de branches nos repositórios principais**
+- ❌ **NÃO fazer commits**
 
 **Próximo passo**: `/start` para iniciar o desenvolvimento.
 
