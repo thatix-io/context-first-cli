@@ -6,11 +6,35 @@ Este comando executa uma unidade de trabalho no workspace atual, implementando p
 
 Antes de executar, certifique-se de que:
 - Executou `/start` e `/plan` para ter o planejamento técnico
-- Está no workspace correto (verifique `diretório do workspace`)
+- Está no workspace correto: `<orchestrator>/.sessions/<ISSUE-ID>/`
 - Tem os arquivos `.sessions/<ISSUE-ID>/` disponíveis:
   - `context.md` (imutável)
   - `architecture.md` (imutável)
   - `plan.md` (mutável)
+
+## 📍 IMPORTANTE: Entenda a Estrutura
+
+**Workspace** (onde você trabalha):
+```
+<orchestrator>/.sessions/<ISSUE-ID>/
+├── repo-1/          # worktree com branch feature/<ISSUE-ID>
+├── repo-2/          # worktree com branch feature/<ISSUE-ID>
+├── context.md       # contexto (imutável)
+├── architecture.md  # arquitetura (imutável)
+└── plan.md          # plano (mutável)
+```
+
+**Repositórios principais** (NÃO tocar):
+```
+{base_path}/repo-1/  # repo principal (branch main/master)
+{base_path}/repo-2/  # repo principal (branch main/master)
+```
+
+**REGRA DE OURO**:
+- ✅ Trabalhe APENAS dentro de `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ Faça commits nos worktrees dentro do workspace
+- ❌ NUNCA faça checkout nos repositórios principais
+- ❌ NUNCA navegue para `{base_path}/{repo-id}/`
 
 ## ⚠️ IMPORTANTE: Arquivos Imutáveis
 
@@ -55,6 +79,20 @@ Com base no plano técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
 
 ### 2. Implementação
 
+**IMPORTANTE**: Trabalhe APENAS dentro do workspace em `.sessions/<ISSUE-ID>/`
+
+Para cada repositório no workspace:
+
+```bash
+# Navegue para o worktree dentro do workspace
+cd <orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/
+
+# Verifique que está na branch correta
+git branch  # deve mostrar * feature/<ISSUE-ID>
+
+# Implemente o código aqui
+```
+
 Execute a implementação seguindo:
 - **Padrões do projeto**: Consulte guias de estilo e arquitetura
 - **Stack aprovada**: Use apenas tecnologias documentadas nas metaspecs
@@ -70,11 +108,16 @@ Antes de commitar:
 
 ### 4. Commit
 
-Para cada repositório modificado:
+Para cada repositório modificado **dentro do workspace**:
 
 ```bash
-cd <repositório>
+# Navegue para o worktree dentro do workspace
+cd <orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/
+
+# Adicione as mudanças
 git add .
+
+# Commit
 git commit -m "tipo: descrição concisa
 
 - Detalhe 1

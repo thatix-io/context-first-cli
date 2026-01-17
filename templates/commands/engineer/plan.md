@@ -8,6 +8,31 @@ Este comando cria o plano técnico detalhado para implementação da feature.
 - Análise inicial feita via `/start`
 - Arquivos `context.md` e `architecture.md` criados e aprovados
 
+## 📍 IMPORTANTE: Entenda a Estrutura
+
+**Workspace**:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/
+├── repo-1/          # worktree (será usado no /work)
+├── repo-2/          # worktree (será usado no /work)
+├── context.md       # contexto (imutável - LER)
+├── architecture.md  # arquitetura (imutável - LER)
+└── plan.md          # plano (mutável - CRIAR)
+```
+
+**Repositórios principais** (apenas leitura):
+```
+{base_path}/repo-1/  # repo principal (branch main/master)
+{base_path}/repo-2/  # repo principal (branch main/master)
+```
+
+**REGRA DE OURO**:
+- ✅ Leia `context.md` e `architecture.md` (imutáveis)
+- ✅ Crie `plan.md` em `.sessions/<ISSUE-ID>/`
+- ✅ Leia código dos repositórios principais (read-only)
+- ❌ NUNCA faça checkout nos repositórios principais
+- ❌ NUNCA modifique `context.md` ou `architecture.md`
+
 ## ⚠️ IMPORTANTE: Arquivos Imutáveis
 
 **Este comando deve LER mas NÃO MODIFICAR:**

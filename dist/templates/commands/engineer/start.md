@@ -2,6 +2,30 @@
 
 Este comando inicia o desenvolvimento de uma funcionalidade no workspace atual.
 
+## 📍 IMPORTANTE: Entenda a Estrutura
+
+**Workspace** (onde você trabalhará):
+```
+<orchestrator>/.sessions/<ISSUE-ID>/
+├── repo-1/          # worktree com branch feature/<ISSUE-ID>
+├── repo-2/          # worktree com branch feature/<ISSUE-ID>
+├── context.md       # contexto (imutável - criado por este comando)
+├── architecture.md  # arquitetura (imutável - criado por este comando)
+└── plan.md          # plano (mutável - criado por /plan)
+```
+
+**Repositórios principais** (apenas leitura):
+```
+{base_path}/repo-1/  # repo principal (branch main/master)
+{base_path}/repo-2/  # repo principal (branch main/master)
+```
+
+**REGRA DE OURO**:
+- ✅ Leia metaspecs e código dos repositórios principais (read-only)
+- ✅ Crie `context.md` e `architecture.md` em `.sessions/<ISSUE-ID>/`
+- ❌ NUNCA faça checkout nos repositórios principais
+- ❌ NUNCA modifique código neste comando (use `/work` depois)
+
 ## 📚 Carregar MetaSpecs
 
 **Localizar MetaSpecs automaticamente**:
