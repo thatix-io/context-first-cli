@@ -634,17 +634,17 @@ export const featureCommands = {
           console.log(chalk.green(`    ✓ Pushed ${targetBranch}`));
         }
         
-        // Delete feature branch
-        await deleteBranch(mainRepoPath, branchName, true);
-        console.log(chalk.green(`    ✓ Deleted branch ${branchName}`));
-        
-        // Remove worktree AFTER successful merge
+        // Remove worktree FIRST (before deleting branch)
         const worktreePath = path.join(workspacePath, repoId);
         if (await pathExists(worktreePath)) {
           console.log(chalk.gray(`    Removing worktree at ${worktreePath}...`));
           await removeWorktree(mainRepoPath, worktreePath);
           console.log(chalk.green(`    ✓ Removed worktree`));
         }
+        
+        // Delete feature branch AFTER removing worktree
+        await deleteBranch(mainRepoPath, branchName, true);
+        console.log(chalk.green(`    ✓ Deleted branch ${branchName}`));
         
       } catch (error: any) {
         console.log(chalk.red(`  ✗ Error in ${repoId}: ${error.message}`));
