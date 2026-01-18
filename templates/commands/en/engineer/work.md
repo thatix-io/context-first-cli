@@ -7,10 +7,48 @@ This command executes a unit of work in the current workspace, implementing part
 Before executing, make sure that:
 - You have run `/start` and `/plan` to have the technical plan
 - You are in the correct workspace: `<orchestrator>/.sessions/<ISSUE-ID>/`
-- You have the `.sessions/<ISSUE-ID>/` files available:
+- You have the files `.sessions/<ISSUE-ID>/` available:
   - `context.md` (immutable)
   - `architecture.md` (immutable)
   - `plan.md` (mutable)
+
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 
 ## 📍 IMPORTANT: Understand the Structure
 
@@ -32,7 +70,7 @@ Before executing, make sure that:
 
 **GOLDEN RULE**:
 - ✅ Work ONLY inside `<orchestrator>/.sessions/<ISSUE-ID>/`
-- ✅ Make commits in the worktrees inside the workspace
+- ✅ Commit in the worktrees inside the workspace
 - ❌ NEVER checkout branches in the main repositories
 - ❌ NEVER navigate to `{base_path}/{repo-id}/`
 
@@ -57,7 +95,7 @@ Before executing, make sure that:
 **ABSOLUTE RULE**:
 - 🛑 **EVERY code file** (`.ts`, `.js`, `.py`, `.java`, etc.) **MUST be inside** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
 - 🛑 **NEVER create code** directly in `<orchestrator>/.sessions/` or `<orchestrator>/.sessions/<ISSUE-ID>/`
-- ✅ **Only valid place**: Inside the specific repository worktree
+- ✅ **Only valid place**: Inside the repository’s worktree
 
 ## ⚠️ IMPORTANT: Immutable Files
 
@@ -67,8 +105,8 @@ Before executing, make sure that:
 - ✅ **UPDATE** `.sessions/<ISSUE-ID>/plan.md` (mark progress)
 - ✅ **IMPLEMENT** code **INSIDE THE WORKTREE**: `.sessions/<ISSUE-ID>/<repo-name>/`
 - ✅ **MAKE COMMITS** in the worktrees: `.sessions/<ISSUE-ID>/<repo-name>/`
-- ❌ **DO NOT modify `context.md` or `architecture.md`**
-- ❌ **DO NOT checkout branches in the main repositories (outside the workspace)**
+- ❌ **Do NOT modify `context.md` or `architecture.md`**
+- ❌ **Do NOT checkout branches in the main repositories (outside workspace)**
 - 🛑 **NEVER create code directly in `.sessions/` or `.sessions/<ISSUE-ID>/`**
 
 ## 📚 Load MetaSpecs
@@ -83,7 +121,7 @@ Before executing, make sure that:
    - Respect defined architecture
    - Use correct conventions
 
-## 🎯 Goal
+## 🎯 Objective
 
 Implement a specific unit of work from the plan, which may involve:
 - Creating new files/components
@@ -124,7 +162,7 @@ Based on the technical plan (`./.sessions/<ISSUE-ID>/plan.md`), identify:
 
 
 
-**IMPORTANT**: Work ONLY inside the workspace in `.sessions/<ISSUE-ID>/`
+**IMPORTANT**: Work ONLY inside the workspace `.sessions/<ISSUE-ID>/`
 
 For each repository in the workspace:
 

@@ -1,12 +1,50 @@
 # Technical Planning
 
-This command creates the detailed technical plan for feature implementation.
+This command creates the detailed technical plan for the feature implementation.
 
 ## 📋 Prerequisites
 
 - PRD created via `/spec`
 - Initial analysis done via `/start`
-- Files `context.md` and `architecture.md` created and approved
+- `context.md` and `architecture.md` files created and approved
+
+## 📋 Project Setup
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Mandatory Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 
 ## 📍 IMPORTANT: Understand the Structure
 
@@ -46,17 +84,17 @@ This command creates the detailed technical plan for feature implementation.
 **Automatically locate MetaSpecs**:
 1. Read `context-manifest.json` from the orchestrator
 2. Find the repository with `"role": "metaspecs"`
-3. Read `ai.properties.md` to obtain the `base_path`
-4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
+3. Read `ai.properties.md` to get the `base_path`
+4. The metaspecs are at: `{base_path}/{metaspecs-repo-id}/`
 5. Read the relevant `index.md` files to ensure compliance with:
    - System architecture
-   - Design and code standards
+   - Design and code patterns
    - Folder and file structure
    - Naming conventions
 
-## 🎯 Objective
+## 🎯 Goal
 
-Create a detailed technical plan that will guide the implementation, breaking the work into smaller, sequential units.
+Create a detailed technical plan that will guide the implementation, dividing the work into smaller, sequential units.
 
 ## 📝 Plan Structure
 
@@ -113,13 +151,13 @@ Create a detailed technical plan that will guide the implementation, breaking th
 
 ### 4. Implementation Plan
 
-Break down the work into small, sequential units:
+Divide the work into small, sequential units:
 
 ```markdown
 ## Implementation Plan
 
 ### Phase 1: [Phase Name]
-**Objective**: [What will be achieved in this phase]
+**Goal**: [What will be achieved in this phase]
 **Repositories**: [affected repos]
 
 #### Task 1.1: [Description]
@@ -265,7 +303,7 @@ src/
 
 ## 📄 Saving the Plan
 
-Save in `./.sessions/<ISSUE-ID>/plan.md`
+Save it in `./.sessions/<ISSUE-ID>/plan.md`
 
 ## 🔍 Review
 

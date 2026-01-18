@@ -10,6 +10,44 @@ Antes de criar PRs, certifique-se de que:
 - Todos os testes estão passando
 - A documentação está atualizada
 
+## 📋 Configuração do Projeto
+
+**⚠️ IMPORTANTE: Sempre leia os arquivos de configuração do projeto ANTES de executar este comando!**
+
+### Arquivos Obrigatórios
+
+1. **`context-manifest.json`** (raiz do orchestrator)
+   - Lista de repositórios do projeto
+   - Roles de cada repositório (metaspecs, application, etc.)
+   - URLs e dependências entre repositórios
+
+2. **`ai.properties.md`** (raiz do orchestrator)
+   - Configurações do projeto (`project_name`, `base_path`)
+   - Sistema de gerenciamento de tarefas (`task_management_system`)
+   - Credenciais e configurações específicas
+
+### Como Ler
+
+```bash
+# 1. Ler context-manifest.json
+cat context-manifest.json
+
+# 2. Ler ai.properties.md
+cat ai.properties.md
+```
+
+### Informações Essenciais
+
+Após ler os arquivos, você terá:
+- ✅ Lista completa de repositórios do projeto
+- ✅ Localização do repositório de metaspecs
+- ✅ Base path para localizar repositórios
+- ✅ Sistema de task management configurado
+- ✅ Configurações específicas do projeto
+
+**🛑 NÃO prossiga sem ler estes arquivos!** Eles contêm informações críticas para a execução correta do comando.
+
+
 ## 🛑 CRÍTICO: ONDE TRABALHAR
 
 **⚠️ ATENÇÃO: Se precisar fazer ajustes de última hora, TODO CÓDIGO DEVE SER CRIADO DENTRO DO WORKTREE!**

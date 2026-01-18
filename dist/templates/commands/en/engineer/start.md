@@ -1,6 +1,6 @@
 # Start of Development
 
-This command starts the development of a feature in the current workspace.
+This command initiates the development of a feature in the current workspace.
 
 ## 📍 IMPORTANT: Understand the Structure
 
@@ -14,7 +14,7 @@ This command starts the development of a feature in the current workspace.
 └── plan.md          # plan (mutable - created by /plan)
 ```
 
-**Main repositories** (read-only):
+**Main Repositories** (read-only):
 ```
 {base_path}/repo-1/  # main repo (branch main/master)
 {base_path}/repo-2/  # main repo (branch main/master)
@@ -24,7 +24,44 @@ This command starts the development of a feature in the current workspace.
 - ✅ Read metaspecs and code from main repositories (read-only)
 - ✅ Create `context.md` and `architecture.md` in `.sessions/<ISSUE-ID>/`
 - ❌ NEVER checkout main repositories
-- ❌ NEVER modify code in this command (use `/work` afterwards)
+- ❌ NEVER modify code in this command (use `/work` later)
+
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies among repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for correct command execution.
 
 ## 📚 Load MetaSpecs
 
@@ -33,7 +70,7 @@ This command starts the development of a feature in the current workspace.
 2. Find the repository with `"role": "metaspecs"`
 3. Read `ai.properties.md` to get the `base_path`
 4. The metaspecs are at: `{base_path}/{metaspecs-repo-id}/`
-5. Read the relevant `index.md` files:
+5. Read relevant `index.md` files:
    - Business context
    - Stack, architecture, and technical patterns
    - Project conventions
@@ -52,7 +89,7 @@ Before starting, load the context by consulting:
    - Confirm you are in the correct workspace (check `workspace directory`)
    - List repositories available in the workspace
 
-2. **Verify Branches**:
+2. **Check Branches**:
    - For each repository in the workspace, check the current branch
    - Confirm all branches are synchronized
 
@@ -73,15 +110,15 @@ Analyze the specification and build a complete understanding by answering:
 - **Which** metric do we want to impact?
 
 ### Functional
-- **What is the expected outcome**? (user behavior, system output)
+- **What is the expected outcome?** (user behavior, system output)
 - **Which components** will be created/modified in each repository?
 - **Which integrations** between repositories are necessary?
 
 ### Technical
-- **Approved stack**? Check against technical specifications
-- **Architectural patterns**? Check ADRs (if available)
-- **New dependencies**? Justify and document
-- **How to test**? (according to project standards)
+- **Approved stack?** Check against technical specifications
+- **Architectural patterns?** Check ADRs (if available)
+- **New dependencies?** Justify and document
+- **How to test?** (according to project standards)
 
 ### Validation against MetaSpecs
 
@@ -97,16 +134,16 @@ After initial analysis, formulate **3-5 most important clarifications**:
 
 **Examples of relevant questions**:
 - Which repository should contain the main logic?
-- How should the repositories communicate?
+- How should repositories communicate?
 - Are there dependencies between changes in different repos?
 - What is the recommended implementation order?
-- Is there any impact on APIs or contracts between services?
+- Is there impact on APIs or contracts between services?
 
 ## 💾 Creation of Context.md
 
 **IMPORTANT**: This file is **IMMUTABLE** after approval. It must not be modified by subsequent commands.
 
-Create the file `./.sessions/<ISSUE-ID>/context.md` with:
+Create file `./.sessions/<ISSUE-ID>/context.md` with:
 
 ```markdown
 # Context: [Feature Name]
@@ -135,7 +172,7 @@ Create the file `./.sessions/<ISSUE-ID>/context.md` with:
 [Technical limitations, performance targets, budget]
 
 ## Tests
-[Critical E2E, required unit tests, expected coverage]
+[Critical E2E, necessary unit tests, expected coverage]
 ```
 
 **After creating `context.md`, request user review and approval before proceeding.**
@@ -153,17 +190,17 @@ Create the file `./.sessions/<ISSUE-ID>/context.md` with:
 1. **Read ADRs (Architecture Decision Records)**:
    - List ADRs in metaspecs
    - Read ALL ADRs relevant to the feature
-   - Identify constraints and mandatory patterns
+   - Identify mandatory constraints and patterns
 
 2. **Consult architectural patterns**:
    - Read project structure guides in metaspecs
-   - Read code patterns in metaspecs
+   - Read coding patterns in metaspecs
    - Identify existing patterns in code (use Glob/Grep to find similar examples)
 
 3. **Validate compliance with ADRs**:
-   - For each relevant ADR, verify if the proposed solution respects the decisions
+   - For each relevant ADR, check if the proposed solution respects the decisions
    - Document compliance in architecture.md
-   - If there is violation, justify or propose correction
+   - If violation exists, justify or propose correction
 
 4. **Analyze existing code**:
    - Use Glob/Grep to find similar components/modules
@@ -172,7 +209,7 @@ Create the file `./.sessions/<ISSUE-ID>/context.md` with:
 
 ### Architecture Document Structure
 
-Create the file `./.sessions/<ISSUE-ID>/architecture.md` with:
+Create file `./.sessions/<ISSUE-ID>/architecture.md` with:
 
 ```markdown
 # Architecture: [Feature Name]
@@ -204,7 +241,7 @@ repo-1/
 ```
 
 ## Patterns and Best Practices
-[Patterns that will be maintained or introduced]
+[Patterns to be maintained or introduced]
 
 ## ADR Validation
 [List of consulted ADRs and compliance]
@@ -213,7 +250,7 @@ repo-1/
 - [x] ADR-002: [Name] - Compliant
 
 ## External Dependencies
-[Libraries that will be used or added]
+[Libraries to be used or added]
 
 ## Technical Decisions
 
@@ -226,7 +263,7 @@ repo-1/
 **Justification**: [Why we chose this option]
 
 ## Constraints and Assumptions
-[Technical limitations and assumptions]
+[Technical limitations and premises]
 
 ## Trade-offs
 [Alternatives considered and why they were not chosen]
@@ -262,7 +299,7 @@ repo-1/
 
 ## 🎯 Next Step
 
-**After user approval of the files `context.md` and `architecture.md`**:
+**After user approval of `context.md` and `architecture.md` files**:
 
 ```bash
 /plan

@@ -2,11 +2,49 @@
 
 Este comando valida que todo está listo para crear Pull Requests.
 
-## 📋 Requisitos previos
+## 📋 Requisitos Previos
 
 - Implementación completa (todas las tareas del `/plan` ejecutadas)
 - Todos los commits realizados
 - Workspace limpio y organizado
+
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orquestador)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orquestador)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** ¡Contienen información crítica para la correcta ejecución del comando!
+
 
 ## 🎯 Objetivo
 
@@ -32,8 +70,8 @@ Garantizar que la implementación está completa, probada y lista para revisión
 
 **REGLA ABSOLUTA**:
 - 🛑 **TODO código** (tests, fixes, configuraciones) **DEBE estar en** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
-- 🛑 **NUNCA modifiques** el repositorio principal en `{base_path}/<repo-name>/`
-- ✅ **Trabaja SOLO** dentro del worktree del repositorio específico
+- 🛑 **NUNCA modifique** el repositorio principal en `{base_path}/<repo-name>/`
+- ✅ **Trabaje SOLO** dentro del worktree del repositorio específico
 
 ## ✅ Checklist de Validación
 
@@ -45,7 +83,7 @@ Garantizar que la implementación está completa, probada y lista para revisión
 - [ ] Todas las tareas del plan fueron ejecutadas
 - [ ] Todos los requisitos funcionales del PRD fueron implementados
 - [ ] Todos los criterios de aceptación fueron cumplidos
-- [ ] Ninguna funcionalidad quedó a medias
+- [ ] Ninguna funcionalidad quedó incompleta
 ```
 
 ### 2. Calidad del Código
@@ -162,9 +200,9 @@ Checklist:
 
 - [ ] README actualizado (si es necesario)
 - [ ] Comentarios de código adecuados
-- [ ] Documentación de APIs actualizada (si hay cambios)
+- [ ] Documentación de APIs actualizada (si hubo cambios)
 - [ ] Changelog actualizado
-- [ ] Documentación técnica actualizada en metaspecs (si aplica)
+- [ ] Documentación técnica actualizada en las metaspecs (si aplica)
 ```
 
 ### 5. Commits
@@ -173,9 +211,9 @@ Checklist:
 ## Commits
 
 - [ ] Todos los commits tienen mensajes claros y descriptivos
-- [ ] Commits siguen el estándar del proyecto (conventional commits, etc.)
+- [ ] Los commits siguen el estándar del proyecto (conventional commits, etc.)
 - [ ] No hay commits con mensajes genéricos ("fix", "update", etc.)
-- [ ] Commits están organizados lógicamente
+- [ ] Los commits están organizados lógicamente
 - [ ] No hay commits de debug o temporales
 ```
 
@@ -184,7 +222,7 @@ Checklist:
 ```markdown
 ## Sincronización
 
-- [ ] Branches están actualizadas con la branch base (main/develop)
+- [ ] Las ramas están actualizadas con la rama base (main/develop)
 - [ ] No hay conflictos de merge
 - [ ] Cambios entre repositorios están sincronizados
 - [ ] Dependencias entre repos fueron probadas
@@ -198,7 +236,7 @@ Checklist:
 - [ ] No hay credenciales o secretos en el código
 - [ ] No hay datos sensibles en logs
 - [ ] Dependencias de seguridad fueron verificadas
-- [ ] No hay vulnerabilidades conocidas introducidas
+- [ ] No se introdujeron vulnerabilidades conocidas
 ```
 
 ### 8. Performance
@@ -206,15 +244,15 @@ Checklist:
 ```markdown
 ## Performance
 
-- [ ] No hay regresiones de performance obvias
+- [ ] No hay regresiones de performance evidentes
 - [ ] Queries/operaciones costosas fueron optimizadas
-- [ ] No hay memory leaks introducidos
+- [ ] No se introdujeron memory leaks
 - [ ] Requisitos de performance del PRD fueron cumplidos
 ```
 
 ## 🔍 Validación Cruzada
 
-Si múltiples repositorios fueron modificados:
+Si se modificaron múltiples repositorios:
 
 ```markdown
 ## Validación Cruzada
@@ -222,12 +260,12 @@ Si múltiples repositorios fueron modificados:
 - [ ] Probé la integración entre los repositorios localmente
 - [ ] APIs/contratos entre repos están consistentes
 - [ ] No hay breaking changes no documentados
-- [ ] Orden de deploy/merge está claro
+- [ ] El orden de deploy/merge está claro
 ```
 
 ## 📄 Preparación de la Descripción del PR
 
-Crea `./.sessions/<ISSUE-ID>/pr-description.md`:
+Cree `./.sessions/<ISSUE-ID>/pr-description.md`:
 
 ```markdown
 ## 🎯 Objetivo
@@ -251,7 +289,7 @@ Crea `./.sessions/<ISSUE-ID>/pr-description.md`:
 - [x] Linting y formateo OK
 - [x] Build sin errores
 
-## 🧪 Cómo Testear
+## 🧪 Cómo Probar
 1. [Paso 1]
 2. [Paso 2]
 3. [Resultado esperado]
@@ -264,14 +302,14 @@ Crea `./.sessions/<ISSUE-ID>/pr-description.md`:
 ## 🚨 Problemas Encontrados
 
 Si alguna validación falla:
-1. 🛑 **DETÉN** el proceso de creación de PR
-2. 📝 **DOCUMENTA** el problema
-3. 🔧 **CORRIGE** el problema
-4. 🔄 **EJECUTA** `/pre-pr` nuevamente
+1. 🛑 **PARE** el proceso de creación de PR
+2. 📝 **DOCUMENTE** el problema
+3. 🔧 **CORRIJA** el problema
+4. 🔄 **EJECUTE** `/pre-pr` nuevamente
 
 ## 📊 Reporte de Validación
 
-Crea `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
+Cree `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 
 ```markdown
 # Reporte de Validación Pre-PR

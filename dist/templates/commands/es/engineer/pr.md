@@ -2,7 +2,7 @@
 
 Este comando crea Pull Requests para todos los repositorios modificados en el workspace.
 
-## 📋 Requisitos previos
+## 📋 Requisitos Previos
 
 Antes de crear PRs, asegúrate de que:
 - Ejecutaste `/pre-pr` y todas las validaciones pasaron
@@ -10,9 +10,47 @@ Antes de crear PRs, asegúrate de que:
 - Todas las pruebas están pasando
 - La documentación está actualizada
 
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lee los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúes sin leer estos archivos!** ¡Contienen información crítica para la correcta ejecución del comando!
+
+
 ## 🛑 CRÍTICO: DÓNDE TRABAJAR
 
-**⚠️ ATENCIÓN: Si necesitas hacer ajustes de última hora, ¡TODO EL CÓDIGO DEBE SER CREADO DENTRO DEL WORKTREE!**
+**⚠️ ATENCIÓN: Si necesitas hacer ajustes de última hora, TODO EL CÓDIGO DEBE SER CREADO DENTRO DEL WORKTREE!**
 
 **✅ CORRECTO** - Trabajar dentro del worktree:
 ```
@@ -41,7 +79,7 @@ Para cada repositorio en el workspace, verifica:
 ```bash
 cd <repositorio>
 git status
-git log origin/main..HEAD  # Ver commits no pushados
+git log origin/main..HEAD  # Ver commits no pusheados
 ```
 
 ### 2. Push de las Branches
@@ -54,7 +92,7 @@ git push origin <branch-name>
 
 ### 3. Crear Pull Requests
 
-Para cada repositorio, crea un PR usando el GitHub CLI o la interfaz web:
+Para cada repositorio, crea un PR usando GitHub CLI o interfaz web:
 
 **Usando GitHub CLI**:
 ```bash
@@ -93,7 +131,7 @@ gh pr create --title "[ISSUE-ID] Título de la Feature" \
 - [ ] Pruebas de integración pasando
 - [ ] Documentación actualizada
 - [ ] Sin breaking changes (o documentados)
-- [ ] Revisado por pares (tras creación del PR)
+- [ ] Revisado por pares (después de crear el PR)
 
 ## 🧪 Cómo Probar
 
@@ -101,9 +139,9 @@ gh pr create --title "[ISSUE-ID] Título de la Feature" \
 2. [Paso 2]
 3. [Resultado esperado]
 
-## 📸 Capturas/Demos
+## 📸 Screenshots/Demos
 
-[Si aplica, añade capturas o enlaces a demos]
+[Si aplica, añade capturas de pantalla o enlaces a demos]
 
 ## 🔍 Notas para Revisores
 
@@ -135,12 +173,12 @@ Actualiza `./.sessions/<ISSUE-ID>/pr.md`:
 ## PRs Creados
 
 ### <repo-1>
-- **Enlace**: <URL del PR>
+- **Link**: <URL del PR>
 - **Estado**: Abierto
 - **Commits**: X commits
 
 ### <repo-2>
-- **Enlace**: <URL del PR>
+- **Link**: <URL del PR>
 - **Estado**: Abierto
 - **Commits**: Y commits
 

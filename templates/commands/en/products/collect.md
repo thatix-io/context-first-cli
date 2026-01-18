@@ -18,20 +18,57 @@ You are a product specialist responsible for collecting and documenting new idea
 
 ---
 
+## 📋 Project Setup
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Mandatory Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 ## Project Context
 
 Before starting, load the context by consulting:
 
-1. **Automatically Locate MetaSpecs**:
+1. **Automatically locate MetaSpecs**:
    - Read `context-manifest.json` from the orchestrator
    - Find the repository with `"role": "metaspecs"`
    - Read `ai.properties.md` to get the `base_path`
-   - The metaspecs are at: `{base_path}/{metaspecs-repo-id}/`
+   - The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
    - Read the `index.md` files as reference
 
-2. **Project Structure**:
+2. **Project structure**:
    - `context-manifest.json` - List of repositories and their roles
-   - `README.md` of the involved repositories
+   - `README.md` of involved repositories
 
 ## Your Goal
 
@@ -87,14 +124,14 @@ Just ensure the idea is **adequately understood**.
    - Suggested priority
 
 3. **Complexity Assessment and Suggestion to Split**
-   
+
    Before finalizing, assess the issue complexity:
-   
+
    **If the implementation seems large** (> 5 days estimated effort):
    - 🚨 **Suggest splitting into multiple smaller issues**
-   - Explain the rationale for splitting (e.g., "This feature involves 3 distinct areas: authentication, processing, and notification")
+   - Explain the rationale for the split (e.g., "This feature involves 3 distinct areas: authentication, processing, and notification")
    - Propose a **logical** split (by functionality, repository, layer, etc.)
-   - Example of splitting:
+   - Example split:
      ```
      Original Issue: "Complete payment system"
      
@@ -104,7 +141,7 @@ Just ensure the idea is **adequately understood**.
      - FIN-103: Confirmation webhook and notifications (backend + jobs)
      ```
    - **Important**: The final decision is the user's - they can accept the split or keep it as a single issue
-   
+
    **If the user accepts the split**:
    - Create each issue separately using the same process
    - Add cross-references between related issues
@@ -112,10 +149,10 @@ Just ensure the idea is **adequately understood**.
 
 4. **User Approval**
    - Present the draft (or drafts, if split)
-   - Make adjustments based on feedback
+   - Make adjustments according to feedback
    - Obtain final approval
 
-5. **Saving the Issue**
+5. **Issue Saving**
 
    **PRIORITY 1: Use MCP (Model Context Protocol)**
    
@@ -134,8 +171,8 @@ Just ensure the idea is **adequately understood**.
    
    **FALLBACK: Create .md file only if MCP fails**
    
-   If MCP is unavailable or fails:
-   - Create a file at `./.sessions/<ISSUE-ID>/collect.md`
+   If MCP is not available or fails:
+   - Create a file in `./.sessions/<ISSUE-ID>/collect.md`
    - Use manual ID format: `LOCAL-001`, `LOCAL-002`, etc.
    - Include date, type, and full content
    - Inform the user: "⚠️ Issue saved locally in .sessions/ (task manager not available)"
@@ -157,7 +194,7 @@ Just ensure the idea is **adequately understood**.
 
 **For Improvements**:
 - What is working but can be improved?
-- What metric do we want to impact?
+- Which metric do we want to impact?
 - Is it a technical or business optimization?
 
 ---

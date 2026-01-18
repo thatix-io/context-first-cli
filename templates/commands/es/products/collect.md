@@ -18,26 +18,63 @@ Eres un especialista en producto responsable de recopilar y documentar nuevas id
 
 ---
 
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lee los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 ¡NO continúes sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
 ## Contexto del Proyecto
 
-Antes de comenzar, carga el contexto consultando:
+Antes de iniciar, carga el contexto consultando:
 
 1. **Localizar MetaSpecs automáticamente**:
-   - Lee `context-manifest.json` del orquestador
+   - Lee `context-manifest.json` del orchestrator
    - Encuentra el repositorio con `"role": "metaspecs"`
    - Lee `ai.properties.md` para obtener el `base_path`
    - El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
    - Lee los archivos `index.md` como referencia
 
 2. **Estructura del proyecto**:
-   - `context-manifest.json` - Lista de repositorios y sus funciones
+   - `context-manifest.json` - Lista de repositorios y sus roles
    - `README.md` de los repositorios involucrados
 
 ## Tu Objetivo
 
 Entender la solicitud del usuario y capturarla como issue en el gestor de tareas (vía MCP).
 
-**En esta fase, NO necesitas:**
+**En esta fase NO necesitas:**
 - ❌ Escribir especificación completa
 - ❌ Validar contra metaspecs (esto se hace en `/refine` o `/spec`)
 - ❌ Detallar implementación técnica
@@ -50,20 +87,20 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
 # [Título Claro y Descriptivo]
 
 ## Descripción
-[2-3 párrafos explicando qué es la funcionalidad/bug y por qué es importante]
+[2-3 párrafos explicando qué es la feature/bug y por qué es importante]
 
 ## Tipo
-- [ ] Nueva Funcionalidad
-- [ ] Mejora de Funcionalidad Existente
+- [ ] Nueva Feature
+- [ ] Mejora de Feature Existente
 - [ ] Bug
 - [ ] Deuda Técnica
 - [ ] Documentación
 
 ## Contexto Adicional
-[Información relevante: dónde ocurre el bug, inspiración para la funcionalidad, etc.]
+[Información relevante: dónde ocurre el bug, inspiración para la feature, etc.]
 
 ## Repositorios Afectados
-[Lista de los repositorios del proyecto que serán impactados]
+[Lista de repositorios del proyecto que serán impactados]
 
 ## Prioridad Sugerida
 - [ ] 🔴 Crítica
@@ -76,7 +113,7 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
 
 1. **Entendimiento Inicial**
    - Haz preguntas de aclaración si es necesario
-   - Identifica: ¿Es funcionalidad nueva? ¿Mejora? ¿Bug?
+   - Identifica: ¿Es feature nueva? ¿Mejora? ¿Bug?
    - Identifica qué repositorios serán afectados
 
 2. **Borrador de la Issue**
@@ -92,11 +129,11 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
    
    **Si la implementación parece grande** (> 5 días de esfuerzo estimado):
    - 🚨 **Sugiere dividir en múltiples issues más pequeñas**
-   - Explica la razón de la división (ej: "Esta funcionalidad involucra 3 áreas distintas: autenticación, procesamiento y notificación")
+   - Explica la razón de la división (ej: "Esta feature involucra 3 áreas distintas: autenticación, procesamiento y notificación")
    - Propón una división **lógica** (por funcionalidad, por repositorio, por capa, etc.)
    - Ejemplo de división:
      ```
-     Issue Original: "Sistema completo de pagos"
+     Issue Original: "Sistema de pagos completo"
      
      División Sugerida:
      - FIN-101: Integración con gateway de pago (backend)
@@ -120,7 +157,7 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
    **PRIORIDAD 1: Usar MCP (Model Context Protocol)**
    
    Verifica si hay MCP configurado para el gestor de tareas:
-   - Lee `ai.properties.md` del orquestador para identificar el `task_management_system`
+   - Lee `ai.properties.md` del orchestrator para identificar el `task_management_system`
    - Si `task_management_system=jira`: Usa MCP de Jira para crear la issue
    - Si `task_management_system=linear`: Usa MCP de Linear para crear la issue
    - Si `task_management_system=github`: Usa MCP de GitHub para crear la issue
@@ -138,16 +175,16 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
    - Crea archivo en `./.sessions/<ISSUE-ID>/collect.md`
    - Usa formato de ID manual: `LOCAL-001`, `LOCAL-002`, etc.
    - Incluye fecha, tipo y contenido completo
-   - Informa al usuario: "⚠️ Issue guardada localmente en .sessions/ (gestor de tareas no disponible)"
+   - Informa al usuario: "⚠️ Issue guardada localmente en .sessions/ (task manager no disponible)"
 
 ## Preguntas de Aclaración
 
-**Para Funcionalidades**:
+**Para Features**:
 - ¿Qué problema resuelve?
 - ¿Quién se beneficia?
 - ¿Es funcionalidad visible o infraestructura?
-- ¿Tiene relación con alguna funcionalidad existente?
-- ¿Qué repositorios necesitan ser modificados?
+- ¿Tiene relación con alguna feature existente?
+- ¿Qué repositorios necesitan modificarse?
 
 **Para Bugs**:
 - ¿Dónde ocurre el bug? (repositorio, componente, flujo)
@@ -172,7 +209,7 @@ Solo asegúrate de que la idea esté **adecuadamente comprendida**.
 
 ## 🎯 Próximo Paso
 
-Tras la aprobación y guardado de la issue:
+Después de la aprobación y guardado de la issue:
 
 ```bash
 /refine [ISSUE-ID]

@@ -26,6 +26,43 @@ Este comando inicia el desarrollo de una funcionalidad en el workspace actual.
 - ❌ NUNCA haga checkout en los repositorios principales
 - ❌ NUNCA modifique código en este comando (use `/work` después)
 
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrá:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
 ## 📚 Cargar MetaSpecs
 
 **Localizar MetaSpecs automáticamente**:
@@ -43,7 +80,7 @@ Este comando inicia el desarrollo de una funcionalidad en el workspace actual.
 
 Antes de iniciar, cargue el contexto consultando:
 - `context-manifest.json` - Estructura de repositorios
-- MetaSpecs (localizado arriba) - Arquitectura y patrones
+- MetaSpecs (ubicado arriba) - Arquitectura y patrones
 - `directorio del workspace` - Información del workspace actual
 
 ## ⚙️ Configuración Inicial
@@ -57,10 +94,10 @@ Antes de iniciar, cargue el contexto consultando:
    - Confirme que todas las branches están sincronizadas
 
 3. **Cargar Especificación**:
-   - **Si task manager configurado**: Lea la issue usando el MCP apropiado
+   - **Si el task manager está configurado**: Lea la issue usando el MCP apropiado
    - **Si no**: Pida al usuario el archivo de especificación o descripción de la feature
 
-4. **Actualizar Estado** (si task manager configurado):
+4. **Actualizar Estado** (si el task manager está configurado):
    - Mueva la issue a "En Progreso"
 
 ## 📋 Análisis y Entendimiento
@@ -86,7 +123,7 @@ Analice la especificación y construya un entendimiento completo respondiendo:
 ### Validación contra MetaSpecs
 
 Si metaspecs están disponibles, validar:
-- ¿Está alineado con la estrategia y roadmap?
+- ¿Está alineado con estrategia y roadmap?
 - ¿Usa stack tecnológica aprobada?
 - ¿Respeta Architecture Decision Records?
 - ¿Sigue reglas de negocio documentadas?
@@ -134,11 +171,11 @@ Cree el archivo `./.sessions/<ISSUE-ID>/context.md` con:
 ## Restricciones
 [Limitaciones técnicas, objetivos de performance, presupuesto]
 
-## Tests
-[E2E críticos, unit tests necesarios, cobertura esperada]
+## Pruebas
+[E2E críticos, pruebas unitarias necesarias, cobertura esperada]
 ```
 
-**Después de crear `context.md`, pida revisión y aprobación al usuario antes de continuar.**
+**Después de crear `context.md`, solicite revisión y aprobación del usuario antes de continuar.**
 
 ---
 
@@ -160,9 +197,9 @@ Cree el archivo `./.sessions/<ISSUE-ID>/context.md` con:
    - Lea patrones de código en metaspecs
    - Identifique patrones existentes en el código (use Glob/Grep para encontrar ejemplos similares)
 
-3. **Validar compliance con ADRs**:
+3. **Validar cumplimiento con ADRs**:
    - Para cada ADR relevante, verifique si la solución propuesta respeta las decisiones
-   - Documente compliance en architecture.md
+   - Documente el cumplimiento en architecture.md
    - Si hay violación, justifique o proponga corrección
 
 4. **Analizar código existente**:
@@ -204,16 +241,16 @@ repo-1/
 ```
 
 ## Patrones y Mejores Prácticas
-[Patrones que se mantendrán o introducirán]
+[Patrones que serán mantenidos o introducidos]
 
 ## Validación de ADRs
-[Lista de ADRs consultados y compliance]
+[Lista de ADRs consultados y cumplimiento]
 
-- [x] ADR-001: [Nombre] - Compliant
-- [x] ADR-002: [Nombre] - Compliant
+- [x] ADR-001: [Nombre] - Cumple
+- [x] ADR-002: [Nombre] - Cumple
 
 ## Dependencias Externas
-[Bibliotecas que se usarán o añadirán]
+[Bibliotecas que serán usadas o añadidas]
 
 ## Decisiones Técnicas
 
@@ -248,7 +285,7 @@ repo-1/
 - `repo-2/src/controllers/NewController.ts` (CREAR)
 ```
 
-**Después de crear `architecture.md`, pida revisión y aprobación al usuario antes de continuar.**
+**Después de crear `architecture.md`, solicite revisión y aprobación del usuario antes de continuar.**
 
 ---
 

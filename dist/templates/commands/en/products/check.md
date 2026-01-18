@@ -12,6 +12,43 @@ This command validates requirements, decisions, or implementations against the p
 - ❌ **DO NOT modify code**
 - ❌ **DO NOT modify `context.md` or `architecture.md`**
 
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (root of the orchestrator)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (root of the orchestrator)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Specific project configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 ## 🎯 Objective
 
 Ensure alignment with:
@@ -34,7 +71,7 @@ Run this command:
 1. Read `context-manifest.json` from the orchestrator
 2. Find the repository with `"role": "metaspecs"`
 3. Read `ai.properties.md` to get the `base_path`
-4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/
+4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
 
 ## 🔍 Validation Process
 
@@ -48,7 +85,7 @@ ls -la {base_path}/{metaspecs-repo-id}/
 
 ### 2. Business Validation
 
-If there are business metaspecs (`MetaSpecs repository (business section)`):
+If business metaspecs exist (`MetaSpecs repository (business section)`):
 
 ```markdown
 ## Business Validation
@@ -56,25 +93,25 @@ If there are business metaspecs (`MetaSpecs repository (business section)`):
 ### Product Strategy
 - **File**: `MetaSpecs repository (business section)PRODUCT_STRATEGY.md`
 - **Validation**: [Is this feature aligned with the strategy?]
-- **Status**: ✅ Aligned / ⚠️ Partially / ❌ Not aligned
+- **Status**: ✅ Aligned / ⚠️ Partial / ❌ Misaligned
 - **Notes**: [Observations]
 
 ### Personas
 - **File**: `MetaSpecs repository (business section)CUSTOMER_PERSONAS.md`
 - **Validation**: [Does it meet the correct persona?]
-- **Status**: ✅ Aligned / ⚠️ Partially / ❌ Not aligned
+- **Status**: ✅ Aligned / ⚠️ Partial / ❌ Misaligned
 - **Notes**: [Observations]
 
 ### Metrics
 - **File**: `MetaSpecs repository (business section)PRODUCT_METRICS.md`
 - **Validation**: [Is the success metric documented?]
-- **Status**: ✅ Aligned / ⚠️ Partially / ❌ Not aligned
+- **Status**: ✅ Aligned / ⚠️ Partial / ❌ Misaligned
 - **Notes**: [Observations]
 ```
 
 ### 3. Technical Validation
 
-If there are technical metaspecs (`MetaSpecs repository (technical section)`):
+If technical metaspecs exist (`MetaSpecs repository (technical section)`):
 
 ```markdown
 ## Technical Validation
@@ -128,14 +165,14 @@ If there are technical metaspecs (`MetaSpecs repository (technical section)`):
 
 ### 5. Conflict Identification
 
-If there are conflicts or misalignments:
+If conflicts or misalignments exist:
 
 ```markdown
 ## Identified Conflicts
 
 ### Conflict 1: [Description]
 - **Severity**: Critical / High / Medium / Low
-- **Metaspec**: [File being violated]
+- **Metaspec**: [Violated file]
 - **Description**: [Conflict details]
 - **Recommendation**: [How to resolve]
 
@@ -151,7 +188,7 @@ If there are justified deviations:
 ## Justified Exceptions
 
 ### Exception 1: [Description]
-- **Metaspec**: [File being deviated]
+- **Metaspec**: [Deviated file]
 - **Deviation**: [What is different]
 - **Justification**: [Why it is necessary]
 - **Approval**: [Who approved]
@@ -166,7 +203,7 @@ If there are justified deviations:
 - Use the appropriate MCP to add the report to the issue:
   - Add as a comment on the issue
   - Update labels/tags according to the result (e.g., "validated", "needs-adjustment", "blocked")
-  - If there are critical conflicts, update the issue status
+  - If critical conflicts exist, update the issue status
 - Inform the user: "✅ Validation report added to issue [ID]"
 
 **FALLBACK: Create .md file only if MCP fails**
@@ -212,7 +249,7 @@ If critical conflicts are found:
 2. 📝 **DOCUMENT** all conflicts
 3. 💬 **ALERT** the user and stakeholders
 4. **Via MCP**: Update issue status to "Blocked" or "Requires Adjustments"
-5. 🔄 **ADJUST** the plan/implementation as needed
+5. 🔄 **ADJUST** plan/implementation as needed
 6. ✅ **REVALIDATE** after adjustments
 
 ---

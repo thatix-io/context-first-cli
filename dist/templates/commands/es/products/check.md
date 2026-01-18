@@ -1,4 +1,4 @@
-# Validación contra Metaspecs
+# Validación contra MetaSpecs
 
 Este comando valida requisitos, decisiones o implementaciones contra las metaspecs del proyecto.
 
@@ -11,6 +11,44 @@ Este comando valida requisitos, decisiones o implementaciones contra las metaspe
 - ❌ **NO hacer checkout de branches en los repositorios principales**
 - ❌ **NO modificar código**
 - ❌ **NO modificar `context.md` o `architecture.md`**
+
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrá:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
 
 ## 🎯 Objetivo
 
@@ -38,7 +76,7 @@ Ejecute este comando:
 
 ## 🔍 Proceso de Validación
 
-### 1. Identificar Metaspecs Disponibles
+### 1. Identificar MetaSpecs Disponibles
 
 Navegue hasta el directorio de metaspecs e identifique qué metaspecs existen:
 
@@ -55,7 +93,7 @@ Si existen metaspecs de negocio (`repositorio de MetaSpecs (sección de negocio)
 
 ### Estrategia de Producto
 - **Archivo**: `repositorio de MetaSpecs (sección de negocio)PRODUCT_STRATEGY.md`
-- **Validación**: [¿Esta funcionalidad está alineada con la estrategia?]
+- **Validación**: [¿Esta feature está alineada con la estrategia?]
 - **Estado**: ✅ Alineado / ⚠️ Parcialmente / ❌ Desalineado
 - **Notas**: [Observaciones]
 
@@ -87,7 +125,7 @@ Si existen metaspecs técnicas (`repositorio de MetaSpecs (sección técnica)`):
 
 ### Arquitectura
 - **Archivo**: `repositorio de MetaSpecs (sección técnica)ARCHITECTURE.md`
-- **Validación**: [¿Sigue estándares arquitectónicos?]
+- **Validación**: [¿Sigue patrones arquitectónicos?]
 - **Estado**: ✅ Conforme / ⚠️ Parcialmente / ❌ No conforme
 - **Notas**: [Observaciones]
 
@@ -140,7 +178,7 @@ Si hay conflictos o desalineamientos:
 - **Recomendación**: [Cómo resolver]
 
 ### Conflicto 2: [Descripción]
-[Mismo formato anterior]
+[Mismo formato arriba]
 ```
 
 ### 6. Excepciones Justificadas
@@ -203,17 +241,17 @@ Si el MCP no está disponible o falla, cree `./.sessions/<ISSUE-ID>/check-report
 - [ ] Bloqueado
 ```
 
-Informe al usuario: "⚠️ Informe guardado localmente en .sessions/ (task manager no disponible)"
+Informe al usuario: "⚠️ Informe guardado localmente en .sessions/ (gestor de tareas no disponible)"
 
 ## 🚨 Acción en Caso de Conflictos
 
 Si se encuentran conflictos críticos:
-1. 🛑 **PARE** el proceso actual
+1. 🛑 **DETENGA** el proceso actual
 2. 📝 **DOCUMENTE** todos los conflictos
 3. 💬 **ALERTE** al usuario y stakeholders
-4. **Via MCP**: Actualice estado de la issue a "Bloqueado" o "Requiere Ajustes"
+4. **Vía MCP**: Actualice el estado de la issue a "Bloqueado" o "Requiere Ajustes"
 5. 🔄 **AJUSTE** el plan/implementación según sea necesario
-6. ✅ **REVALIDE** después de los ajustes
+6. ✅ **REVALIDE** tras los ajustes
 
 ---
 
@@ -228,6 +266,6 @@ Si se encuentran conflictos críticos:
 ## 🎯 Resultado
 
 Después de la validación:
-- Si ✅: Proceda a la siguiente fase
+- Si ✅: Continúe a la siguiente fase
 - Si ⚠️: Documente reservas y continúe con aprobación
 - Si ❌: Corrija conflictos antes de continuar

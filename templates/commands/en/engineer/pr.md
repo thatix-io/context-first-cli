@@ -10,6 +10,44 @@ Before creating PRs, make sure that:
 - All tests are passing
 - Documentation is up to date
 
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (root of the orchestrator)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (root of the orchestrator)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Specific project configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
+
 ## 🛑 CRITICAL: WHERE TO WORK
 
 **⚠️ ATTENTION: If you need to make last-minute adjustments, ALL CODE MUST BE CREATED INSIDE THE WORKTREE!**
@@ -30,8 +68,8 @@ Before creating PRs, make sure that:
 
 **ABSOLUTE RULE**:
 - 🛑 **Any code adjustment** (docs, changelog, fixes) **MUST be in** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
-- 🛑 **NEVER modify** the main repository in `{base_path}/<repo-name>/`
-- ✅ **Work ONLY** inside the specific repository’s worktree
+- 🛑 **NEVER modify** the main repository at `{base_path}/<repo-name>/`
+- ✅ **Work ONLY** inside the worktree of the specific repository
 
 ## 🎯 PR Creation Process
 
@@ -107,20 +145,20 @@ gh pr create --title "[ISSUE-ID] Feature Title" \
 
 ## 🔍 Notes for Reviewers
 
-- [Attention point 1]
-- [Attention point 2]
+- [Point of attention 1]
+- [Point of attention 2]
 ```
 
 ### 4. Link PRs
 
 If there are multiple PRs (one per repository):
 - Add cross-links between PRs
-- Document recommended merge order
+- Document the recommended merge order
 - Indicate dependencies between PRs
 
 ### 5. Update Issue in Task Manager
 
-If a task manager is configured:
+If task manager is configured:
 - Move the issue to "In Review" or "PR Open"
 - Add PR links to the issue
 - Add a comment summarizing the changes
@@ -149,7 +187,7 @@ Update `./.sessions/<ISSUE-ID>/pr.md`:
 1. <repo-1> - [Justification]
 2. <repo-2> - [Justification]
 
-## Notes for Merge
+## Merge Notes
 
 - [Important note 1]
 - [Important note 2]
@@ -163,7 +201,7 @@ Before requesting review:
 - [ ] PRs linked to each other
 - [ ] Issue updated in task manager
 - [ ] Tests passing in CI/CD
-- [ ] Session documentation complete
+- [ ] Complete session documentation
 
 ## 📢 Communication
 

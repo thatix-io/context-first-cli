@@ -1,20 +1,58 @@
 # Planificación Técnica
 
-Este comando crea el plan técnico detallado para la implementación de la feature.
+Este comando crea el plan técnico detallado para la implementación de la funcionalidad.
 
-## 📋 Prerrequisitos
+## 📋 Requisitos Previos
 
 - PRD creado vía `/spec`
-- Análisis inicial hecho vía `/start`
+- Análisis inicial realizado vía `/start`
 - Archivos `context.md` y `architecture.md` creados y aprobados
+
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orquestador)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orquestador)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
 
 ## 📍 IMPORTANTE: Entienda la Estructura
 
 **Workspace**:
 ```
 <orchestrator>/.sessions/<ISSUE-ID>/
-├── repo-1/          # worktree (será usado no /work)
-├── repo-2/          # worktree (será usado no /work)
+├── repo-1/          # worktree (se usará en /work)
+├── repo-2/          # worktree (se usará en /work)
 ├── context.md       # contexto (inmutable - LEER)
 ├── architecture.md  # arquitectura (inmutable - LEER)
 └── plan.md          # plan (mutable - CREAR)
@@ -29,7 +67,7 @@ Este comando crea el plan técnico detallado para la implementación de la featu
 **REGLA DE ORO**:
 - ✅ Lea `context.md` y `architecture.md` (inmutables)
 - ✅ Cree `plan.md` en `.sessions/<ISSUE-ID>/`
-- ✅ Lea código de los repositorios principales (read-only)
+- ✅ Lea código de los repositorios principales (solo lectura)
 - ❌ NUNCA haga checkout en los repositorios principales
 - ❌ NUNCA modifique `context.md` o `architecture.md`
 
@@ -38,17 +76,17 @@ Este comando crea el plan técnico detallado para la implementación de la featu
 **Este comando debe LEER pero NO MODIFICAR:**
 - ✅ **LEER** `.sessions/<ISSUE-ID>/context.md` (inmutable)
 - ✅ **LEER** `.sessions/<ISSUE-ID>/architecture.md` (inmutable)
-- ✅ **CREAR** `.sessions/<ISSUE-ID>/plan.md` (mutable - será actualizado durante `/work`)
+- ✅ **CREAR** `.sessions/<ISSUE-ID>/plan.md` (mutable - se actualizará durante `/work`)
 - ❌ **NO modificar `context.md` o `architecture.md`**
 
 ## 📚 Cargar MetaSpecs
 
 **Localizar MetaSpecs automáticamente**:
-1. Lea `context-manifest.json` del orchestrator
+1. Lea `context-manifest.json` del orquestador
 2. Encuentre el repositorio con `"role": "metaspecs"`
 3. Lea `ai.properties.md` para obtener el `base_path`
 4. El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
-5. Lea los archivos `index.md` relevantes para garantizar conformidad con:
+5. Lea los archivos `index.md` relevantes para asegurar conformidad con:
    - Arquitectura del sistema
    - Patrones de diseño y código
    - Estructura de carpetas y archivos
@@ -63,14 +101,14 @@ Crear un plan técnico detallado que guiará la implementación, dividiendo el t
 ### 1. Visión General Técnica
 
 ```markdown
-# Plan Técnico - [Título de la Feature]
+# Plan Técnico - [Título de la Funcionalidad]
 
 ## Resumen
 [Breve descripción técnica de lo que se implementará]
 
 ## Repositorios Involucrados
-- **<repo-1>**: [Papel en esta feature]
-- **<repo-2>**: [Papel en esta feature]
+- **<repo-1>**: [Rol en esta funcionalidad]
+- **<repo-2>**: [Rol en esta funcionalidad]
 
 ## Enfoque Técnico
 [Estrategia general de implementación]
@@ -82,7 +120,7 @@ Crear un plan técnico detallado que guiará la implementación, dividiendo el t
 ## Arquitectura
 
 ### Diagrama de Componentes
-[Descripción textual o ASCII art de los componentes y sus relaciones]
+[Descripción textual o arte ASCII de los componentes y sus relaciones]
 
 ### Flujo de Datos
 1. [Paso 1 del flujo]
@@ -91,7 +129,7 @@ Crear un plan técnico detallado que guiará la implementación, dividiendo el t
 
 ### Integraciones
 - **<repo-1> → <repo-2>**: [Cómo se comunican]
-- **Sistema → API Externa**: [Si hay]
+- **Sistema → API Externa**: [Si aplica]
 ```
 
 ### 3. Decisiones Técnicas
@@ -108,7 +146,7 @@ Crear un plan técnico detallado que guiará la implementación, dividiendo el t
 **Justificación**: [Por qué elegimos esta opción]
 
 ### Decisión 2: [Título]
-[Mismo formato arriba]
+[Mismo formato anterior]
 ```
 
 ### 4. Plan de Implementación
@@ -137,10 +175,10 @@ Divida el trabajo en unidades pequeñas y secuenciales:
 - **Estimación**: [tiempo estimado]
 
 ### Fase 2: [Nombre de la Fase]
-[Mismo formato arriba]
+[Mismo formato anterior]
 
 ### Fase 3: [Nombre de la Fase]
-[Mismo formato arriba]
+[Mismo formato anterior]
 ```
 
 ### 5. Estructura de Archivos
@@ -233,7 +271,7 @@ src/
 - **Plan B**: [Alternativa si ocurre]
 
 ### Riesgo 2: [Descripción]
-[Mismo formato arriba]
+[Mismo formato anterior]
 ```
 
 ### 9. Checklist de Implementación
@@ -272,9 +310,9 @@ Guarde en `./.sessions/<ISSUE-ID>/plan.md`
 Revise el plan verificando:
 - Todas las tareas están claras y ejecutables
 - Dependencias entre tareas están identificadas
-- Estimaciones son realistas
-- Riesgos fueron considerados
-- Estrategia de pruebas es adecuada
+- Las estimaciones son realistas
+- Los riesgos fueron considerados
+- La estrategia de pruebas es adecuada
 
 ---
 
@@ -288,7 +326,7 @@ Revise el plan verificando:
 
 ## 🎯 Próximo Paso
 
-Tras la aprobación del plan:
+Después de la aprobación del plan:
 
 ```bash
 /work
