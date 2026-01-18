@@ -139,6 +139,15 @@ exports.featureCommands = {
             },
         ]);
         console.log(chalk_1.default.gray(`✓ Language: ${language}`));
+        // Ask if user wants to copy .env files
+        const { copyEnvFiles } = await inquirer_1.default.prompt([
+            {
+                type: 'confirm',
+                name: 'copyEnvFiles',
+                message: 'Copy .env* files from main repositories to worktrees?',
+                default: true,
+            },
+        ]);
         // Create workspace directory in orchestrator/.sessions/
         const sessionsDir = path_1.default.join(orchestratorPath, '.sessions');
         await (0, config_1.ensureDir)(sessionsDir);
@@ -188,6 +197,28 @@ exports.featureCommands = {
             try {
                 await (0, git_1.createWorktree)(mainRepoPath, worktreePath, branchName);
                 console.log(chalk_1.default.green(`    ✓ Created worktree for ${repo.id}`));
+                // Copy .env* files if requested
+                if (copyEnvFiles) {
+                    try {
+                        const envFiles = await promises_1.default.readdir(mainRepoPath);
+                        const envFilesToCopy = envFiles.filter(file => file.startsWith('.env'));
+                        if (envFilesToCopy.length > 0) {
+                            console.log(chalk_1.default.blue(`    Copying .env* files...`));
+                            for (const envFile of envFilesToCopy) {
+                                const sourcePath = path_1.default.join(mainRepoPath, envFile);
+                                const destPath = path_1.default.join(worktreePath, envFile);
+                                await promises_1.default.copyFile(sourcePath, destPath);
+                                console.log(chalk_1.default.gray(`      ✓ Copied ${envFile}`));
+                            }
+                        }
+                        else {
+                            console.log(chalk_1.default.gray(`    No .env* files found in ${repo.id}`));
+                        }
+                    }
+                    catch (error) {
+                        console.log(chalk_1.default.yellow(`    ⚠ Failed to copy .env files: ${error.message}`));
+                    }
+                }
             }
             catch (error) {
                 console.log(chalk_1.default.yellow(`    ⚠ Failed to create worktree: ${error.message}`));

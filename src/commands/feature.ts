@@ -178,6 +178,16 @@ export const featureCommands = {
     ]);
     console.log(chalk.gray(`✓ Language: ${language}`));
 
+    // Ask if user wants to copy .env files
+    const { copyEnvFiles } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'copyEnvFiles',
+        message: 'Copy .env* files from main repositories to worktrees?',
+        default: true,
+      },
+    ]);
+
     // Create workspace directory in orchestrator/.sessions/
     const sessionsDir = path.join(orchestratorPath, '.sessions');
     await ensureDir(sessionsDir);
@@ -232,6 +242,28 @@ export const featureCommands = {
       try {
         await createWorktree(mainRepoPath, worktreePath, branchName);
         console.log(chalk.green(`    ✓ Created worktree for ${repo.id}`));
+
+        // Copy .env* files if requested
+        if (copyEnvFiles) {
+          try {
+            const envFiles = await fs.readdir(mainRepoPath);
+            const envFilesToCopy = envFiles.filter(file => file.startsWith('.env'));
+            
+            if (envFilesToCopy.length > 0) {
+              console.log(chalk.blue(`    Copying .env* files...`));
+              for (const envFile of envFilesToCopy) {
+                const sourcePath = path.join(mainRepoPath, envFile);
+                const destPath = path.join(worktreePath, envFile);
+                await fs.copyFile(sourcePath, destPath);
+                console.log(chalk.gray(`      ✓ Copied ${envFile}`));
+              }
+            } else {
+              console.log(chalk.gray(`    No .env* files found in ${repo.id}`));
+            }
+          } catch (error: any) {
+            console.log(chalk.yellow(`    ⚠ Failed to copy .env files: ${error.message}`));
+          }
+        }
       } catch (error: any) {
         console.log(chalk.yellow(`    ⚠ Failed to create worktree: ${error.message}`));
       }
