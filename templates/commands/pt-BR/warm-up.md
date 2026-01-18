@@ -16,11 +16,11 @@ Se não estiver em um workspace, pergunte ao usuário qual workspace usar ou se 
 
 ## 2. Carregar Configuração do Projeto
 
-Identifique o orchestrator do projeto:
+Você já está no orchestrator do projeto (raiz do repositório atual).
 
-1. **Procure o arquivo `.contextrc.json`** em qualquer um dos repositórios do workspace
-2. Este arquivo contém a URL do repositório orchestrator
-3. Se o orchestrator ainda não estiver clonado localmente, clone-o
+1. **Verifique se está na raiz do orchestrator**: `pwd` deve mostrar o diretório do orchestrator
+2. **Leia o arquivo `context-manifest.json`** na raiz do orchestrator
+3. **Leia o arquivo `ai.properties.md`** para obter configurações locais (base_path, etc.)
 
 ## 3. Carregar Manifesto do Projeto
 
@@ -32,7 +32,14 @@ Leia o `context-manifest.json` do orchestrator para entender:
 
 ## 4. Carregar MetaSpecs
 
-O repositório de MetaSpecs está definido no `context-manifest.json` (geralmente com `role: "specs-provider"`).
+O repositório de MetaSpecs é **separado** e está definido no `context-manifest.json` com `role: "metaspecs"`.
+
+**Localize o repositório de metaspecs:**
+
+1. Leia `context-manifest.json` e encontre o repositório com `role: "metaspecs"`
+2. Obtenha o `id` desse repositório (ex: "my-project-metaspecs")
+3. Leia `ai.properties.md` para obter o `base_path`
+4. O repositório de metaspecs está em: `{base_path}/{metaspecs-id}/`
 
 **Leia sempre os arquivos de índice primeiro:**
 

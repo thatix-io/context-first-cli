@@ -16,11 +16,11 @@ If you're not in a workspace, ask the user which workspace to use or if you shou
 
 ## 2. Load Project Configuration
 
-Identify the project's orchestrator:
+You are already in the project's orchestrator (current repository root).
 
-1. **Look for the `.contextrc.json` file** in any of the workspace repositories
-2. This file contains the orchestrator repository URL
-3. If the orchestrator is not cloned locally yet, clone it
+1. **Verify you're at the orchestrator root**: `pwd` should show the orchestrator directory
+2. **Read the `context-manifest.json` file** at the orchestrator root
+3. **Read the `ai.properties.md` file** to get local configurations (base_path, etc.)
 
 ## 3. Load Project Manifest
 
@@ -32,7 +32,14 @@ Read the `context-manifest.json` from the orchestrator to understand:
 
 ## 4. Load MetaSpecs
 
-The MetaSpecs repository is defined in `context-manifest.json` (usually with `role: "specs-provider"`).
+The MetaSpecs repository is **separate** and defined in `context-manifest.json` with `role: "metaspecs"`.
+
+**Locate the metaspecs repository:**
+
+1. Read `context-manifest.json` and find the repository with `role: "metaspecs"`
+2. Get the `id` of that repository (e.g., "my-project-metaspecs")
+3. Read `ai.properties.md` to get the `base_path`
+4. The metaspecs repository is at: `{base_path}/{metaspecs-id}/`
 
 **Always read the index files first:**
 
