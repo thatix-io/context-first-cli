@@ -1,209 +1,182 @@
 # Requirements Refinement
 
-This command refines a collected issue, transforming it into clear and validated requirements.
+You are a product expert responsible for helping to refine requirements for the project.
 
 ## ⚠️ IMPORTANT: This Command DOES NOT Implement Code
 
-**This command is ONLY for requirements refinement:**
-- ✅ Refine and validate requirements
-- ✅ Update issue in the task manager via MCP
-- ✅ **READ** files from main repositories (read-only)
+**This command is ONLY for planning and documentation:**
+- ✅ Validate requirements against metaspecs
+- ✅ Create refined specification
+- ✅ Save documentation in `.sessions/`
+- ✅ Update issue in task manager
 - ❌ **DO NOT implement code**
 - ❌ **DO NOT edit code files**
-- ❌ **DO NOT checkout branches in main repositories**
-- ❌ **DO NOT make commits**
+- ❌ **DO NOT run tests or deploy**
 
-**Next step**: `/spec [ISSUE-ID]` to create the complete specification (PRD).
+**Next step**: `/spec [ISSUE-ID]` to create a complete PRD based on the refined requirements.
 
 ---
 
-## 📋 Prerequisites
+## Objective
 
-- Issue already collected via `/collect`
-- Project context will be loaded automatically (see "Load MetaSpecs" section below)
+Transform an initial requirement into a refined and validated specification, ready to become a complete PRD.
 
-## 🎯 Objective
+## Process
 
-Refine the collected issue, clarifying:
-- Exact scope (what is included and what is not)
-- Clear acceptance criteria
-- Impact on each repository
-- Technical dependencies
-- Risks and constraints
+### 1. Clarification Phase
 
-## 📝 Refinement Process
+Read the initial requirement and ask questions to achieve full clarity about:
+- **Objective**: Why build this?
+- **Business Value**: Which metric/persona does it impact?
+- **Scope**: What is included and what is NOT included?
+- **Interactions**: Which existing features/components are affected?
 
-### 1. Load Issue
+Keep asking questions until you have full understanding.
 
-**PRIORITY 1: Use MCP (Model Context Protocol)**
+### 2. Validation Against Metaspecs
 
-- Read `ai.properties.md` from the orchestrator to identify the `task_management_system`
-- Use the appropriate MCP to fetch the issue:
-  - `task_management_system=jira`: Use Jira MCP
-  - `task_management_system=linear`: Use Linear MCP
-  - `task_management_system=github`: Use GitHub MCP
-- Load all issue data (title, description, labels, etc.)
+**IMPORTANT**: First read `ai.properties.md` to obtain the `base_path`. The indexes should ALREADY be in context (you ran `/warm-up`). Consult the indexes and read ONLY the relevant documents to validate the requirement.
 
-**FALLBACK: If MCP is unavailable or fails**
+**Validation Process**:
 
-- Read `./.sessions/<ISSUE-ID>/collect.md`
-- If the file does not exist, inform the user of the error
+1. **Consult the indexes loaded** by `/warm-up`:
+   - Read `context-manifest.json` to find the repository with `role: "metaspecs"`
+   - Obtain the `id` of that repository (e.g., "my-project-metaspecs")
+   - Read `ai.properties.md` to get the `base_path`
+   - The metaspecs repository is at: `{base_path}/{metaspecs-id}/`
+   - Consult `{base_path}/{metaspecs-id}/index.md` - Project overview
+   - Consult specific indexes (e.g., `specs/business/index.md`, `specs/technical/index.md`)
 
-### 2. Load MetaSpecs
+2. **Identify relevant documents** for this specific requirement:
+   - In `specs/business/`: Which business documents are relevant?
+   - In `specs/technical/`: Which technical documents are relevant?
 
-**Automatically locate MetaSpecs**:
-1. Read `context-manifest.json` from the orchestrator
-2. Find the repository with `"role": "metaspecs"`
-3. Read `ai.properties.md` to get the `base_path`
-4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
-5. Read relevant `index.md` files to understand:
-   - System architecture
-   - Design patterns
-   - Technical constraints
-   - Project conventions
+3. **Read ONLY the identified relevant documents** (do not read everything!)
 
-### 3. Scope Analysis
+4. **Validate the requirement** against the read metaspecs:
+   - ✅ Alignment with product strategy and vision
+   - ✅ Meets needs of the correct personas
+   - ✅ Compatible with approved technology stack
+   - ✅ Respects architectural decisions (ADRs)
+   - ✅ Follows existing business rules
+   - ⚠️ Identify conflicts or violations
 
-Clearly define:
+**If violations are identified**: 🛑 **STOP** and ask the user for clarification before proceeding (Jidoka Principle).
 
-**What IS in scope**:
-- Specific functionalities to be implemented
-- Repositories that will be modified
-- Necessary integrations
+### 3. Summary and Approval Phase
 
-**What IS NOT in scope**:
-- Related functionalities deferred for later
-- Future optimizations
-- "Nice to have" features
+Once you have gathered sufficient information and validated against metaspecs, present a structured summary with:
+- **Feature**: Feature name
+- **Objective**: Why build it (1-2 sentences)
+- **Business Value**: Metric, persona, roadmap phase (consult metaspecs)
+- **Scope**: What INCLUDES and what DOES NOT INCLUDE
+- **Affected Components**: List based on current architecture (consult technical metaspecs)
+- **Validation against Metaspecs**: ✅ Approved / ⚠️ Attention needed
 
-### 4. Acceptance Criteria
+Request user approval and incorporate feedback if necessary.
 
-Define measurable and testable criteria:
+**Tip**: You may research the codebase or internet before finalizing, if needed.
 
+### 4. Saving the Refined Requirements
+
+Once the user approves, save the requirements:
+
+**IMPORTANT**: Always create a local backup AND update the task manager (if configured).
+
+**Saving Process**:
+
+1. **ALWAYS create local backup first**:
+   - Create a complete file at `./.sessions/<ISSUE-ID>/refined.md` (e.g., `./.sessions/FIN-5/refined.md`)
+   - Where `<ISSUE-ID>` is the issue ID (e.g., FIN-5, FIN-123)
+   - Include ALL refinement details (complete backup)
+
+2. **If task manager is configured** (read `ai.properties.md` to identify `task_management_system`):
+   - Identify the MCP tool of the task manager
+   - **Update the BODY (description) of the issue** with a CONCISE version of the refined requirements
+     - For Jira: Use Jira MCP with `description` field
+     - For Linear: Use Linear MCP with `description` field
+     - For GitHub: Use GitHub MCP with `body` field
+     - **IMPORTANT**: Create a SUMMARY version (max 3000 words) to avoid API limits
+     - Include link to local file at the end: "Full document: `.sessions/<ISSUE-ID>/refined.md`"
+   - **ALWAYS overwrite** the existing body (do not append)
+
+**Note**:
+- The local backup is ALWAYS saved and complete
+- If API error occurs, manually verify if the issue was updated in the task manager
+
+**Output Template**:
+
+**IMPORTANT**: The default template for refined requirements may be documented in the metaspecs repository. Check `{base_path}/{metaspecs-id}/specs/refined/` or similar.
+
+**FULL Template** (for local backup `.sessions/<ISSUE-ID>/refined.md`):
+- **Metadata**: Issue, ID, Task Manager, Project, Date, Sprint, Priority
+- **🎯 WHY**: Reasons, business value, metric, persona, strategic alignment
+- **📦 WHAT**: Detailed features, affected components, integrations, full negative scope
+- **🔧 HOW**: Stack, coding standards, file structure, dependencies, implementation order, failure modes, performance/cost/UX considerations
+- **✅ Validation against Metaspecs**: Consulted documents (business and technical), verified ADRs, validation result
+- **📊 Success Metrics**: Technical, product/UX, acceptance criteria
+- **🔄 Product Impact**: Alignment with goals, enablers, mitigated risks
+- **⚠️ Known Limitations**: MVP limitations
+- **📝 Implementation Checklist**: Tasks by area (backend, frontend, testing, security, etc.)
+
+**SUMMARY Template** (for task manager - max 3000 words):
 ```markdown
-## Acceptance Criteria
+# [Feature Name] - Refined Requirements
 
-### Functional
-- [ ] [Criterion 1 - specific and testable]
-- [ ] [Criterion 2 - specific and testable]
+**Sprint X** | **Y days** | **Priority**
 
-### Technical
-- [ ] [Technical criterion 1]
-- [ ] [Technical criterion 2]
-
-### Quality
-- [ ] Unit tests implemented
-- [ ] Integration tests implemented
-- [ ] Documentation updated
-```
-
-### 5. Impact Analysis
-
-For each affected repository:
-
-```markdown
-## Impact by Repository
-
-### <repo-1>
-- **Affected components**: [list]
-- **Type of change**: New feature / Modification / Refactoring
-- **Estimated complexity**: Low / Medium / High
-- **Risks**: [specific risks]
-
-### <repo-2>
-- **Affected components**: [list]
-- **Type of change**: New feature / Modification / Refactoring
-- **Estimated complexity**: Low / Medium / High
-- **Risks**: [specific risks]
-```
-
-### 6. Dependencies and Constraints
-
-Identify:
-- Dependencies between repositories
-- Dependencies on other features/issues
-- Technical constraints
-- Business constraints
-- Known blockers
-
-### 7. Initial Estimate
-
-Provide effort estimate:
-- **Small**: < 1 day
-- **Medium**: 1-3 days
-- **Large**: 3-5 days
-- **Very Large**: > 5 days (consider breaking into smaller issues)
-
-### 8. Pending Questions
-
-List questions that still need answers before starting implementation.
-
-## 📄 Saving the Refinement
-
-**PRIORITY 1: Update via MCP**
-
-- Use the task manager MCP to update the issue
-- Add acceptance criteria as a comment or custom field
-- Update labels/tags if necessary (e.g., "refined", "ready-for-spec")
-- Add estimate if supported by the task manager
-- Inform the user: "✅ Issue [ID] updated with refinement"
-
-**FALLBACK: Create .md file only if MCP fails**
-
-If MCP is unavailable or fails, create/update `./.sessions/<ISSUE-ID>/refine.md`:
-
-```markdown
-# [Issue Title] - Refinement
+## Objective
+[1-2 paragraphs: what it is and why do it]
 
 ## Scope
 
-### Included
-- [Item 1]
-- [Item 2]
+### Main Features
+- Feature 1: [summary]
+- Feature 2: [summary]
+- Validations/Guards: [summary]
 
-### Excluded
-- [Item 1]
-- [Item 2]
+### Affected Components
+- Component 1: [type of change]
+- Component 2: [type of change]
+
+### Security
+✅ [item 1] ✅ [item 2] ✅ [item 3]
+
+## Negative Scope
+❌ [item 1] ❌ [item 2] ❌ [item 3]
+
+## Stack
+[Tech stack summarized by area]
+
+## Structure
+[SUMMARIZED file tree - main modules only]
+
+## Failure Modes (To Avoid)
+🔴 [critical 1] 🔴 [critical 2]
+🟡 [medium 1] 🟡 [medium 2]
 
 ## Acceptance Criteria
-[As per section 3 above]
+- [ ] [item 1]
+- [ ] [item 2]
+- [ ] [item 3]
 
-## Impact by Repository
-[As per section 4 above]
+## Validation
+**ADRs**: [list]
+**Specs**: [main]
+**Status**: ✅ Approved
 
-## Dependencies
-- [Dependency 1]
-- [Dependency 2]
+**Impact**: [summary]
+**Limitations**: [summary]
 
-## Constraints
-- [Constraint 1]
-- [Constraint 2]
-
-## Estimate
-[Small/Medium/Large/Very Large] - [Justification]
-
-## Pending Questions
-1. [Question 1]
-2. [Question 2]
-
-## Identified Risks
-- [Risk 1 and mitigation]
-- [Risk 2 and mitigation]
+---
+📄 **Full document**: `.sessions/<ISSUE-ID>/refined.md`
 ```
 
-Inform the user: "⚠️ Refinement saved locally in .sessions/ (task manager not available)"
-
-## 🔍 Validation
-
-Validate the refinement against:
-- Product strategy (if documented)
-- Technical architecture (if documented)
-- Team capacity
-- Roadmap priorities
+**Audience**: AI Developer with capabilities similar to yours. Be concise but complete.
 
 ---
 
-**Provided arguments**:
+**Requirement to Refine**:
 
 ```
 #$ARGUMENTS
@@ -213,10 +186,12 @@ Validate the refinement against:
 
 ## 🎯 Next Step
 
-After approved refinement:
+**After user approval and saving the refined requirements**, the natural flow is:
 
 ```bash
 /spec [ISSUE-ID]
 ```
 
-This command will create the complete feature specification (PRD).
+**Example**: `/spec FIN-3`
+
+This command will create a complete PRD (Product Requirements Document) based on the refined requirements, detailing features, user stories, acceptance criteria, and final validations.

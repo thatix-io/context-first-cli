@@ -1,209 +1,182 @@
 # Refinamiento de Requisitos
 
-Este comando refina una issue recopilada, transformándola en requisitos claros y validados.
+Eres un especialista en producto encargado de ayudar a refinar requisitos para el proyecto.
 
 ## ⚠️ IMPORTANTE: Este Comando NO Implementa Código
 
-**Este comando es SOLO para refinamiento de requisitos:**
-- ✅ Refinar y validar requisitos
-- ✅ Actualizar issue en el task manager vía MCP
-- ✅ **LEER** archivos de los repositorios principales (solo lectura)
+**Este comando es SÓLO para planificación y documentación:**
+- ✅ Validar requisitos contra metaspecs
+- ✅ Crear especificación refinada
+- ✅ Guardar documentación en `.sessions/`
+- ✅ Actualizar issue en el task manager
 - ❌ **NO implementar código**
 - ❌ **NO hacer ediciones en archivos de código**
-- ❌ **NO hacer checkout de branches en los repositorios principales**
-- ❌ **NO hacer commits**
+- ❌ **NO ejecutar pruebas ni deploy**
 
-**Próximo paso**: `/spec [ISSUE-ID]` para crear la especificación completa (PRD).
+**Próximo paso**: `/spec [ISSUE-ID]` para crear PRD completo basado en los requisitos refinados.
 
 ---
 
-## 📋 Prerrequisitos
+## Objetivo
 
-- Issue ya recopilada vía `/collect`
-- Contexto del proyecto se cargará automáticamente (ver sección "Cargar MetaSpecs" abajo)
+Transformar un requisito inicial en especificación refinada y validada, lista para convertirse en PRD completo.
 
-## 🎯 Objetivo
+## Proceso
 
-Refinar la issue recopilada, aclarando:
-- Alcance exacto (qué entra y qué no entra)
-- Criterios de aceptación claros
-- Impacto en cada repositorio
-- Dependencias técnicas
-- Riesgos y restricciones
+### 1. Fase de Aclaración
 
-## 📝 Proceso de Refinamiento
+Lee el requisito inicial y haz preguntas para alcanzar claridad total sobre:
+- **Objetivo**: ¿Por qué construir esto?
+- **Valor de Negocio**: ¿Qué métrica/persona impacta?
+- **Alcance**: ¿Qué incluye y qué NO incluye?
+- **Interacciones**: ¿Qué features/componentes existentes se ven afectados?
 
-### 1. Cargar Issue
+Continúa haciendo preguntas hasta tener entendimiento completo.
 
-**PRIORIDAD 1: Usar MCP (Model Context Protocol)**
+### 2. Validación Contra Metaspecs
 
-- Lea `ai.properties.md` del orchestrator para identificar el `task_management_system`
-- Use el MCP apropiado para buscar la issue:
-  - `task_management_system=jira`: Use MCP de Jira
-  - `task_management_system=linear`: Use MCP de Linear
-  - `task_management_system=github`: Use MCP de GitHub
-- Cargue todos los datos de la issue (título, descripción, labels, etc.)
+**IMPORTANTE**: Primero lee `ai.properties.md` para obtener el `base_path`. Los índices YA deben estar en contexto (corriste `/warm-up`). Consulta los índices y lee SÓLO los documentos relevantes para validar el requisito.
 
-**FALLBACK: Si MCP no está disponible o falla**
+**Proceso de Validación**:
 
-- Lea `./.sessions/<ISSUE-ID>/collect.md`
-- Si el archivo no existe, informe el error al usuario
+1. **Consulta los índices cargados** por `/warm-up`:
+   - Lee `context-manifest.json` para encontrar el repositorio con `role: "metaspecs"`
+   - Obtén el `id` de ese repositorio (ej: "my-project-metaspecs")
+   - Lee `ai.properties.md` para obtener el `base_path`
+   - El repositorio de metaspecs está en: `{base_path}/{metaspecs-id}/`
+   - Consulta `{base_path}/{metaspecs-id}/index.md` - Visión general del proyecto
+   - Consulta índices específicos (ej: `specs/business/index.md`, `specs/technical/index.md`)
 
-### 2. Cargar MetaSpecs
+2. **Identifica documentos relevantes** para este requisito específico:
+   - En `specs/business/`: ¿Qué documentos de negocio son relevantes?
+   - En `specs/technical/`: ¿Qué documentos técnicos son relevantes?
 
-**Localizar MetaSpecs automáticamente**:
-1. Lea `context-manifest.json` del orchestrator
-2. Encuentre el repositorio con `"role": "metaspecs"`
-3. Lea `ai.properties.md` para obtener el `base_path`
-4. El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
-5. Lea los archivos `index.md` relevantes para entender:
-   - Arquitectura del sistema
-   - Patrones de diseño
-   - Restricciones técnicas
-   - Convenciones del proyecto
+3. **Lee SÓLO los documentos relevantes** identificados (¡no leas todo!)
 
-### 3. Análisis de Alcance
+4. **Valida el requisito** contra las metaspecs leídas:
+   - ✅ Alineación con estrategia y visión de producto
+   - ✅ Atiende necesidades de las personas correctas
+   - ✅ Compatible con stack tecnológica aprobada
+   - ✅ Respeta decisiones arquitecturales (ADRs)
+   - ✅ Sigue reglas de negocio existentes
+   - ⚠️ Identifica conflictos o violaciones
 
-Defina claramente:
+**Si identificas violaciones**: 🛑 **DETENTE** y pide aclaración al usuario antes de continuar (Principio Jidoka).
 
-**Qué ESTÁ en el alcance**:
-- Funcionalidades específicas a implementar
-- Repositorios que serán modificados
-- Integraciones necesarias
+### 3. Fase de Resumen y Aprobación
 
-**Qué NO ESTÁ en el alcance**:
-- Funcionalidades relacionadas pero que quedan para después
-- Optimizaciones futuras
-- Features "nice to have"
+Una vez que hayas recopilado información suficiente y validado contra metaspecs, presenta un resumen estructurado con:
+- **Feature**: Nombre de la funcionalidad
+- **Objetivo**: Por qué construir (1-2 frases)
+- **Valor de Negocio**: Métrica, persona, fase del roadmap (consulta metaspecs)
+- **Alcance**: Qué INCLUYE y qué NO INCLUYE
+- **Componentes Afectados**: Lista basada en la arquitectura actual (consulta metaspecs técnicas)
+- **Validación contra Metaspecs**: ✅ Aprobado / ⚠️ Atención necesaria
 
-### 4. Criterios de Aceptación
+Pide aprobación del usuario e incorpora feedback si es necesario.
 
-Defina criterios medibles y comprobables:
+**Consejo**: Puedes investigar en el código base o internet antes de finalizar, si es necesario.
 
+### 4. Guardado de los Requisitos Refinados
+
+Una vez que el usuario apruebe, guarda los requisitos:
+
+**IMPORTANTE**: Siempre crea backup local Y actualiza el task manager (si está configurado).
+
+**Proceso de Guardado**:
+
+1. **SIEMPRE crear backup local primero**:
+   - Crea archivo completo en `./.sessions/<ISSUE-ID>/refined.md` (ej: `./.sessions/FIN-5/refined.md`)
+   - Donde `<ISSUE-ID>` es el ID de la issue (ej: FIN-5, FIN-123)
+   - Incluye TODOS los detalles del refinamiento (backup completo)
+
+2. **Si el task manager está configurado** (lee `ai.properties.md` para identificar `task_management_system`):
+   - Identifica la herramienta MCP del task manager
+   - **Actualiza el BODY (descripción) de la issue** con versión CONCISA de los requisitos refinados
+     - Para Jira: Usa MCP de Jira con campo `description`
+     - Para Linear: Usa MCP de Linear con campo `description`
+     - Para GitHub: Usa MCP de GitHub con campo `body`
+     - **IMPORTANTE**: Crea versión RESUMIDA (máx 3000 palabras) para evitar problemas con límites de API
+     - Incluye enlace al archivo local al final: "Documento completo: `.sessions/<ISSUE-ID>/refined.md`"
+   - **SIEMPRE sobrescribe** el body existente (no agregues al final)
+
+**Observación**:
+- El backup local SIEMPRE está guardado y completo
+- Si hay error de API, verifica manualmente si la issue fue actualizada en el task manager
+
+**Plantilla de Salida**:
+
+**IMPORTANTE**: La plantilla estándar para requisitos refinados puede estar documentada en el repositorio de metaspecs. Consulta `{base_path}/{metaspecs-id}/specs/refined/` o similar.
+
+**Plantilla COMPLETA** (para backup local `.sessions/<ISSUE-ID>/refined.md`):
+- **Metadatos**: Issue, ID, Task Manager, Proyecto, Fecha, Sprint, Prioridad
+- **🎯 POR QUÉ**: Razones, valor de negocio, métrica, persona, alineamiento estratégico
+- **📦 QUÉ**: Funcionalidades detalladas, componentes afectados, integraciones, alcance negativo completo
+- **🔧 CÓMO**: Stack, patrones de código, estructura de archivos, dependencias, orden de implementación, modos de fallo, consideraciones de performance/costo/UX
+- **✅ Validación contra Metaspecs**: Documentos consultados (business y technical), ADRs verificados, resultado de la validación
+- **📊 Métricas de Éxito**: Técnicas, producto/UX, criterios de aceptación
+- **🔄 Impacto en el Producto**: Alineamiento con objetivos, habilitadores, riesgos mitigados
+- **⚠️ Limitaciones Conocidas**: Limitaciones del MVP
+- **📝 Checklist de Implementación**: Tareas por área (backend, frontend, pruebas, seguridad, etc.)
+
+**Plantilla RESUMIDA** (para task manager - máx 3000 palabras):
 ```markdown
-## Criterios de Aceptación
+# [Nombre Feature] - Requisitos Refinados
 
-### Funcional
-- [ ] [Criterio 1 - específico y comprobable]
-- [ ] [Criterio 2 - específico y comprobable]
+**Sprint X** | **Y días** | **Prioridad**
 
-### Técnico
-- [ ] [Criterio técnico 1]
-- [ ] [Criterio técnico 2]
-
-### Calidad
-- [ ] Pruebas unitarias implementadas
-- [ ] Pruebas de integración implementadas
-- [ ] Documentación actualizada
-```
-
-### 5. Análisis de Impacto
-
-Para cada repositorio afectado:
-
-```markdown
-## Impacto por Repositorio
-
-### <repo-1>
-- **Componentes afectados**: [lista]
-- **Tipo de cambio**: Nueva feature / Modificación / Refactorización
-- **Complejidad estimada**: Baja / Media / Alta
-- **Riesgos**: [riesgos específicos]
-
-### <repo-2>
-- **Componentes afectados**: [lista]
-- **Tipo de cambio**: Nueva feature / Modificación / Refactorización
-- **Complejidad estimada**: Baja / Media / Alta
-- **Riesgos**: [riesgos específicos]
-```
-
-### 6. Dependencias y Restricciones
-
-Identifique:
-- Dependencias entre repositorios
-- Dependencias de otras features/issues
-- Restricciones técnicas
-- Restricciones de negocio
-- Bloqueadores conocidos
-
-### 7. Estimación Inicial
-
-Proporcione estimación de esfuerzo:
-- **Pequeño**: < 1 día
-- **Medio**: 1-3 días
-- **Grande**: 3-5 días
-- **Muy Grande**: > 5 días (considere dividir en issues más pequeñas)
-
-### 8. Preguntas Pendientes
-
-Liste preguntas que aún necesitan respuesta antes de iniciar la implementación.
-
-## 📄 Guardado del Refinamiento
-
-**PRIORIDAD 1: Actualizar vía MCP**
-
-- Use el MCP del task manager para actualizar la issue
-- Añada los criterios de aceptación como comentario o campo personalizado
-- Actualice labels/tags si es necesario (ej: "refined", "ready-for-spec")
-- Añada estimación si el task manager lo soporta
-- Informe al usuario: "✅ Issue [ID] actualizada con refinamiento"
-
-**FALLBACK: Crear archivo .md solo si MCP falla**
-
-Si el MCP no está disponible o falla, cree/actualice `./.sessions/<ISSUE-ID>/refine.md`:
-
-```markdown
-# [Título de la Issue] - Refinamiento
+## Objetivo
+[1-2 párrafos: qué es y por qué hacerlo]
 
 ## Alcance
 
-### Incluido
-- [Ítem 1]
-- [Ítem 2]
+### Funcionalidades Principales
+- Funcionalidad 1: [resumen]
+- Funcionalidad 2: [resumen]
+- Validaciones/Guards: [resumen]
 
-### Excluido
-- [Ítem 1]
-- [Ítem 2]
+### Componentes Afectados
+- Componente 1: [tipo de cambio]
+- Componente 2: [tipo de cambio]
+
+### Seguridad
+✅ [item 1] ✅ [item 2] ✅ [item 3]
+
+## Alcance Negativo
+❌ [item 1] ❌ [item 2] ❌ [item 3]
+
+## Stack
+[Tech stack resumida por área]
+
+## Estructura
+[Árbol de archivos RESUMIDO - principales módulos solamente]
+
+## Modos de Fallo (Evitar)
+🔴 [crítico 1] 🔴 [crítico 2]
+🟡 [medio 1] 🟡 [medio 2]
 
 ## Criterios de Aceptación
-[Según sección 3 arriba]
+- [ ] [item 1]
+- [ ] [item 2]
+- [ ] [item 3]
 
-## Impacto por Repositorio
-[Según sección 4 arriba]
+## Validación
+**ADRs**: [lista]
+**Specs**: [principales]
+**Estado**: ✅ Aprobado
 
-## Dependencias
-- [Dependencia 1]
-- [Dependencia 2]
+**Impacto**: [resumen]
+**Limitaciones**: [resumen]
 
-## Restricciones
-- [Restricción 1]
-- [Restricción 2]
-
-## Estimación
-[Pequeño/Medio/Grande/Muy Grande] - [Justificación]
-
-## Preguntas Pendientes
-1. [Pregunta 1]
-2. [Pregunta 2]
-
-## Riesgos Identificados
-- [Riesgo 1 y mitigación]
-- [Riesgo 2 y mitigación]
+---
+📄 **Documento completo**: `.sessions/<ISSUE-ID>/refined.md`
 ```
 
-Informe al usuario: "⚠️ Refinamiento guardado localmente en .sessions/ (task manager no disponible)"
-
-## 🔍 Validación
-
-Valide el refinamiento contra:
-- Estrategia del producto (si está documentada)
-- Arquitectura técnica (si está documentada)
-- Capacidad del equipo
-- Prioridades del roadmap
+**Audiencia**: Desarrollador IA con capacidades similares a las tuyas. Sé conciso pero completo.
 
 ---
 
-**Argumentos proporcionados**:
+**Requisito para Refinar**:
 
 ```
 #$ARGUMENTS
@@ -213,10 +186,12 @@ Valide el refinamiento contra:
 
 ## 🎯 Próximo Paso
 
-Después de aprobar el refinamiento:
+**Tras aprobación del usuario y guardado de los requisitos refinados**, el flujo natural es:
 
 ```bash
 /spec [ISSUE-ID]
 ```
 
-Este comando creará la especificación completa (PRD) de la feature.
+**Ejemplo**: `/spec FIN-3`
+
+Este comando creará un PRD (Product Requirements Document) completo basado en los requisitos refinados, detallando funcionalidades, user stories, criterios de aceptación y validaciones finales.
