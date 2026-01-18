@@ -521,20 +521,24 @@ exports.featureCommands = {
             }
             try {
                 console.log(chalk_1.default.gray(`  Processing ${repoId}...`));
-                // Remove worktree BEFORE merging to avoid conflicts
+                // Merge branch FIRST (while worktree still exists for conflict resolution)
+                await (0, git_1.mergeBranch)(mainRepoPath, branchName, targetBranch);
+                console.log(chalk_1.default.green(`    ✓ Merged ${branchName} into ${targetBranch}`));
+                // Push if not disabled
+                if (!options.noPush) {
+                    await (0, git_1.pushBranch)(mainRepoPath, targetBranch);
+                    console.log(chalk_1.default.green(`    ✓ Pushed ${targetBranch}`));
+                }
+                // Delete feature branch
+                await (0, git_1.deleteBranch)(mainRepoPath, branchName, true);
+                console.log(chalk_1.default.green(`    ✓ Deleted branch ${branchName}`));
+                // Remove worktree AFTER successful merge
                 const worktreePath = path_1.default.join(workspacePath, repoId);
                 if (await (0, config_1.pathExists)(worktreePath)) {
                     console.log(chalk_1.default.gray(`    Removing worktree at ${worktreePath}...`));
                     await (0, git_1.removeWorktree)(mainRepoPath, worktreePath);
+                    console.log(chalk_1.default.green(`    ✓ Removed worktree`));
                 }
-                // Merge branch
-                await (0, git_1.mergeBranch)(mainRepoPath, branchName, targetBranch);
-                // Push if not disabled
-                if (!options.noPush) {
-                    await (0, git_1.pushBranch)(mainRepoPath, targetBranch);
-                }
-                // Delete feature branch (now safe since worktree is removed)
-                await (0, git_1.deleteBranch)(mainRepoPath, branchName, true);
             }
             catch (error) {
                 console.log(chalk_1.default.red(`  ✗ Error in ${repoId}: ${error.message}`));
@@ -544,7 +548,13 @@ exports.featureCommands = {
         if (mergeErrors.length > 0) {
             console.log(chalk_1.default.red.bold('\n⚠️ Merge completed with errors:\n'));
             mergeErrors.forEach(err => console.log(chalk_1.default.red(`  - ${err}`)));
-            console.log(chalk_1.default.yellow('\n💡 Tip: Fix errors manually and re-run merge, or use --keep-workspace to preserve the workspace'));
+            console.log(chalk_1.default.yellow('\n💡 Worktrees were preserved to allow conflict resolution!'));
+            console.log(chalk_1.default.gray('\nTo resolve conflicts:'));
+            console.log(chalk_1.default.gray(`  1. cd ${workspacePath}/<repo-with-conflict>`));
+            console.log(chalk_1.default.gray('  2. Resolve conflicts with your AI assistant'));
+            console.log(chalk_1.default.gray('  3. git add . && git commit'));
+            console.log(chalk_1.default.gray('  4. git push'));
+            console.log(chalk_1.default.gray(`  5. Re-run: context-cli feature merge ${issueId}`));
             return;
         }
         console.log(chalk_1.default.green.bold('\n✅ Merge completed successfully!'));

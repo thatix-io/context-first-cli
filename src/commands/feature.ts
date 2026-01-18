@@ -624,23 +624,27 @@ export const featureCommands = {
       try {
         console.log(chalk.gray(`  Processing ${repoId}...`));
         
-        // Remove worktree BEFORE merging to avoid conflicts
-        const worktreePath = path.join(workspacePath, repoId);
-        if (await pathExists(worktreePath)) {
-          console.log(chalk.gray(`    Removing worktree at ${worktreePath}...`));
-          await removeWorktree(mainRepoPath, worktreePath);
-        }
-        
-        // Merge branch
+        // Merge branch FIRST (while worktree still exists for conflict resolution)
         await mergeBranch(mainRepoPath, branchName, targetBranch);
+        console.log(chalk.green(`    ✓ Merged ${branchName} into ${targetBranch}`));
         
         // Push if not disabled
         if (!options.noPush) {
           await pushBranch(mainRepoPath, targetBranch);
+          console.log(chalk.green(`    ✓ Pushed ${targetBranch}`));
         }
         
-        // Delete feature branch (now safe since worktree is removed)
+        // Delete feature branch
         await deleteBranch(mainRepoPath, branchName, true);
+        console.log(chalk.green(`    ✓ Deleted branch ${branchName}`));
+        
+        // Remove worktree AFTER successful merge
+        const worktreePath = path.join(workspacePath, repoId);
+        if (await pathExists(worktreePath)) {
+          console.log(chalk.gray(`    Removing worktree at ${worktreePath}...`));
+          await removeWorktree(mainRepoPath, worktreePath);
+          console.log(chalk.green(`    ✓ Removed worktree`));
+        }
         
       } catch (error: any) {
         console.log(chalk.red(`  ✗ Error in ${repoId}: ${error.message}`));
@@ -651,7 +655,13 @@ export const featureCommands = {
     if (mergeErrors.length > 0) {
       console.log(chalk.red.bold('\n⚠️ Merge completed with errors:\n'));
       mergeErrors.forEach(err => console.log(chalk.red(`  - ${err}`)));
-      console.log(chalk.yellow('\n💡 Tip: Fix errors manually and re-run merge, or use --keep-workspace to preserve the workspace'));
+      console.log(chalk.yellow('\n💡 Worktrees were preserved to allow conflict resolution!'));
+      console.log(chalk.gray('\nTo resolve conflicts:'));
+      console.log(chalk.gray(`  1. cd ${workspacePath}/<repo-with-conflict>`));
+      console.log(chalk.gray('  2. Resolve conflicts with your AI assistant'));
+      console.log(chalk.gray('  3. git add . && git commit'));
+      console.log(chalk.gray('  4. git push'));
+      console.log(chalk.gray(`  5. Re-run: context-cli feature merge ${issueId}`));
       return;
     }
 
