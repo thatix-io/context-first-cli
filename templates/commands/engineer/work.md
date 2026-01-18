@@ -128,29 +128,33 @@ Refs: <ISSUE-ID>"
 
 **Tipos de commit**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
-### 5. Documentação da Sessão
+### 5. Atualização do Plan.md
 
-Atualize `./.sessions/<ISSUE-ID>/work.md`:
+**A CADA tarefa completada**, atualize `./.sessions/<ISSUE-ID>/plan.md`:
 
 ```markdown
-# [Título da Feature] - Trabalho Executado
+#### 1.1 - [Nome da Tarefa] [Completada ✅]
+- [Detalhe 1]
+- [Detalhe 2]
+- [Detalhe 3]
 
-## [Data/Hora] - [Descrição da Unidade]
+**Arquivos**:
+- `path/to/file1.ts` ✅
+- `path/to/file2.vue` ✅
 
-### Repositórios Modificados
-- **repo-1**: [Arquivos modificados e o que foi feito]
-- **repo-2**: [Arquivos modificados e o que foi feito]
+**Testes**:
+- Unit test: [Descrição] ✅
+- Integration test: [Descrição] ✅
 
-### Decisões Tomadas
-- [Decisão 1 e justificativa]
-- [Decisão 2 e justificativa]
-
-### Testes Adicionados
-- [Descrição dos testes]
-
-### Próxima Unidade
-- [O que será feito a seguir]
+**Comentários**:
+- Decisão: [Explicação de decisão técnica importante]
+- Aprendizado: [Algo aprendido durante implementação]
 ```
+
+**Marque status das tarefas**:
+- `[Não Iniciada ⏳]` - Tarefa ainda não começou
+- `[Em Progresso ⏰]` - Tarefa sendo trabalhada agora
+- `[Completada ✅]` - Tarefa finalizada e validada
 
 ## 🔍 Checklist de Qualidade
 
@@ -160,7 +164,7 @@ Antes de considerar a unidade completa:
 - [ ] Linting/formatação OK
 - [ ] Documentação atualizada (se necessário)
 - [ ] Commit realizado em todos os repos afetados
-- [ ] Sessão documentada
+- [ ] `plan.md` atualizado com progresso e comentários
 
 ## ⚠️ Princípio Jidoka
 
