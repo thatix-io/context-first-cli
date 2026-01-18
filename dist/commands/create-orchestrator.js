@@ -49,6 +49,18 @@ async function createOrchestratorCommand() {
             },
             {
                 type: 'list',
+                name: 'aiProvider',
+                message: 'Which AI provider will you use?',
+                choices: [
+                    { name: 'Claude (Anthropic)', value: 'claude' },
+                    { name: 'Cursor', value: 'cursor' },
+                    { name: 'Windsurf (Codeium)', value: 'windsurf' },
+                    { name: 'Other / Custom', value: 'other' },
+                ],
+                default: 'claude',
+            },
+            {
+                type: 'list',
                 name: 'taskManager',
                 message: 'Which task management system will you use?',
                 choices: [
@@ -104,7 +116,7 @@ async function createOrchestratorCommand() {
         const manifestExample = generateManifestExample(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest-example.json'), JSON.stringify(manifestExample, null, 2), 'utf-8');
         // Copy command templates
-        await copyCommandTemplates(targetDir, answers.language);
+        await copyCommandTemplates(targetDir, answers.aiProvider, answers.language);
         // Create .contextrc.json pointing to itself
         const contextrc = {
             orchestratorRepo: `file://${path_1.default.resolve(targetDir)}`,
@@ -123,7 +135,8 @@ ai.properties.md
         await promises_1.default.writeFile(path_1.default.join(targetDir, '.gitignore'), gitignore, 'utf-8');
         console.log(chalk_1.default.green(`\n✅ Orchestrator created successfully at: ${targetDir}`));
         console.log(chalk_1.default.blue('\n📁 Structure created:'));
-        console.log(chalk_1.default.gray('  .claude/commands/        - Command definitions for AI'));
+        const commandsFolder = answers.aiProvider === 'other' ? '.ai' : `.${answers.aiProvider}`;
+        console.log(chalk_1.default.gray(`  ${commandsFolder}/commands/        - Command definitions for AI`));
         console.log(chalk_1.default.gray('  .sessions/               - Feature session data'));
         console.log(chalk_1.default.gray('  .contextrc.json          - CLI configuration'));
         console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template (gitignored)'));
@@ -156,10 +169,12 @@ ai.properties.md
         process.exit(1);
     }
 }
-async function copyCommandTemplates(targetDir, language = 'en') {
+async function copyCommandTemplates(targetDir, aiProvider, language = 'en') {
     // Use language-specific templates
     const templatesDir = path_1.default.join(__dirname, '..', '..', 'templates', 'commands', language);
-    const targetCommandsDir = path_1.default.join(targetDir, '.claude', 'commands');
+    // Determine target directory based on AI provider
+    const commandsFolder = aiProvider === 'other' ? '.ai' : `.${aiProvider}`;
+    const targetCommandsDir = path_1.default.join(targetDir, commandsFolder, 'commands');
     // Copy warm-up.md
     await promises_1.default.copyFile(path_1.default.join(templatesDir, 'warm-up.md'), path_1.default.join(targetCommandsDir, 'warm-up.md'));
     // Copy products commands
@@ -179,6 +194,7 @@ async function copyCommandTemplates(targetDir, language = 'en') {
     }
 }
 function generateReadme(answers) {
+    const commandsFolder = answers.aiProvider === 'other' ? '.ai' : `.${answers.aiProvider}`;
     return `# ${answers.projectName}
 
 ${answers.description}
@@ -187,11 +203,11 @@ ${answers.description}
 
 This orchestrator manages the Context-First development methodology for the project.
 
-## 🏗️ Structure
+## 🏭️ Structure
 
 \`\`\`
 ${answers.projectName}/
-├── .claude/
+├── ${commandsFolder}/
 │   └── commands/            # Command definitions for AI
 │       ├── products/        # Product commands (collect, refine, spec, check)
 │       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)

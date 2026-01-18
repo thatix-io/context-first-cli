@@ -33,7 +33,7 @@ Orchestrate multi-repository workflows, create isolated feature workspaces, and 
 ✅ **Isolated Feature Workspaces** - Work on multiple features simultaneously without conflicts  
 ✅ **Git Worktree Integration** - Efficient branch management without re-cloning repositories  
 ✅ **Docker Support** - Automatic `docker-compose.yml` generation with dynamic ports  
-✅ **AI-Ready** - Pre-configured command templates for AI assistants (Claude, Cursor)  
+✅ **AI-Ready** - Pre-configured command templates for multiple AI providers (Claude, Cursor, Windsurf)  
 ✅ **Cross-Platform** - Works on Windows, macOS, and Linux  
 ✅ **Project-Agnostic** - One CLI for all your projects
 
@@ -75,7 +75,7 @@ The **single source of truth** for your project's development process.
 
 **Contains**:
 - `context-manifest.json` - Repository definitions and relationships
-- `.claude/commands/` - AI command templates
+- `.claude/commands/` (or `.cursor/`, `.windsurf/`, `.ai/`) - AI command templates
 - `ai.properties.md` - Local configuration (gitignored)
 - `.contextrc.json` - Makes orchestrator self-aware
 

@@ -8,6 +8,7 @@ interface ScaffoldAnswers {
   projectName: string;
   description: string;
   metaspecsUrl: string;
+  aiProvider: 'claude' | 'cursor' | 'windsurf' | 'other';
   taskManager: 'jira' | 'linear' | 'github' | 'azure' | 'none';
   language: 'en' | 'es' | 'pt-BR';
   initGit: boolean;
@@ -51,6 +52,18 @@ export async function createOrchestratorCommand() {
           }
           return true;
         },
+      },
+      {
+        type: 'list',
+        name: 'aiProvider',
+        message: 'Which AI provider will you use?',
+        choices: [
+          { name: 'Claude (Anthropic)', value: 'claude' },
+          { name: 'Cursor', value: 'cursor' },
+          { name: 'Windsurf (Codeium)', value: 'windsurf' },
+          { name: 'Other / Custom', value: 'other' },
+        ],
+        default: 'claude',
       },
       {
         type: 'list',
@@ -117,7 +130,7 @@ export async function createOrchestratorCommand() {
     await fs.writeFile(path.join(targetDir, 'context-manifest-example.json'), JSON.stringify(manifestExample, null, 2), 'utf-8');
 
     // Copy command templates
-    await copyCommandTemplates(targetDir, answers.language);
+    await copyCommandTemplates(targetDir, answers.aiProvider, answers.language);
 
     // Create .contextrc.json pointing to itself
     const contextrc = {
@@ -143,7 +156,8 @@ ai.properties.md
 
     console.log(chalk.green(`\n✅ Orchestrator created successfully at: ${targetDir}`));
     console.log(chalk.blue('\n📁 Structure created:'));
-    console.log(chalk.gray('  .claude/commands/        - Command definitions for AI'));
+    const commandsFolder = answers.aiProvider === 'other' ? '.ai' : `.${answers.aiProvider}`;
+    console.log(chalk.gray(`  ${commandsFolder}/commands/        - Command definitions for AI`));
     console.log(chalk.gray('  .sessions/               - Feature session data'));
     console.log(chalk.gray('  .contextrc.json          - CLI configuration'));
     console.log(chalk.gray('  ai.properties.md         - Configuration template (gitignored)'));
@@ -178,10 +192,13 @@ ai.properties.md
   }
 }
 
-async function copyCommandTemplates(targetDir: string, language: string = 'en'): Promise<void> {
+async function copyCommandTemplates(targetDir: string, aiProvider: string, language: string = 'en'): Promise<void> {
   // Use language-specific templates
   const templatesDir = path.join(__dirname, '..', '..', 'templates', 'commands', language);
-  const targetCommandsDir = path.join(targetDir, '.claude', 'commands');
+  
+  // Determine target directory based on AI provider
+  const commandsFolder = aiProvider === 'other' ? '.ai' : `.${aiProvider}`;
+  const targetCommandsDir = path.join(targetDir, commandsFolder, 'commands');
 
   // Copy warm-up.md
   await fs.copyFile(
@@ -218,6 +235,7 @@ async function copyCommandTemplates(targetDir: string, language: string = 'en'):
 }
 
 function generateReadme(answers: ScaffoldAnswers): string {
+  const commandsFolder = answers.aiProvider === 'other' ? '.ai' : `.${answers.aiProvider}`;
   return `# ${answers.projectName}
 
 ${answers.description}
@@ -226,11 +244,11 @@ ${answers.description}
 
 This orchestrator manages the Context-First development methodology for the project.
 
-## 🏗️ Structure
+## 🏭️ Structure
 
 \`\`\`
 ${answers.projectName}/
-├── .claude/
+├── ${commandsFolder}/
 │   └── commands/            # Command definitions for AI
 │       ├── products/        # Product commands (collect, refine, spec, check)
 │       ├── engineer/        # Engineering commands (start, plan, work, pre-pr, pr)
