@@ -407,6 +407,38 @@ export const featureCommands = {
       }
     }
 
+    // Prune orphaned worktrees in all repositories
+    console.log(chalk.blue('Pruning orphaned worktrees...'));
+    if (configResult) {
+      const { configDir } = configResult;
+      let orchestratorPath: string;
+      const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
+      
+      if (await pathExists(aiPropertiesInConfigDir)) {
+        orchestratorPath = configDir;
+      } else {
+        orchestratorPath = path.join(configDir, '.context-orchestrator');
+      }
+      
+      const aiProperties = await loadAiProperties(orchestratorPath);
+      const basePath = getBasePath(aiProperties);
+      
+      if (basePath) {
+        for (const repoId of metadata.repositories) {
+          const mainRepoPath = path.join(basePath, repoId);
+          if (await pathExists(mainRepoPath)) {
+            try {
+              const { execSync } = require('child_process');
+              execSync('git worktree prune', { cwd: mainRepoPath, stdio: 'pipe' });
+              console.log(chalk.gray(`  Pruned worktrees in ${repoId}`));
+            } catch (error: any) {
+              // Ignore prune errors
+            }
+          }
+        }
+      }
+    }
+    
     // Remove workspace directory
     console.log(chalk.blue('Removing workspace directory...'));
     console.log(chalk.gray(`  Path: ${workspacePath}`));
@@ -560,6 +592,13 @@ export const featureCommands = {
       try {
         console.log(chalk.gray(`  Processing ${repoId}...`));
         
+        // Remove worktree BEFORE merging to avoid conflicts
+        const worktreePath = path.join(workspacePath, repoId);
+        if (await pathExists(worktreePath)) {
+          console.log(chalk.gray(`    Removing worktree at ${worktreePath}...`));
+          await removeWorktree(mainRepoPath, worktreePath);
+        }
+        
         // Merge branch
         await mergeBranch(mainRepoPath, branchName, targetBranch);
         
@@ -568,7 +607,7 @@ export const featureCommands = {
           await pushBranch(mainRepoPath, targetBranch);
         }
         
-        // Delete feature branch
+        // Delete feature branch (now safe since worktree is removed)
         await deleteBranch(mainRepoPath, branchName, true);
         
       } catch (error: any) {

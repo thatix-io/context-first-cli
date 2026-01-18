@@ -334,6 +334,36 @@ exports.featureCommands = {
                 }
             }
         }
+        // Prune orphaned worktrees in all repositories
+        console.log(chalk_1.default.blue('Pruning orphaned worktrees...'));
+        if (configResult) {
+            const { configDir } = configResult;
+            let orchestratorPath;
+            const aiPropertiesInConfigDir = path_1.default.join(configDir, 'ai.properties.md');
+            if (await (0, config_1.pathExists)(aiPropertiesInConfigDir)) {
+                orchestratorPath = configDir;
+            }
+            else {
+                orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
+            }
+            const aiProperties = await (0, ai_properties_1.loadAiProperties)(orchestratorPath);
+            const basePath = (0, ai_properties_1.getBasePath)(aiProperties);
+            if (basePath) {
+                for (const repoId of metadata.repositories) {
+                    const mainRepoPath = path_1.default.join(basePath, repoId);
+                    if (await (0, config_1.pathExists)(mainRepoPath)) {
+                        try {
+                            const { execSync } = require('child_process');
+                            execSync('git worktree prune', { cwd: mainRepoPath, stdio: 'pipe' });
+                            console.log(chalk_1.default.gray(`  Pruned worktrees in ${repoId}`));
+                        }
+                        catch (error) {
+                            // Ignore prune errors
+                        }
+                    }
+                }
+            }
+        }
         // Remove workspace directory
         console.log(chalk_1.default.blue('Removing workspace directory...'));
         console.log(chalk_1.default.gray(`  Path: ${workspacePath}`));
@@ -460,13 +490,19 @@ exports.featureCommands = {
             }
             try {
                 console.log(chalk_1.default.gray(`  Processing ${repoId}...`));
+                // Remove worktree BEFORE merging to avoid conflicts
+                const worktreePath = path_1.default.join(workspacePath, repoId);
+                if (await (0, config_1.pathExists)(worktreePath)) {
+                    console.log(chalk_1.default.gray(`    Removing worktree at ${worktreePath}...`));
+                    await (0, git_1.removeWorktree)(mainRepoPath, worktreePath);
+                }
                 // Merge branch
                 await (0, git_1.mergeBranch)(mainRepoPath, branchName, targetBranch);
                 // Push if not disabled
                 if (!options.noPush) {
                     await (0, git_1.pushBranch)(mainRepoPath, targetBranch);
                 }
-                // Delete feature branch
+                // Delete feature branch (now safe since worktree is removed)
                 await (0, git_1.deleteBranch)(mainRepoPath, branchName, true);
             }
             catch (error) {
