@@ -96,9 +96,12 @@ async function createOrchestratorCommand() {
         // Create ai.properties.md template
         const aiProperties = generateAiProperties(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'ai.properties.md'), aiProperties, 'utf-8');
-        // Create context-manifest.json
+        // Create context-manifest.json (empty repositories)
         const manifest = generateManifest(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
+        // Create context-manifest-example.json (with example repositories)
+        const manifestExample = generateManifestExample(answers);
+        await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest-example.json'), JSON.stringify(manifestExample, null, 2), 'utf-8');
         // Copy command templates
         await copyCommandTemplates(targetDir, answers.language);
         // Create .contextrc.json pointing to itself
@@ -123,7 +126,8 @@ ai.properties.md
         console.log(chalk_1.default.gray('  .sessions/               - Feature session data'));
         console.log(chalk_1.default.gray('  .contextrc.json          - CLI configuration'));
         console.log(chalk_1.default.gray('  ai.properties.md         - Configuration template (gitignored)'));
-        console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest'));
+        console.log(chalk_1.default.gray('  context-manifest.json    - Repository manifest (empty)'));
+        console.log(chalk_1.default.gray('  context-manifest-example.json - Repository manifest example'));
         // Initialize Git if requested
         if (answers.initGit) {
             console.log(chalk_1.default.blue('\n🔧 Initializing Git repository...'));
@@ -194,7 +198,8 @@ ${answers.projectName}/
 │       └── warm-up.md       # Context loading command
 ├── .sessions/               # Feature session data (gitignored)
 ├── ai.properties.md         # Configuration (gitignored - each dev has their own)
-└── context-manifest.json    # Repository manifest
+├── context-manifest.json         # Repository manifest (empty - add your repos)
+└── context-manifest-example.json # Example manifest with sample repositories
 \`\`\`
 
 ## ⚙️ Configuration
@@ -210,7 +215,7 @@ Edit \`ai.properties.md\` to configure:
 ## 🚀 Usage
 
 1. Configure \`ai.properties.md\` with your project paths
-2. Define your repositories in \`context-manifest.json\`
+2. Define your repositories in \`context-manifest.json\` (see \`context-manifest-example.json\` for reference)
 3. Use \`context-cli\` to manage features and workspaces
 
 ## 📝 License
@@ -255,6 +260,14 @@ frontend.build_command=npm run build
 `;
 }
 function generateManifest(answers) {
+    return {
+        version: '1.0',
+        project: answers.projectName,
+        description: answers.description,
+        repositories: [],
+    };
+}
+function generateManifestExample(answers) {
     return {
         version: '1.0',
         project: answers.projectName,
