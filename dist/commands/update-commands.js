@@ -96,8 +96,48 @@ async function updateCommands() {
             ],
         },
     ]);
-    // 5. Copiar templates atualizados
-    const templatesPath = path.join(__dirname, '..', 'templates', 'commands');
+    // 5. Detectar idioma do workspace (se houver)
+    let language = 'en'; // default
+    const sessionsDir = path.join(process.cwd(), '.sessions');
+    if (fs.existsSync(sessionsDir)) {
+        // Tentar encontrar um workspace existente para detectar idioma
+        const workspaces = fs.readdirSync(sessionsDir);
+        if (workspaces.length > 0) {
+            const firstWorkspace = workspaces[0];
+            const metadataPath = path.join(sessionsDir, firstWorkspace, '.workspace.json');
+            if (fs.existsSync(metadataPath)) {
+                try {
+                    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
+                    if (metadata.language) {
+                        language = metadata.language;
+                        console.log(chalk_1.default.gray(`✓ Detected language from workspace: ${language}`));
+                    }
+                }
+                catch (error) {
+                    // Ignore errors, use default
+                }
+            }
+        }
+    }
+    // Se não detectou, perguntar
+    if (language === 'en') {
+        const { selectedLanguage } = await inquirer_1.default.prompt([
+            {
+                type: 'list',
+                name: 'selectedLanguage',
+                message: 'Select language for AI commands:',
+                choices: [
+                    { name: '🇺🇸 English', value: 'en' },
+                    { name: '🇪🇸 Español', value: 'es' },
+                    { name: '🇧🇷 Português (Brasil)', value: 'pt-BR' },
+                ],
+                default: 'en',
+            },
+        ]);
+        language = selectedLanguage;
+    }
+    // 6. Copiar templates atualizados
+    const templatesPath = path.join(__dirname, '..', 'templates', 'commands', language);
     if (!fs.existsSync(templatesPath)) {
         console.log(chalk_1.default.red('❌ Error: Templates not found'));
         console.log(chalk_1.default.yellow('Please reinstall context-first-cli'));

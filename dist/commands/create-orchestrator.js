@@ -60,6 +60,17 @@ async function createOrchestratorCommand() {
                 default: 'jira',
             },
             {
+                type: 'list',
+                name: 'language',
+                message: 'Select language for AI commands:',
+                choices: [
+                    { name: '🇺🇸 English', value: 'en' },
+                    { name: '🇪🇸 Español', value: 'es' },
+                    { name: '🇧🇷 Português (Brasil)', value: 'pt-BR' },
+                ],
+                default: 'en',
+            },
+            {
                 type: 'confirm',
                 name: 'initGit',
                 message: 'Initialize Git repository and create initial commit?',
@@ -89,7 +100,7 @@ async function createOrchestratorCommand() {
         const manifest = generateManifest(answers);
         await promises_1.default.writeFile(path_1.default.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
         // Copy command templates
-        await copyCommandTemplates(targetDir);
+        await copyCommandTemplates(targetDir, answers.language);
         // Create .contextrc.json pointing to itself
         const contextrc = {
             orchestratorRepo: `file://${path_1.default.resolve(targetDir)}`,
@@ -140,8 +151,9 @@ ai.properties.md
         process.exit(1);
     }
 }
-async function copyCommandTemplates(targetDir) {
-    const templatesDir = path_1.default.join(__dirname, '..', '..', 'templates', 'commands');
+async function copyCommandTemplates(targetDir, language = 'en') {
+    // Use language-specific templates
+    const templatesDir = path_1.default.join(__dirname, '..', '..', 'templates', 'commands', language);
     const targetCommandsDir = path_1.default.join(targetDir, '.claude', 'commands');
     // Copy warm-up.md
     await promises_1.default.copyFile(path_1.default.join(templatesDir, 'warm-up.md'), path_1.default.join(targetCommandsDir, 'warm-up.md'));

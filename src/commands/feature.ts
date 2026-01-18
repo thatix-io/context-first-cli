@@ -162,6 +162,22 @@ export const featureCommands = {
       repoIds = selectedRepos;
     }
 
+    // Select language for AI commands
+    const { language } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'language',
+        message: 'Select language for AI commands:',
+        choices: [
+          { name: '🇺🇸 English', value: 'en' },
+          { name: '🇪🇸 Español', value: 'es' },
+          { name: '🇧🇷 Português (Brasil)', value: 'pt-BR' },
+        ],
+        default: 'en',
+      },
+    ]);
+    console.log(chalk.gray(`✓ Language: ${language}`));
+
     // Create workspace directory in orchestrator/.sessions/
     const sessionsDir = path.join(orchestratorPath, '.sessions');
     await ensureDir(sessionsDir);
@@ -225,6 +241,7 @@ export const featureCommands = {
     const metadata: WorkspaceMetadata = {
       issueId,
       repositories: repoIds,
+      language,
       createdAt: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
       status: 'active',
@@ -392,9 +409,25 @@ export const featureCommands = {
 
     // Remove workspace directory
     console.log(chalk.blue('Removing workspace directory...'));
-    await fs.rm(workspacePath, { recursive: true, force: true });
-
-    console.log(chalk.green(`\n✅ Workspace ${issueId} removed successfully`));
+    console.log(chalk.gray(`  Path: ${workspacePath}`));
+    
+    try {
+      await fs.rm(workspacePath, { recursive: true, force: true });
+      
+      // Verify deletion
+      const stillExists = await pathExists(workspacePath);
+      if (stillExists) {
+        console.log(chalk.yellow(`  Warning: Directory still exists after deletion attempt`));
+        // Try alternative deletion method
+        const { execSync } = require('child_process');
+        execSync(`rm -rf "${workspacePath}"`);
+      }
+      
+      console.log(chalk.green(`\n✅ Workspace ${issueId} removed successfully`));
+    } catch (error: any) {
+      console.log(chalk.red(`  Error removing directory: ${error.message}`));
+      throw error;
+    }
   },
 
   status: async (issueId?: string) => {

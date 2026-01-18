@@ -9,6 +9,7 @@ interface ScaffoldAnswers {
   description: string;
   metaspecsUrl: string;
   taskManager: 'jira' | 'linear' | 'github' | 'none';
+  language: 'en' | 'es' | 'pt-BR';
   initGit: boolean;
 }
 
@@ -64,6 +65,17 @@ export async function createOrchestratorCommand() {
         default: 'jira',
       },
       {
+        type: 'list',
+        name: 'language',
+        message: 'Select language for AI commands:',
+        choices: [
+          { name: '🇺🇸 English', value: 'en' },
+          { name: '🇪🇸 Español', value: 'es' },
+          { name: '🇧🇷 Português (Brasil)', value: 'pt-BR' },
+        ],
+        default: 'en',
+      },
+      {
         type: 'confirm',
         name: 'initGit',
         message: 'Initialize Git repository and create initial commit?',
@@ -100,7 +112,7 @@ export async function createOrchestratorCommand() {
     await fs.writeFile(path.join(targetDir, 'context-manifest.json'), JSON.stringify(manifest, null, 2), 'utf-8');
 
     // Copy command templates
-    await copyCommandTemplates(targetDir);
+    await copyCommandTemplates(targetDir, answers.language);
 
     // Create .contextrc.json pointing to itself
     const contextrc = {
@@ -160,8 +172,9 @@ ai.properties.md
   }
 }
 
-async function copyCommandTemplates(targetDir: string): Promise<void> {
-  const templatesDir = path.join(__dirname, '..', '..', 'templates', 'commands');
+async function copyCommandTemplates(targetDir: string, language: string = 'en'): Promise<void> {
+  // Use language-specific templates
+  const templatesDir = path.join(__dirname, '..', '..', 'templates', 'commands', language);
   const targetCommandsDir = path.join(targetDir, '.claude', 'commands');
 
   // Copy warm-up.md

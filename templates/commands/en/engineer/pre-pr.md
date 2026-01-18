@@ -1,0 +1,262 @@
+# Preparation for Pull Request
+
+This command validates that everything is ready to create Pull Requests.
+
+## 📋 Prerequisites
+
+- Complete implementation (all `/plan` tasks executed)
+- All commits made
+- Clean and organized workspace
+
+## 🎯 Objective
+
+Ensure that the implementation is complete, tested, and ready for review before creating the PRs.
+
+## ✅ Validation Checklist
+
+### 1. Implementation Completeness
+
+```markdown
+## Completeness Check
+
+- [ ] All plan tasks have been executed
+- [ ] All functional requirements from the PRD have been implemented
+- [ ] All acceptance criteria have been met
+- [ ] No functionality is left half-done
+```
+
+### 2. Code Quality
+
+For each modified repository:
+
+```bash
+cd <repositório>
+
+# Check status
+git status
+
+# Check linting
+npm run lint  # or equivalent command
+
+# Check formatting
+npm run format:check  # or equivalent command
+
+# Check build
+npm run build  # or equivalent command
+```
+
+Checklist:
+```markdown
+## Code Quality
+
+### <repo-1>
+- [ ] Linting without errors
+- [ ] Correct formatting
+- [ ] Build without errors
+- [ ] No critical warnings
+
+### <repo-2>
+- [ ] Linting without errors
+- [ ] Correct formatting
+- [ ] Build without errors
+- [ ] No critical warnings
+```
+
+### 3. Tests
+
+For each repository:
+
+```bash
+cd <repositório>
+
+# Run unit tests
+npm run test:unit  # or equivalent command
+
+# Run integration tests
+npm run test:integration  # or equivalent command
+
+# Check coverage
+npm run test:coverage  # or equivalent command
+```
+
+Checklist:
+```markdown
+## Tests
+
+### <repo-1>
+- [ ] All unit tests passing
+- [ ] All integration tests passing
+- [ ] Adequate test coverage (>= X%)
+- [ ] New tests added for new features
+
+### <repo-2>
+- [ ] All unit tests passing
+- [ ] All integration tests passing
+- [ ] Adequate test coverage (>= X%)
+- [ ] New tests added for new features
+```
+
+### 4. Documentation
+
+```markdown
+## Documentation
+
+- [ ] README updated (if necessary)
+- [ ] Appropriate code comments
+- [ ] API documentation updated (if there are changes)
+- [ ] Changelog updated
+- [ ] Technical documentation updated in metaspecs (if applicable)
+```
+
+### 5. Commits
+
+```markdown
+## Commits
+
+- [ ] All commits have clear and descriptive messages
+- [ ] Commits follow the project standard (conventional commits, etc.)
+- [ ] No commits with generic messages ("fix", "update", etc.)
+- [ ] Commits are logically organized
+- [ ] No debug or temporary commits
+```
+
+### 6. Synchronization
+
+```markdown
+## Synchronization
+
+- [ ] Branches are up to date with the base branch (main/develop)
+- [ ] No merge conflicts
+- [ ] Changes between repositories are synchronized
+- [ ] Dependencies between repos have been tested
+```
+
+### 7. Security
+
+```markdown
+## Security
+
+- [ ] No credentials or secrets in the code
+- [ ] No sensitive data in logs
+- [ ] Security dependencies have been checked
+- [ ] No known vulnerabilities introduced
+```
+
+### 8. Performance
+
+```markdown
+## Performance
+
+- [ ] No obvious performance regressions
+- [ ] Costly queries/operations have been optimized
+- [ ] No memory leaks introduced
+- [ ] PRD performance requirements have been met
+```
+
+## 🔍 Cross Validation
+
+If multiple repositories were modified:
+
+```markdown
+## Cross Validation
+
+- [ ] Tested integration between repositories locally
+- [ ] APIs/contracts between repos are consistent
+- [ ] No undocumented breaking changes
+- [ ] Deployment/merge order is clear
+```
+
+## 📄 PR Description Preparation
+
+Create `./.sessions/<ISSUE-ID>/pr-description.md`:
+
+```markdown
+## 🎯 Objective
+[Brief description of what this feature does]
+
+## 📝 Main Changes
+- [Change 1]
+- [Change 2]
+- [Change 3]
+
+## 🔗 Links
+- **Issue**: [ISSUE-ID]
+- **PRD**: [link or path]
+- **Technical Plan**: [link or path]
+
+## ✅ Checklist
+- [x] Code implemented and tested
+- [x] Unit tests added/updated
+- [x] Integration tests passing
+- [x] Documentation updated
+- [x] Linting and formatting OK
+- [x] Build without errors
+
+## 🧪 How to Test
+1. [Step 1]
+2. [Step 2]
+3. [Expected result]
+
+## 🔍 Notes for Reviewers
+- [Attention point 1]
+- [Attention point 2]
+```
+
+## 🚨 Issues Found
+
+If any validation fails:
+1. 🛑 **STOP** the PR creation process
+2. 📝 **DOCUMENT** the issue
+3. 🔧 **FIX** the issue
+4. 🔄 **RUN** `/pre-pr` again
+
+## 📊 Validation Report
+
+Create `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
+
+```markdown
+# Pre-PR Validation Report
+
+**Date**: [date/time]
+**Issue**: [ISSUE-ID]
+
+## Overall Status
+✅ Ready for PR / ⚠️ Pending / ❌ Blocked
+
+## Validated Repositories
+- **<repo-1>**: ✅ OK
+- **<repo-2>**: ✅ OK
+
+## Test Summary
+- **Unit Tests**: X/X passing
+- **Integration Tests**: Y/Y passing
+- **Coverage**: Z%
+
+## Pending Items (if any)
+- [Pending item 1]
+- [Pending item 2]
+
+## Next Steps
+- [x] All validations passed
+- [ ] Run `/pr` to create Pull Requests
+```
+
+---
+
+**Provided arguments**:
+
+```
+#$ARGUMENTS
+```
+
+---
+
+## 🎯 Next Step
+
+If all validations passed:
+
+```bash
+/pr
+```
+
+This command will create the Pull Requests for all modified repositories.

@@ -124,6 +124,21 @@ exports.featureCommands = {
             ]);
             repoIds = selectedRepos;
         }
+        // Select language for AI commands
+        const { language } = await inquirer_1.default.prompt([
+            {
+                type: 'list',
+                name: 'language',
+                message: 'Select language for AI commands:',
+                choices: [
+                    { name: '🇺🇸 English', value: 'en' },
+                    { name: '🇪🇸 Español', value: 'es' },
+                    { name: '🇧🇷 Português (Brasil)', value: 'pt-BR' },
+                ],
+                default: 'en',
+            },
+        ]);
+        console.log(chalk_1.default.gray(`✓ Language: ${language}`));
         // Create workspace directory in orchestrator/.sessions/
         const sessionsDir = path_1.default.join(orchestratorPath, '.sessions');
         await (0, config_1.ensureDir)(sessionsDir);
@@ -182,6 +197,7 @@ exports.featureCommands = {
         const metadata = {
             issueId,
             repositories: repoIds,
+            language,
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             status: 'active',
@@ -320,8 +336,23 @@ exports.featureCommands = {
         }
         // Remove workspace directory
         console.log(chalk_1.default.blue('Removing workspace directory...'));
-        await promises_1.default.rm(workspacePath, { recursive: true, force: true });
-        console.log(chalk_1.default.green(`\n✅ Workspace ${issueId} removed successfully`));
+        console.log(chalk_1.default.gray(`  Path: ${workspacePath}`));
+        try {
+            await promises_1.default.rm(workspacePath, { recursive: true, force: true });
+            // Verify deletion
+            const stillExists = await (0, config_1.pathExists)(workspacePath);
+            if (stillExists) {
+                console.log(chalk_1.default.yellow(`  Warning: Directory still exists after deletion attempt`));
+                // Try alternative deletion method
+                const { execSync } = require('child_process');
+                execSync(`rm -rf "${workspacePath}"`);
+            }
+            console.log(chalk_1.default.green(`\n✅ Workspace ${issueId} removed successfully`));
+        }
+        catch (error) {
+            console.log(chalk_1.default.red(`  Error removing directory: ${error.message}`));
+            throw error;
+        }
     },
     status: async (issueId) => {
         const sessionsDir = await getSessionsDir();

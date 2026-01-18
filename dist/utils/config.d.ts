@@ -21,6 +21,7 @@ export interface Repository {
 export interface WorkspaceMetadata {
     issueId: string;
     repositories: string[];
+    language?: string;
     createdAt: string;
     lastUpdated: string;
     status: 'active' | 'archived';
