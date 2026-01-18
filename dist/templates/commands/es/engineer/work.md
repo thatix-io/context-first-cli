@@ -2,19 +2,19 @@
 
 Este comando ejecuta una unidad de trabajo en el workspace actual, implementando parte del plan técnico.
 
-## 📋 Requisitos Previos
+## 📋 Prerrequisitos
 
-Antes de ejecutar, asegúrese de que:
-- Ha ejecutado `/start` y `/plan` para tener el plan técnico
-- Está en el workspace correcto: `<orchestrator>/.sessions/<ISSUE-ID>/`
-- Tiene los archivos `.sessions/<ISSUE-ID>/` disponibles:
+Antes de ejecutar, asegúrate de que:
+- Has ejecutado `/start` y `/plan` para tener el plan técnico
+- Estás en el workspace correcto: `<orchestrator>/.sessions/<ISSUE-ID>/`
+- Tienes disponibles los archivos `.sessions/<ISSUE-ID>/`:
   - `context.md` (inmutable)
   - `architecture.md` (inmutable)
   - `plan.md` (mutable)
 
-## 📍 IMPORTANTE: Entienda la Estructura
+## 📍 IMPORTANTE: Entiende la Estructura
 
-**Workspace** (donde trabaja):
+**Workspace** (donde trabajas):
 ```
 <orchestrator>/.sessions/<ISSUE-ID>/
 ├── repo-1/          # worktree con branch feature/<ISSUE-ID>
@@ -31,10 +31,33 @@ Antes de ejecutar, asegúrese de que:
 ```
 
 **REGLA DE ORO**:
-- ✅ Trabaje SÓLO dentro de `<orchestrator>/.sessions/<ISSUE-ID>/`
-- ✅ Haga commits en los worktrees dentro del workspace
-- ❌ NUNCA haga checkout en los repositorios principales
-- ❌ NUNCA navegue a `{base_path}/{repo-id}/`
+- ✅ Trabaja SÓLO dentro de `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ Haz commits en los worktrees dentro del workspace
+- ❌ NUNCA hagas checkout en los repositorios principales
+- ❌ NUNCA navegues a `{base_path}/{repo-id}/`
+
+## 🛑 CRÍTICO: DÓNDE CREAR CÓDIGO
+
+**⚠️ ATENCIÓN: TODO CÓDIGO DEBE SER CREADO DENTRO DEL WORKTREE DEL REPOSITORIO!**
+
+**✅ CORRECTO** - Crear código dentro del worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/package.json  ✅
+```
+
+**❌ INCORRECTO** - NUNCA crear código directamente en .sessions:
+```
+<orchestrator>/.sessions/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/file.ts  ❌
+```
+
+**REGLA ABSOLUTA**:
+- 🛑 **TODO archivo de código** (`.ts`, `.js`, `.py`, `.java`, etc.) **DEBE estar dentro de** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA crees código** directamente en `<orchestrator>/.sessions/` o `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ **Único lugar válido**: Dentro del worktree del repositorio específico
 
 ## ⚠️ IMPORTANTE: Archivos Inmutables
 
@@ -42,19 +65,20 @@ Antes de ejecutar, asegúrese de que:
 - ✅ **LEER** `.sessions/<ISSUE-ID>/context.md` (inmutable)
 - ✅ **LEER** `.sessions/<ISSUE-ID>/architecture.md` (inmutable)
 - ✅ **ACTUALIZAR** `.sessions/<ISSUE-ID>/plan.md` (marcar progreso)
-- ✅ **IMPLEMENTAR** código en los repositorios del workspace
-- ✅ **HACER COMMITS** en los repositorios del workspace
+- ✅ **IMPLEMENTAR** código **DENTRO DEL WORKTREE**: `.sessions/<ISSUE-ID>/<repo-name>/`
+- ✅ **HACER COMMITS** en los worktrees: `.sessions/<ISSUE-ID>/<repo-name>/`
 - ❌ **NO modificar `context.md` o `architecture.md`**
 - ❌ **NO hacer checkout de branches en los repositorios principales (fuera del workspace)**
+- 🛑 **NUNCA crear código en `.sessions/` o `.sessions/<ISSUE-ID>/` directamente**
 
 ## 📚 Cargar MetaSpecs
 
 **Localizar MetaSpecs automáticamente**:
-1. Lea `context-manifest.json` del orchestrator
-2. Encuentre el repositorio con `"role": "metaspecs"`
-3. Lea `ai.properties.md` para obtener el `base_path`
+1. Lee `context-manifest.json` del orchestrator
+2. Encuentra el repositorio con `"role": "metaspecs"`
+3. Lee `ai.properties.md` para obtener el `base_path`
 4. El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
-5. Lea los archivos `index.md` relevantes durante la implementación para:
+5. Lee los archivos `index.md` relevantes durante la implementación para:
    - Seguir patrones de código
    - Respetar arquitectura definida
    - Usar convenciones correctas
@@ -71,27 +95,27 @@ Implementar una unidad de trabajo específica del plan, que puede involucrar:
 
 **⚠️ IMPORTANTE: CONTROL DE PROGRESO**
 
-Este comando ejecuta el trabajo en **fases incrementales**. Después de completar cada **FASE PRINCIPAL** (ej: Fase 1 → Fase 2):
+Este comando ejecuta el trabajo en **fases incrementales**. Tras completar cada **FASE PRINCIPAL** (ej: Fase 1 → Fase 2):
 
-1. 🛑 **PARE** la ejecución
-2. 📊 **PRESENTE** un resumen de lo realizado
-3. ❓ **PREGUNTE** al desarrollador si quiere:
+1. 🛑 **DETÉN** la ejecución
+2. 📊 **PRESENTA** un resumen de lo realizado
+3. ❓ **PREGUNTA** al desarrollador si quiere:
    - Revisar el código implementado
    - Hacer ajustes antes de continuar
    - Continuar a la siguiente fase
 
 **IMPORTANTE**:
-- ✅ **PAUSE** entre fases principales (Fase 1 → Fase 2 → Fase 3)
-- ❌ **NO pause** entre subfases (Fase 1.1 → Fase 1.2 → Fase 1.3)
+- ✅ **PAUSA** entre fases principales (Fase 1 → Fase 2 → Fase 3)
+- ❌ **NO pauses** entre subfases (Fase 1.1 → Fase 1.2 → Fase 1.3)
 
-**NO implemente todo de una vez**. Trabaje fase principal por fase principal, esperando confirmación del desarrollador.
+**NO implementes todo de una vez**. Trabaja fase principal por fase principal, esperando confirmación del desarrollador.
 
 ---
 
 ### 1. Identificar Unidad de Trabajo
 
-Basado en el plan técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
-- Qué tarea específica será implementada ahora
+Basado en el plan técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifica:
+- Qué tarea específica se implementará ahora
 - En cuál(es) repositorio(s) del workspace
 - Qué archivos serán creados/modificados
 - Dependencias con otras tareas
@@ -100,34 +124,34 @@ Basado en el plan técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
 
 
 
-**IMPORTANTE**: Trabaje SÓLO dentro del workspace en `.sessions/<ISSUE-ID>/`
+**IMPORTANTE**: Trabaja SÓLO dentro del workspace en `.sessions/<ISSUE-ID>/`
 
 Para cada repositorio en el workspace:
 
 ```bash
-# Navegue al worktree dentro del workspace
+# Navega al worktree dentro del workspace
 cd <orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/
 
-# Verifique que está en la branch correcta
+# Verifica que estás en la branch correcta
 git branch  # debe mostrar * feature/<ISSUE-ID>
 
-# Implemente el código aquí
+# Implementa el código aquí
 ```
 
-Ejecute la implementación siguiendo:
-- **Patrones del proyecto**: Consulte guías de estilo y arquitectura
-- **Stack aprobada**: Use sólo tecnologías documentadas en las metaspecs
-- **Pruebas**: Implemente pruebas conforme a los patrones del proyecto
-- **Documentación**: Actualice comentarios y docs cuando sea necesario
+Ejecuta la implementación siguiendo:
+- **Patrones del proyecto**: Consulta guías de estilo y arquitectura
+- **Stack aprobada**: Usa sólo tecnologías documentadas en las metaspecs
+- **Pruebas**: Implementa pruebas conforme a los estándares del proyecto
+- **Documentación**: Actualiza comentarios y docs cuando sea necesario
 
 
 
 ### 3. Validación Local
 
 Antes de commitear:
-- Ejecute pruebas unitarias/integración
-- Verifique linting y formato
-- Confirme que no rompió funcionalidades existentes
+- Ejecuta pruebas unitarias/integración
+- Verifica linting y formato
+- Confirma que no rompiste funcionalidades existentes
 
 
 
@@ -136,10 +160,10 @@ Antes de commitear:
 Para cada repositorio modificado **dentro del workspace**:
 
 ```bash
-# Navegue al worktree dentro del workspace
+# Navega al worktree dentro del workspace
 cd <orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/
 
-# Añada los cambios
+# Añade los cambios
 git add .
 
 # Commit
@@ -153,15 +177,15 @@ Refs: <ISSUE-ID>"
 
 **Tipos de commit**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
-**⚠️ PAUSA OBLIGATORIA**: Después de completar TODA la fase principal (identificación + implementación + validación + commit + actualización del plan.md), **PARE** y muestre al desarrollador:
+**⚠️ PAUSA OBLIGATORIA**: Tras completar TODA la fase principal (identificación + implementación + validación + commit + actualización del plan.md), **DETÉN** y muestra al desarrollador:
 - Resumen completo de la fase
 - Archivos creados/modificados
 - Commits realizados
-- Pregunte si quiere revisar o continuar a la siguiente fase
+- Pregunta si quiere revisar o continuar a la siguiente fase
 
 ### 5. Actualización del Plan.md
 
-**POR CADA tarea completada**, actualice `./.sessions/<ISSUE-ID>/plan.md`:
+**POR CADA tarea completada**, actualiza `./.sessions/<ISSUE-ID>/plan.md`:
 
 ```markdown
 #### 1.1 - [Nombre de la Tarea] [Completada ✅]
@@ -182,9 +206,9 @@ Refs: <ISSUE-ID>"
 - Aprendizaje: [Algo aprendido durante implementación]
 ```
 
-**Marque estado de las tareas**:
+**Marca el estado de las tareas**:
 - `[No Iniciada ⏳]` - Tarea aún no comenzó
-- `[En Progreso ⏰]` - Tarea en curso ahora
+- `[En Progreso ⏰]` - Tarea en curso
 - `[Completada ✅]` - Tarea finalizada y validada
 
 ## 🔍 Checklist de Calidad
@@ -199,11 +223,11 @@ Antes de considerar la unidad completa:
 
 ## ⚠️ Principio Jidoka
 
-Si encuentra problemas durante la implementación:
-1. 🛑 **PARE** la implementación
-2. 📝 **DOCUMENTE** el problema encontrado
-3. 💬 **ALERTE** al usuario y discuta soluciones
-4. 🔄 **AJUSTE** el plan si es necesario
+Si encuentras problemas durante la implementación:
+1. 🛑 **DETÉN** la implementación
+2. 📝 **DOCUMENTA** el problema encontrado
+3. 💬 **ALERTA** al usuario y discute soluciones
+4. 🔄 **AJUSTA** el plan si es necesario
 
 ---
 
@@ -217,12 +241,12 @@ Si encuentra problemas durante la implementación:
 
 ## 🎯 Próximos Pasos
 
-- **Continuar implementación**: Ejecute `/work` nuevamente para la siguiente unidad
-- **Finalizar feature**: Cuando todo esté implementado, ejecute `/pre-pr`
+- **Continuar implementación**: Ejecuta `/work` nuevamente para la siguiente unidad
+- **Finalizar feature**: Cuando todo esté implementado, ejecuta `/pre-pr`
 
 ## 💡 Consejos
 
-- Trabaje en unidades pequeñas e incrementales
+- Trabaja en unidades pequeñas e incrementales
 - Commit frecuente (commits atómicos)
-- Documente decisiones importantes en la sesión
-- Mantenga los repositorios sincronizados entre sí
+- Documenta decisiones importantes en la sesión
+- Mantén los repositorios sincronizados entre sí

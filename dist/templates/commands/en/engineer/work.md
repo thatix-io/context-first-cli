@@ -36,16 +36,40 @@ Before executing, make sure that:
 - ❌ NEVER checkout branches in the main repositories
 - ❌ NEVER navigate to `{base_path}/{repo-id}/`
 
+## 🛑 CRITICAL: WHERE TO CREATE CODE
+
+**⚠️ ATTENTION: ALL CODE MUST BE CREATED INSIDE THE REPOSITORY WORKTREE!**
+
+**✅ CORRECT** - Create code inside the worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/package.json  ✅
+```
+
+**❌ WRONG** - NEVER create code directly in .sessions:
+```
+<orchestrator>/.sessions/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/file.ts  ❌
+```
+
+**ABSOLUTE RULE**:
+- 🛑 **EVERY code file** (`.ts`, `.js`, `.py`, `.java`, etc.) **MUST be inside** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NEVER create code** directly in `<orchestrator>/.sessions/` or `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ **Only valid place**: Inside the specific repository worktree
+
 ## ⚠️ IMPORTANT: Immutable Files
 
 **This command must READ but NOT MODIFY:**
 - ✅ **READ** `.sessions/<ISSUE-ID>/context.md` (immutable)
 - ✅ **READ** `.sessions/<ISSUE-ID>/architecture.md` (immutable)
 - ✅ **UPDATE** `.sessions/<ISSUE-ID>/plan.md` (mark progress)
-- ✅ **IMPLEMENT** code in the workspace repositories
-- ✅ **MAKE COMMITS** in the workspace repositories
+- ✅ **IMPLEMENT** code **INSIDE THE WORKTREE**: `.sessions/<ISSUE-ID>/<repo-name>/`
+- ✅ **MAKE COMMITS** in the worktrees: `.sessions/<ISSUE-ID>/<repo-name>/`
 - ❌ **DO NOT modify `context.md` or `architecture.md`**
-- ❌ **DO NOT checkout branches in the main repositories (outside workspace)**
+- ❌ **DO NOT checkout branches in the main repositories (outside the workspace)**
+- 🛑 **NEVER create code directly in `.sessions/` or `.sessions/<ISSUE-ID>/`**
 
 ## 📚 Load MetaSpecs
 
@@ -53,8 +77,8 @@ Before executing, make sure that:
 1. Read `context-manifest.json` from the orchestrator
 2. Find the repository with `"role": "metaspecs"`
 3. Read `ai.properties.md` to get the `base_path`
-4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
-5. Read the relevant `index.md` files during implementation to:
+4. The metaspecs are at: `{base_path}/{metaspecs-repo-id}/`
+5. Read relevant `index.md` files during implementation to:
    - Follow coding standards
    - Respect defined architecture
    - Use correct conventions
@@ -71,7 +95,7 @@ Implement a specific unit of work from the plan, which may involve:
 
 **⚠️ IMPORTANT: PROGRESS CONTROL**
 
-This command executes work in **incremental phases**. After completing each **MAIN PHASE** (e.g., Phase 1 → Phase 2):
+This command executes the work in **incremental phases**. After completing each **MAIN PHASE** (e.g., Phase 1 → Phase 2):
 
 1. 🛑 **STOP** execution
 2. 📊 **PRESENT** a summary of what was done
@@ -84,7 +108,7 @@ This command executes work in **incremental phases**. After completing each **MA
 - ✅ **PAUSE** between main phases (Phase 1 → Phase 2 → Phase 3)
 - ❌ **DO NOT pause** between subphases (Phase 1.1 → Phase 1.2 → Phase 1.3)
 
-**DO NOT implement everything at once**. Work main phase by main phase, waiting for developer confirmation.
+**DO NOT implement everything at once**. Work main phase by main phase, awaiting developer confirmation.
 
 ---
 
@@ -92,7 +116,7 @@ This command executes work in **incremental phases**. After completing each **MA
 
 Based on the technical plan (`./.sessions/<ISSUE-ID>/plan.md`), identify:
 - Which specific task will be implemented now
-- In which workspace repository(ies)
+- In which repository(ies) of the workspace
 - Which files will be created/modified
 - Dependencies with other tasks
 
@@ -100,7 +124,7 @@ Based on the technical plan (`./.sessions/<ISSUE-ID>/plan.md`), identify:
 
 
 
-**IMPORTANT**: Work ONLY inside the workspace at `.sessions/<ISSUE-ID>/`
+**IMPORTANT**: Work ONLY inside the workspace in `.sessions/<ISSUE-ID>/`
 
 For each repository in the workspace:
 
@@ -133,7 +157,7 @@ Before committing:
 
 ### 4. Commit
 
-For each modified repository **inside the workspace**:
+For each repository modified **inside the workspace**:
 
 ```bash
 # Navigate to the worktree inside the workspace

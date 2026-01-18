@@ -36,16 +36,40 @@ Antes de executar, certifique-se de que:
 - ❌ NUNCA faça checkout nos repositórios principais
 - ❌ NUNCA navegue para `{base_path}/{repo-id}/`
 
+## 🛑 CRÍTICO: ONDE CRIAR CÓDIGO
+
+**⚠️ ATENÇÃO: TODO CÓDIGO DEVE SER CRIADO DENTRO DO WORKTREE DO REPOSITÓRIO!**
+
+**✅ CORRETO** - Criar código dentro do worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/package.json  ✅
+```
+
+**❌ ERRADO** - NUNCA criar código diretamente em .sessions:
+```
+<orchestrator>/.sessions/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/src/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/file.ts  ❌
+```
+
+**REGRA ABSOLUTA**:
+- 🛑 **TODO arquivo de código** (`.ts`, `.js`, `.py`, `.java`, etc.) **DEVE estar dentro de** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA crie código** diretamente em `<orchestrator>/.sessions/` ou `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ **Único lugar válido**: Dentro do worktree do repositório específico
+
 ## ⚠️ IMPORTANTE: Arquivos Imutáveis
 
 **Este comando deve LER mas NÃO MODIFICAR:**
 - ✅ **LER** `.sessions/<ISSUE-ID>/context.md` (imutável)
 - ✅ **LER** `.sessions/<ISSUE-ID>/architecture.md` (imutável)
 - ✅ **ATUALIZAR** `.sessions/<ISSUE-ID>/plan.md` (marcar progresso)
-- ✅ **IMPLEMENTAR** código nos repositórios do workspace
-- ✅ **FAZER COMMITS** nos repositórios do workspace
+- ✅ **IMPLEMENTAR** código **DENTRO DO WORKTREE**: `.sessions/<ISSUE-ID>/<repo-name>/`
+- ✅ **FAZER COMMITS** nos worktrees: `.sessions/<ISSUE-ID>/<repo-name>/`
 - ❌ **NÃO modificar `context.md` ou `architecture.md`**
 - ❌ **NÃO fazer checkout de branches nos repositórios principais (fora do workspace)**
+- 🛑 **NUNCA criar código em `.sessions/` ou `.sessions/<ISSUE-ID>/` diretamente**
 
 ## 📚 Carregar MetaSpecs
 
