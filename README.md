@@ -22,6 +22,7 @@ To enable parallel development without conflicts, the CLI uses **Feature Workspa
 
 -   **Isolation**: Every feature has its own folder, preventing any overlap or context-clash between concurrent tasks.
 -   **Efficiency**: Powered by `git worktree`, creating and switching between workspaces is nearly instantaneous.
+-   **Docker Support**: Automatically generates `docker-compose.yml` with dynamic ports based on issue number, allowing multiple workspaces to run simultaneously without port conflicts.
 
 ### 3. The Agnostic CLI (`context-cli`)
 
@@ -130,8 +131,17 @@ This command will:
 3.  If a repository isn't found and `auto_clone` is true, it will clone it for you.
 4.  Create a new, isolated workspace in the orchestrator (e.g., `orchestrator/.sessions/FIN-123/`).
 5.  Use `git worktree` to efficiently check out a new feature branch for each selected repository into the workspace.
+6.  **Generate a `docker-compose.yml`** with dynamic ports based on the issue number (e.g., FIN-11 → backend:3011, frontend:8011, postgres:5411).
 
 Your isolated, multi-repo development environment is ready, organized within your orchestrator!
+
+**Running Services:**
+```bash
+cd orchestrator/.sessions/FIN-123
+docker-compose up -d  # Start all services
+# Access: Backend at http://localhost:3123, Frontend at http://localhost:8123
+docker-compose down   # Stop all services
+```
 
 ### Step 5: Manage Your Workspaces
 

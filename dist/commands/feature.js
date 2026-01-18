@@ -11,6 +11,7 @@ const inquirer_1 = __importDefault(require("inquirer"));
 const config_1 = require("../utils/config");
 const git_1 = require("../utils/git");
 const ai_properties_1 = require("../utils/ai-properties");
+const docker_1 = require("../utils/docker");
 /**
  * Get orchestrator path from config
  */
@@ -186,11 +187,15 @@ exports.featureCommands = {
             status: 'active',
         };
         await (0, config_1.saveWorkspaceMetadata)(workspacePath, metadata);
+        // Generate docker-compose.yml
+        console.log(chalk_1.default.blue('\nGenerating docker-compose.yml...'));
+        await (0, docker_1.generateDockerCompose)(workspacePath, issueId, selectedRepos);
         console.log(chalk_1.default.green.bold('\n✅ Workspace created successfully!'));
         console.log(chalk_1.default.blue('\n📁 Workspace location:'));
         console.log(chalk_1.default.white(`   ${workspacePath}`));
         console.log(chalk_1.default.blue('\n💡 Next steps:'));
         console.log(chalk_1.default.gray(`   cd ${workspacePath}`));
+        console.log(chalk_1.default.gray('   docker-compose up -d  # Start services'));
         console.log(chalk_1.default.gray('   code .'));
         console.log(chalk_1.default.gray('   # Start working on your feature!'));
     },
@@ -276,6 +281,8 @@ exports.featureCommands = {
                 return;
             }
         }
+        // Cleanup Docker containers
+        await (0, docker_1.cleanupDockerContainers)(workspacePath, issueId);
         // Remove worktrees
         console.log(chalk_1.default.blue('Removing worktrees...'));
         // Load ai.properties to get base_path

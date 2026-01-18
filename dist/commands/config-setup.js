@@ -123,6 +123,13 @@ async function configSetupCommand() {
         else if (taskAnswers.taskManager === 'github') {
             content += `github_repo=${taskAnswers.githubRepo}\n`;
         }
+        content += `\n## Docker Configuration\n\n`;
+        content += `# Base ports for services (will be incremented by issue number)\n`;
+        content += `# Example: For FIN-11, backend will use port 3011, frontend 8011, etc.\n`;
+        content += `docker.backend_base_port=3000\n`;
+        content += `docker.frontend_base_port=8000\n`;
+        content += `docker.postgres_base_port=5400\n`;
+        content += `docker.redis_base_port=6300\n`;
         content += `\n## Repository Commands\n\n`;
         content += `# Define commands for each repository (lint, test, build, etc.)\n`;
         content += `# Example:\n`;

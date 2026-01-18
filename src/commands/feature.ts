@@ -27,6 +27,10 @@ import {
   getBasePath,
   isAutoCloneEnabled,
 } from '../utils/ai-properties';
+import {
+  generateDockerCompose,
+  cleanupDockerContainers,
+} from '../utils/docker';
 
 /**
  * Get orchestrator path from config
@@ -227,11 +231,16 @@ export const featureCommands = {
     };
     await saveWorkspaceMetadata(workspacePath, metadata);
 
+    // Generate docker-compose.yml
+    console.log(chalk.blue('\nGenerating docker-compose.yml...'));
+    await generateDockerCompose(workspacePath, issueId, selectedRepos);
+
     console.log(chalk.green.bold('\n✅ Workspace created successfully!'));
     console.log(chalk.blue('\n📁 Workspace location:'));
     console.log(chalk.white(`   ${workspacePath}`));
     console.log(chalk.blue('\n💡 Next steps:'));
     console.log(chalk.gray(`   cd ${workspacePath}`));
+    console.log(chalk.gray('   docker-compose up -d  # Start services'));
     console.log(chalk.gray('   code .'));
     console.log(chalk.gray('   # Start working on your feature!'));
   },
@@ -337,6 +346,9 @@ export const featureCommands = {
         return;
       }
     }
+
+    // Cleanup Docker containers
+    await cleanupDockerContainers(workspacePath, issueId);
 
     // Remove worktrees
     console.log(chalk.blue('Removing worktrees...'));
