@@ -76,6 +76,21 @@ export async function addRepoMetaspecCommand() {
       },
       {
         type: 'input',
+        name: 'id',
+        message: 'Repository folder name (must match the local directory name in base_path):',
+        default: 'metaspecs',
+        validate: (input: string) => {
+          if (!input.trim()) {
+            return 'Folder name is required';
+          }
+          if (input.includes('/') || input.includes('\\')) {
+            return 'Folder name cannot contain path separators';
+          }
+          return true;
+        },
+      },
+      {
+        type: 'input',
         name: 'description',
         message: 'Repository description:',
         default: 'MetaSpecs repository with technical and business specifications',
@@ -84,7 +99,7 @@ export async function addRepoMetaspecCommand() {
 
     // Create metaspecs repository entry
     const metaspecsRepo: Repository = {
-      id: 'metaspecs',
+      id: answers.id,
       role: 'specs-provider',
       url: answers.url,
       description: answers.description,
@@ -98,7 +113,7 @@ export async function addRepoMetaspecCommand() {
 
     console.log(chalk.green('\n✅ MetaSpecs repository added successfully!'));
     console.log(chalk.blue('\n📝 Repository details:'));
-    console.log(chalk.gray(`  ID: metaspecs`));
+    console.log(chalk.gray(`  ID: ${answers.id}`));
     console.log(chalk.gray(`  Role: specs-provider`));
     console.log(chalk.gray(`  URL: ${answers.url}`));
     console.log(chalk.gray(`  Description: ${answers.description}`));
