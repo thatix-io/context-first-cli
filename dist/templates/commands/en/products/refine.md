@@ -1,6 +1,6 @@
 # Requirements Refinement
 
-You are a product expert responsible for helping to refine requirements for the project.
+You are a product expert tasked with helping to refine requirements for the project.
 
 ## ⚠️ IMPORTANT: This Command DOES NOT Implement Code
 
@@ -31,7 +31,7 @@ Read the initial requirement and ask questions to achieve full clarity about:
 - **Scope**: What is included and what is NOT included?
 - **Interactions**: Which existing features/components are affected?
 
-Keep asking questions until you have full understanding.
+Keep asking questions until you have complete understanding.
 
 ### 2. Validation Against Metaspecs
 
@@ -39,7 +39,7 @@ Keep asking questions until you have full understanding.
 
 **Validation Process**:
 
-1. **Consult the indexes loaded** by `/warm-up`:
+1. **Consult the loaded indexes** from `/warm-up`:
    - Read `context-manifest.json` to find the repository with `role: "metaspecs"`
    - Obtain the `id` of that repository (e.g., "my-project-metaspecs")
    - Read `ai.properties.md` to get the `base_path`
@@ -61,7 +61,7 @@ Keep asking questions until you have full understanding.
    - ✅ Follows existing business rules
    - ⚠️ Identify conflicts or violations
 
-**If violations are identified**: 🛑 **STOP** and ask the user for clarification before proceeding (Jidoka Principle).
+**If you identify violations**: 🛑 **STOP** and ask the user for clarification before proceeding (Jidoka Principle).
 
 ### 3. Summary and Approval Phase
 
@@ -69,13 +69,42 @@ Once you have gathered sufficient information and validated against metaspecs, p
 - **Feature**: Feature name
 - **Objective**: Why build it (1-2 sentences)
 - **Business Value**: Metric, persona, roadmap phase (consult metaspecs)
-- **Scope**: What INCLUDES and what DOES NOT INCLUDE
+- **Scope**: What it INCLUDES and what it DOES NOT INCLUDE
 - **Affected Components**: List based on current architecture (consult technical metaspecs)
 - **Validation against Metaspecs**: ✅ Approved / ⚠️ Attention needed
+- **Effort Estimate**: Small (< 1 day) / Medium (1-3 days) / Large (3-5 days) / Very Large (> 5 days)
+
+**Complexity Assessment and Suggestion to Break Down**:
+
+**If the implementation seems large** (> 5 days estimated effort):
+- 🚨 **Suggest breaking into multiple smaller issues**
+- Explain the rationale for the breakdown (e.g., "This feature involves 3 distinct areas that can be implemented independently")
+- Propose a **logical** breakdown based on:
+  - Independent functionalities
+  - Different repositories
+  - Application layers (backend, frontend, infra)
+  - Implementation phases (MVP, improvements, optimizations)
+- Example breakdown:
+  ```
+  Original Issue: "Multi-channel notification system"
+  
+  Suggested Breakdown:
+  - FIN-201: Queue and worker infrastructure (backend)
+  - FIN-202: Email notifications (backend + templates)
+  - FIN-203: Push notifications (backend + mobile)
+  - FIN-204: Notification preferences (frontend + backend)
+  ```
+- **Important**: The final decision is the user's - they may accept the breakdown or keep it as a single issue
+
+**If the user accepts the breakdown**:
+- Document each issue separately
+- Add cross-references between related issues
+- Suggest implementation order if dependencies exist
+- Each broken-down issue must go through the same refinement process
 
 Request user approval and incorporate feedback if necessary.
 
-**Tip**: You may research the codebase or internet before finalizing, if needed.
+**Tip**: You may search the codebase or internet before finalizing, if needed.
 
 ### 4. Saving the Refined Requirements
 
@@ -88,7 +117,7 @@ Once the user approves, save the requirements:
 1. **ALWAYS create local backup first**:
    - Create a complete file at `./.sessions/<ISSUE-ID>/refined.md` (e.g., `./.sessions/FIN-5/refined.md`)
    - Where `<ISSUE-ID>` is the issue ID (e.g., FIN-5, FIN-123)
-   - Include ALL refinement details (complete backup)
+   - Include ALL refinement details (full backup)
 
 2. **If task manager is configured** (read `ai.properties.md` to identify `task_management_system`):
    - Identify the MCP tool of the task manager
@@ -96,8 +125,8 @@ Once the user approves, save the requirements:
      - For Jira: Use Jira MCP with `description` field
      - For Linear: Use Linear MCP with `description` field
      - For GitHub: Use GitHub MCP with `body` field
-     - **IMPORTANT**: Create a SUMMARY version (max 3000 words) to avoid API limits
-     - Include link to local file at the end: "Full document: `.sessions/<ISSUE-ID>/refined.md`"
+     - Include all refined content in the issue description/body field
+     - If content is too long and API errors occur, consider creating a summarized version
    - **ALWAYS overwrite** the existing body (do not append)
 
 **Note**:
@@ -106,7 +135,7 @@ Once the user approves, save the requirements:
 
 **Output Template**:
 
-**IMPORTANT**: The default template for refined requirements may be documented in the metaspecs repository. Check `{base_path}/{metaspecs-id}/specs/refined/` or similar.
+**IMPORTANT**: The standard template for refined requirements may be documented in the metaspecs repository. Check `{base_path}/{metaspecs-id}/specs/refined/` or similar.
 
 **FULL Template** (for local backup `.sessions/<ISSUE-ID>/refined.md`):
 - **Metadata**: Issue, ID, Task Manager, Project, Date, Sprint, Priority
@@ -115,18 +144,18 @@ Once the user approves, save the requirements:
 - **🔧 HOW**: Stack, coding standards, file structure, dependencies, implementation order, failure modes, performance/cost/UX considerations
 - **✅ Validation against Metaspecs**: Consulted documents (business and technical), verified ADRs, validation result
 - **📊 Success Metrics**: Technical, product/UX, acceptance criteria
-- **🔄 Product Impact**: Alignment with goals, enablers, mitigated risks
+- **🔄 Product Impact**: Alignment with objectives, enablers, mitigated risks
 - **⚠️ Known Limitations**: MVP limitations
 - **📝 Implementation Checklist**: Tasks by area (backend, frontend, testing, security, etc.)
 
-**SUMMARY Template** (for task manager - max 3000 words):
+**Task Manager Template**:
 ```markdown
 # [Feature Name] - Refined Requirements
 
 **Sprint X** | **Y days** | **Priority**
 
 ## Objective
-[1-2 paragraphs: what it is and why do it]
+[1-2 paragraphs: what it is and why]
 
 ## Scope
 
@@ -146,7 +175,7 @@ Once the user approves, save the requirements:
 ❌ [item 1] ❌ [item 2] ❌ [item 3]
 
 ## Stack
-[Tech stack summarized by area]
+[Tech stack summary by area]
 
 ## Structure
 [SUMMARIZED file tree - main modules only]

@@ -86,12 +86,36 @@ Apenas certifique-se de que a ideia esteja **adequadamente compreendida**.
    - Repositórios afetados
    - Prioridade sugerida
 
-3. **Aprovação do Usuário**
-   - Apresente o rascunho
+3. **Avaliação de Complexidade e Sugestão de Quebra**
+   
+   Antes de finalizar, avalie a complexidade da issue:
+   
+   **Se a implementação parecer grande** (> 5 dias de esforço estimado):
+   - 🚨 **Sugira quebrar em múltiplas issues menores**
+   - Explique o racional da quebra (ex: "Esta feature envolve 3 áreas distintas: autenticação, processamento e notificação")
+   - Proponha uma quebra **lógica** (por funcionalidade, por repositório, por camada, etc.)
+   - Exemplo de quebra:
+     ```
+     Issue Original: "Sistema de pagamentos completo"
+     
+     Quebra Sugerida:
+     - FIN-101: Integração com gateway de pagamento (backend)
+     - FIN-102: Interface de checkout (frontend)
+     - FIN-103: Webhook de confirmação e notificações (backend + jobs)
+     ```
+   - **Importante**: A decisão final é do usuário - ele pode aceitar a quebra ou manter como issue única
+   
+   **Se o usuário aceitar a quebra**:
+   - Crie cada issue separadamente usando o mesmo processo
+   - Adicione referências cruzadas entre as issues relacionadas
+   - Sugira ordem de implementação se houver dependências
+
+4. **Aprovação do Usuário**
+   - Apresente o rascunho (ou rascunhos, se houver quebra)
    - Faça ajustes conforme feedback
    - Obtenha aprovação final
 
-4. **Salvamento da Issue**
+5. **Salvamento da Issue**
 
    **PRIORIDADE 1: Usar MCP (Model Context Protocol)**
    

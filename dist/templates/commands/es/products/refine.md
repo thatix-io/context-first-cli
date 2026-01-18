@@ -11,7 +11,7 @@ Eres un especialista en producto encargado de ayudar a refinar requisitos para e
 - ✅ Actualizar issue en el task manager
 - ❌ **NO implementar código**
 - ❌ **NO hacer ediciones en archivos de código**
-- ❌ **NO ejecutar pruebas ni deploy**
+- ❌ **NO ejecutar pruebas o deploy**
 
 **Próximo paso**: `/spec [ISSUE-ID]` para crear PRD completo basado en los requisitos refinados.
 
@@ -56,7 +56,7 @@ Continúa haciendo preguntas hasta tener entendimiento completo.
 4. **Valida el requisito** contra las metaspecs leídas:
    - ✅ Alineación con estrategia y visión de producto
    - ✅ Atiende necesidades de las personas correctas
-   - ✅ Compatible con stack tecnológica aprobada
+   - ✅ Compatible con stack tecnológico aprobado
    - ✅ Respeta decisiones arquitecturales (ADRs)
    - ✅ Sigue reglas de negocio existentes
    - ⚠️ Identifica conflictos o violaciones
@@ -72,10 +72,39 @@ Una vez que hayas recopilado información suficiente y validado contra metaspecs
 - **Alcance**: Qué INCLUYE y qué NO INCLUYE
 - **Componentes Afectados**: Lista basada en la arquitectura actual (consulta metaspecs técnicas)
 - **Validación contra Metaspecs**: ✅ Aprobado / ⚠️ Atención necesaria
+- **Estimación de Esfuerzo**: Pequeño (< 1 día) / Medio (1-3 días) / Grande (3-5 días) / Muy Grande (> 5 días)
+
+**Evaluación de Complejidad y Sugerencia de División**:
+
+**Si la implementación parece grande** (> 5 días de esfuerzo estimado):
+- 🚨 **Sugiere dividir en múltiples issues menores**
+- Explica el racional de la división (ej: "Esta feature involucra 3 áreas distintas que pueden implementarse independientemente")
+- Propón una división **lógica** basada en:
+  - Funcionalidades independientes
+  - Repositorios diferentes
+  - Capas de la aplicación (backend, frontend, infra)
+  - Fases de implementación (MVP, mejoras, optimizaciones)
+- Ejemplo de división:
+  ```
+  Issue Original: "Sistema de notificaciones multi-canal"
+  
+  División Sugerida:
+  - FIN-201: Infraestructura de colas y workers (backend)
+  - FIN-202: Notificaciones por email (backend + templates)
+  - FIN-203: Notificaciones push (backend + mobile)
+  - FIN-204: Preferencias de notificación (frontend + backend)
+  ```
+- **Importante**: La decisión final es del usuario - puede aceptar la división o mantener como issue única
+
+**Si el usuario acepta la división**:
+- Documenta cada issue por separado
+- Añade referencias cruzadas entre las issues relacionadas
+- Sugiere orden de implementación si hay dependencias
+- Cada issue dividida debe pasar por el mismo proceso de refinamiento
 
 Pide aprobación del usuario e incorpora feedback si es necesario.
 
-**Consejo**: Puedes investigar en el código base o internet antes de finalizar, si es necesario.
+**Consejo**: Puedes buscar en el código base o internet antes de finalizar, si es necesario.
 
 ### 4. Guardado de los Requisitos Refinados
 
@@ -92,34 +121,34 @@ Una vez que el usuario apruebe, guarda los requisitos:
 
 2. **Si el task manager está configurado** (lee `ai.properties.md` para identificar `task_management_system`):
    - Identifica la herramienta MCP del task manager
-   - **Actualiza el BODY (descripción) de la issue** con versión CONCISA de los requisitos refinados
+   - **Actualiza el BODY (description) de la issue** con versión CONCISA de los requisitos refinados
      - Para Jira: Usa MCP de Jira con campo `description`
      - Para Linear: Usa MCP de Linear con campo `description`
      - Para GitHub: Usa MCP de GitHub con campo `body`
-     - **IMPORTANTE**: Crea versión RESUMIDA (máx 3000 palabras) para evitar problemas con límites de API
-     - Incluye enlace al archivo local al final: "Documento completo: `.sessions/<ISSUE-ID>/refined.md`"
-   - **SIEMPRE sobrescribe** el body existente (no agregues al final)
+     - Incluye todo el contenido refinado en el campo description/body de la issue
+     - Si el contenido es muy extenso y hay error de API, considera crear versión resumida
+   - **SIEMPRE sobrescribe** el body existente (no agregar al final)
 
 **Observación**:
 - El backup local SIEMPRE está guardado y completo
 - Si hay error de API, verifica manualmente si la issue fue actualizada en el task manager
 
-**Plantilla de Salida**:
+**Template de Salida**:
 
-**IMPORTANTE**: La plantilla estándar para requisitos refinados puede estar documentada en el repositorio de metaspecs. Consulta `{base_path}/{metaspecs-id}/specs/refined/` o similar.
+**IMPORTANTE**: El template estándar para requisitos refinados puede estar documentado en el repositorio de metaspecs. Consulta `{base_path}/{metaspecs-id}/specs/refined/` o similar.
 
-**Plantilla COMPLETA** (para backup local `.sessions/<ISSUE-ID>/refined.md`):
+**Template COMPLETO** (para backup local `.sessions/<ISSUE-ID>/refined.md`):
 - **Metadatos**: Issue, ID, Task Manager, Proyecto, Fecha, Sprint, Prioridad
 - **🎯 POR QUÉ**: Razones, valor de negocio, métrica, persona, alineamiento estratégico
 - **📦 QUÉ**: Funcionalidades detalladas, componentes afectados, integraciones, alcance negativo completo
-- **🔧 CÓMO**: Stack, patrones de código, estructura de archivos, dependencias, orden de implementación, modos de fallo, consideraciones de performance/costo/UX
+- **🔧 CÓMO**: Stack, patrones de código, estructura de archivos, dependencias, orden de implementación, failure modes, consideraciones de performance/costo/UX
 - **✅ Validación contra Metaspecs**: Documentos consultados (business y technical), ADRs verificados, resultado de la validación
 - **📊 Métricas de Éxito**: Técnicas, producto/UX, criterios de aceptación
 - **🔄 Impacto en el Producto**: Alineamiento con objetivos, habilitadores, riesgos mitigados
 - **⚠️ Limitaciones Conocidas**: Limitaciones del MVP
-- **📝 Checklist de Implementación**: Tareas por área (backend, frontend, pruebas, seguridad, etc.)
+- **📝 Checklist de Implementación**: Tareas por área (backend, frontend, tests, seguridad, etc.)
 
-**Plantilla RESUMIDA** (para task manager - máx 3000 palabras):
+**Template para Task Manager**:
 ```markdown
 # [Nombre Feature] - Requisitos Refinados
 
@@ -140,25 +169,25 @@ Una vez que el usuario apruebe, guarda los requisitos:
 - Componente 2: [tipo de cambio]
 
 ### Seguridad
-✅ [item 1] ✅ [item 2] ✅ [item 3]
+✅ [ítem 1] ✅ [ítem 2] ✅ [ítem 3]
 
 ## Alcance Negativo
-❌ [item 1] ❌ [item 2] ❌ [item 3]
+❌ [ítem 1] ❌ [ítem 2] ❌ [ítem 3]
 
 ## Stack
 [Tech stack resumida por área]
 
 ## Estructura
-[Árbol de archivos RESUMIDO - principales módulos solamente]
+[Árbol de archivos RESUMIDO - módulos principales solamente]
 
-## Modos de Fallo (Evitar)
+## Failure Modes (Evitar)
 🔴 [crítico 1] 🔴 [crítico 2]
 🟡 [medio 1] 🟡 [medio 2]
 
 ## Criterios de Aceptación
-- [ ] [item 1]
-- [ ] [item 2]
-- [ ] [item 3]
+- [ ] [ítem 1]
+- [ ] [ítem 2]
+- [ ] [ítem 3]
 
 ## Validación
 **ADRs**: [lista]
@@ -186,7 +215,7 @@ Una vez que el usuario apruebe, guarda los requisitos:
 
 ## 🎯 Próximo Paso
 
-**Tras aprobación del usuario y guardado de los requisitos refinados**, el flujo natural es:
+**Tras la aprobación del usuario y guardado de los requisitos refinados**, el flujo natural es:
 
 ```bash
 /spec [ISSUE-ID]

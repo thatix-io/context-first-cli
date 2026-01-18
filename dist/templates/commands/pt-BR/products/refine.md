@@ -72,6 +72,35 @@ Uma vez que tenha coletado informações suficientes e validado contra metaspecs
 - **Escopo**: O que INCLUI e o que NÃO INCLUI
 - **Componentes Afetados**: Lista baseada na arquitetura atual (consulte metaspecs técnicas)
 - **Validação contra Metaspecs**: ✅ Aprovado / ⚠️ Atenção necessária
+- **Estimativa de Esforço**: Pequeno (< 1 dia) / Médio (1-3 dias) / Grande (3-5 dias) / Muito Grande (> 5 dias)
+
+**Avaliação de Complexidade e Sugestão de Quebra**:
+
+**Se a implementação parecer grande** (> 5 dias de esforço estimado):
+- 🚨 **Sugira quebrar em múltiplas issues menores**
+- Explique o racional da quebra (ex: "Esta feature envolve 3 áreas distintas que podem ser implementadas independentemente")
+- Proponha uma quebra **lógica** baseada em:
+  - Funcionalidades independentes
+  - Repositórios diferentes
+  - Camadas da aplicação (backend, frontend, infra)
+  - Fases de implementação (MVP, melhorias, otimizações)
+- Exemplo de quebra:
+  ```
+  Issue Original: "Sistema de notificações multi-canal"
+  
+  Quebra Sugerida:
+  - FIN-201: Infraestrutura de filas e workers (backend)
+  - FIN-202: Notificações por email (backend + templates)
+  - FIN-203: Notificações push (backend + mobile)
+  - FIN-204: Preferências de notificação (frontend + backend)
+  ```
+- **Importante**: A decisão final é do usuário - ele pode aceitar a quebra ou manter como issue única
+
+**Se o usuário aceitar a quebra**:
+- Documente cada issue separadamente
+- Adicione referências cruzadas entre as issues relacionadas
+- Sugira ordem de implementação se houver dependências
+- Cada issue quebrada deve passar pelo mesmo processo de refinamento
 
 Peça aprovação do usuário e incorpore feedback se necessário.
 
@@ -96,8 +125,8 @@ Uma vez que o usuário aprove, salve os requisitos:
      - Para Jira: Use MCP do Jira com campo `description`
      - Para Linear: Use MCP do Linear com campo `description`
      - Para GitHub: Use MCP do GitHub com campo `body`
-     - **IMPORTANTE**: Crie versão RESUMIDA (máx 3000 palavras) para evitar problemas com limites de API
-     - Inclua link para arquivo local no final: "Documento completo: `.sessions/<ISSUE-ID>/refined.md`"
+     - Inclua todo o conteúdo refinado no campo description/body da issue
+     - Se o conteúdo for muito extenso e houver erro de API, considere criar versão resumida
    - **SEMPRE sobrescrever** o body existente (não adicionar ao final)
 
 **Observação**:
@@ -119,7 +148,7 @@ Uma vez que o usuário aprove, salve os requisitos:
 - **⚠️ Limitações Conhecidas**: Limitações do MVP
 - **📝 Checklist de Implementação**: Tarefas por área (backend, frontend, testes, segurança, etc.)
 
-**Template RESUMIDO** (para task manager - máx 3000 palavras):
+**Template para Task Manager**:
 ```markdown
 # [Nome Feature] - Requisitos Refinados
 

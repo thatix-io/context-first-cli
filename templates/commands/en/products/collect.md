@@ -1,18 +1,18 @@
-# Idea and Requirements Collection
+# Idea and Requirements Gathering
 
-You are a product expert responsible for collecting and documenting new ideas, features, or bugs.
+You are a product specialist responsible for collecting and documenting new ideas, features, or bugs.
 
-## ⚠️ IMPORTANT: This Command Does NOT Implement Code
+## ⚠️ IMPORTANT: This Command DOES NOT Implement Code
 
 **This command is ONLY for planning and documentation:**
 - ✅ Collect and understand requirements
-- ✅ Create issue in task manager via MCP
-- ✅ Ask clarifying questions
+- ✅ Create issue in the task manager via MCP
+- ✅ Ask clarification questions
 - ✅ **READ** files from main repositories (read-only)
 - ❌ **DO NOT implement code**
 - ❌ **DO NOT edit code files**
 - ❌ **DO NOT checkout branches in main repositories**
-- ❌ **DO NOT make commits**
+- ❌ **DO NOT commit**
 
 **Next step**: `/refine [ISSUE-ID]` to refine the collected requirements.
 
@@ -22,27 +22,27 @@ You are a product expert responsible for collecting and documenting new ideas, f
 
 Before starting, load the context by consulting:
 
-1. **Locate MetaSpecs automatically**:
-   - Read `context-manifest.json` from orchestrator
+1. **Automatically Locate MetaSpecs**:
+   - Read `context-manifest.json` from the orchestrator
    - Find the repository with `"role": "metaspecs"`
    - Read `ai.properties.md` to get the `base_path`
-   - Metaspecs is at: `{base_path}/{metaspecs-repo-id}/`
-   - Read `index.md` files as reference
+   - The metaspecs are at: `{base_path}/{metaspecs-repo-id}/`
+   - Read the `index.md` files as reference
 
-2. **Project structure**:
-   - `context-manifest.json` - List of repositories and their functions
-   - `README.md` of involved repositories
+2. **Project Structure**:
+   - `context-manifest.json` - List of repositories and their roles
+   - `README.md` of the involved repositories
 
-## Your Objective
+## Your Goal
 
 Understand the user's request and capture it as an issue in the task manager (via MCP).
 
 **At this stage, you DO NOT need to:**
-- ❌ Write complete specification
+- ❌ Write a complete specification
 - ❌ Validate against metaspecs (this is done in `/refine` or `/spec`)
 - ❌ Detail technical implementation
 
-Just make sure the idea is **adequately understood**.
+Just ensure the idea is **adequately understood**.
 
 ## Issue Format
 
@@ -50,7 +50,7 @@ Just make sure the idea is **adequately understood**.
 # [Clear and Descriptive Title]
 
 ## Description
-[2-3 paragraphs explaining what the feature/bug is and why it's important]
+[2-3 paragraphs explaining what the feature/bug is and why it is important]
 
 ## Type
 - [ ] New Feature
@@ -60,7 +60,7 @@ Just make sure the idea is **adequately understood**.
 - [ ] Documentation
 
 ## Additional Context
-[Relevant information: where the bug occurs, feature inspiration, etc.]
+[Relevant information: where the bug occurs, inspiration for the feature, etc.]
 
 ## Affected Repositories
 [List which project repositories will be impacted]
@@ -75,65 +75,89 @@ Just make sure the idea is **adequately understood**.
 ## Collection Process
 
 1. **Initial Understanding**
-   - Ask clarifying questions if needed
+   - Ask clarification questions if needed
    - Identify: Is it a new feature? Improvement? Bug?
    - Identify which repositories will be affected
 
 2. **Issue Draft**
-   - Clear title (maximum 10 words)
+   - Clear title (max 10 words)
    - Objective description (2-3 paragraphs)
    - Relevant additional context
    - Affected repositories
    - Suggested priority
 
-3. **User Approval**
-   - Present the draft
+3. **Complexity Assessment and Suggestion to Split**
+   
+   Before finalizing, assess the issue complexity:
+   
+   **If the implementation seems large** (> 5 days estimated effort):
+   - 🚨 **Suggest splitting into multiple smaller issues**
+   - Explain the rationale for splitting (e.g., "This feature involves 3 distinct areas: authentication, processing, and notification")
+   - Propose a **logical** split (by functionality, repository, layer, etc.)
+   - Example of splitting:
+     ```
+     Original Issue: "Complete payment system"
+     
+     Suggested Split:
+     - FIN-101: Payment gateway integration (backend)
+     - FIN-102: Checkout interface (frontend)
+     - FIN-103: Confirmation webhook and notifications (backend + jobs)
+     ```
+   - **Important**: The final decision is the user's - they can accept the split or keep it as a single issue
+   
+   **If the user accepts the split**:
+   - Create each issue separately using the same process
+   - Add cross-references between related issues
+   - Suggest implementation order if dependencies exist
+
+4. **User Approval**
+   - Present the draft (or drafts, if split)
    - Make adjustments based on feedback
    - Obtain final approval
 
-4. **Issue Saving**
+5. **Saving the Issue**
 
    **PRIORITY 1: Use MCP (Model Context Protocol)**
    
-   Check if there's MCP configured for task manager:
-   - Read `ai.properties.md` from orchestrator to identify the `task_management_system`
+   Check if MCP is configured for the task manager:
+   - Read `ai.properties.md` from the orchestrator to identify the `task_management_system`
    - If `task_management_system=jira`: Use Jira MCP to create the issue
    - If `task_management_system=linear`: Use Linear MCP to create the issue
    - If `task_management_system=github`: Use GitHub MCP to create the issue
    
    **When using MCP:**
    - Create the issue directly in the task manager
-   - Get the created issue ID (e.g., FIN-123, LIN-456)
+   - Obtain the created issue ID (e.g., FIN-123, LIN-456)
    - Inform the user: "✅ Issue [ID] created in [task manager]"
-   - **DO NOT create .md file**
+   - **DO NOT create a .md file**
    
    **FALLBACK: Create .md file only if MCP fails**
    
-   If MCP is not available or fails:
-   - Create file at `./.sessions/<ISSUE-ID>/collect.md`
+   If MCP is unavailable or fails:
+   - Create a file at `./.sessions/<ISSUE-ID>/collect.md`
    - Use manual ID format: `LOCAL-001`, `LOCAL-002`, etc.
-   - Include date, type, and complete content
+   - Include date, type, and full content
    - Inform the user: "⚠️ Issue saved locally in .sessions/ (task manager not available)"
 
-## Clarifying Questions
+## Clarification Questions
 
 **For Features**:
 - What problem does it solve?
 - Who benefits?
-- Is it visible functionality or infrastructure?
+- Is it a visible functionality or infrastructure?
 - Is it related to any existing feature?
-- Which repositories need to be modified?
+- Which repositories need modification?
 
 **For Bugs**:
 - Where does the bug occur? (repository, component, flow)
 - How to reproduce?
-- What is the expected vs actual behavior?
-- Impact severity?
+- Expected vs current behavior?
+- Severity of impact?
 
 **For Improvements**:
-- What is working but can improve?
-- Which metric do we want to impact?
-- Is it technical or business optimization?
+- What is working but can be improved?
+- What metric do we want to impact?
+- Is it a technical or business optimization?
 
 ---
 
@@ -147,7 +171,7 @@ Just make sure the idea is **adequately understood**.
 
 ## 🎯 Next Step
 
-After approval and issue saving:
+After approval and saving the issue:
 
 ```bash
 /refine [ISSUE-ID]
