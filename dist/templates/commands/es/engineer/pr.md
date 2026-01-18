@@ -5,10 +5,33 @@ Este comando crea Pull Requests para todos los repositorios modificados en el wo
 ## 📋 Requisitos previos
 
 Antes de crear PRs, asegúrate de que:
-- Has ejecutado `/pre-pr` y todas las validaciones pasaron
+- Ejecutaste `/pre-pr` y todas las validaciones pasaron
 - Todos los commits fueron realizados
 - Todas las pruebas están pasando
 - La documentación está actualizada
+
+## 🛑 CRÍTICO: DÓNDE TRABAJAR
+
+**⚠️ ATENCIÓN: Si necesitas hacer ajustes de última hora, ¡TODO EL CÓDIGO DEBE SER CREADO DENTRO DEL WORKTREE!**
+
+**✅ CORRECTO** - Trabajar dentro del worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/README.md  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/CHANGELOG.md  ✅
+```
+
+**❌ INCORRECTO** - NUNCA crear código fuera del worktree:
+```
+<orchestrator>/.sessions/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/file.ts  ❌
+{base_path}/<repo-name>/file.ts  ❌ (¡repositorio principal!)
+```
+
+**REGLA ABSOLUTA**:
+- 🛑 **Cualquier ajuste de código** (docs, changelog, fixes) **DEBE estar en** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA modifiques** el repositorio principal en `{base_path}/<repo-name>/`
+- ✅ **Trabaja SÓLO** dentro del worktree del repositorio específico
 
 ## 🎯 Proceso de Creación de PRs
 
@@ -16,7 +39,7 @@ Antes de crear PRs, asegúrate de que:
 
 Para cada repositorio en el workspace, verifica:
 ```bash
-cd <repositório>
+cd <repositorio>
 git status
 git log origin/main..HEAD  # Ver commits no pushados
 ```
@@ -25,7 +48,7 @@ git log origin/main..HEAD  # Ver commits no pushados
 
 Para cada repositorio modificado:
 ```bash
-cd <repositório>
+cd <repositorio>
 git push origin <branch-name>
 ```
 
@@ -35,7 +58,7 @@ Para cada repositorio, crea un PR usando el GitHub CLI o la interfaz web:
 
 **Usando GitHub CLI**:
 ```bash
-cd <repositório>
+cd <repositorio>
 gh pr create --title "[ISSUE-ID] Título de la Feature" \
   --body "$(cat ../.sessions/<ISSUE-ID>/pr-description.md)" \
   --base main
@@ -50,7 +73,7 @@ gh pr create --title "[ISSUE-ID] Título de la Feature" \
 
 ## 📝 Cambios
 
-### Repositorio: <nome-do-repo>
+### Repositorio: <nombre-del-repo>
 
 - [Cambio 1]
 - [Cambio 2]
@@ -70,17 +93,17 @@ gh pr create --title "[ISSUE-ID] Título de la Feature" \
 - [ ] Pruebas de integración pasando
 - [ ] Documentación actualizada
 - [ ] Sin breaking changes (o documentados)
-- [ ] Revisado por pares (después de crear el PR)
+- [ ] Revisado por pares (tras creación del PR)
 
-## 🧪 Cómo Testear
+## 🧪 Cómo Probar
 
 1. [Paso 1]
 2. [Paso 2]
 3. [Resultado esperado]
 
-## 📸 Screenshots/Demos
+## 📸 Capturas/Demos
 
-[Si aplica, añade capturas de pantalla o enlaces a demos]
+[Si aplica, añade capturas o enlaces a demos]
 
 ## 🔍 Notas para Revisores
 
@@ -112,12 +135,12 @@ Actualiza `./.sessions/<ISSUE-ID>/pr.md`:
 ## PRs Creados
 
 ### <repo-1>
-- **Link**: <URL del PR>
+- **Enlace**: <URL del PR>
 - **Estado**: Abierto
 - **Commits**: X commits
 
 ### <repo-2>
-- **Link**: <URL del PR>
+- **Enlace**: <URL del PR>
 - **Estado**: Abierto
 - **Commits**: Y commits
 
@@ -163,5 +186,5 @@ Notifica al equipo sobre los PRs:
 
 1. Esperar revisión de los PRs
 2. Responder comentarios y hacer ajustes
-3. Tras la aprobación, hacer merge en el orden recomendado
+3. Tras aprobación, hacer merge en el orden recomendado
 4. Ejecutar `context-cli feature:end <ISSUE-ID>` para limpiar el workspace

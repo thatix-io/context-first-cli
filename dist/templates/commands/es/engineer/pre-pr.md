@@ -12,6 +12,29 @@ Este comando valida que todo está listo para crear Pull Requests.
 
 Garantizar que la implementación está completa, probada y lista para revisión antes de crear los PRs.
 
+## 🛑 CRÍTICO: DÓNDE TRABAJAR
+
+**⚠️ ATENCIÓN: TODO CÓDIGO (tests, fixes, ajustes) DEBE SER CREADO DENTRO DEL WORKTREE!**
+
+**✅ CORRECTO** - Trabajar dentro del worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/.eslintrc.js  ✅
+```
+
+**❌ INCORRECTO** - NUNCA crear código fuera del worktree:
+```
+<orchestrator>/.sessions/test.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/test.ts  ❌
+{base_path}/<repo-name>/test.ts  ❌ (¡repositorio principal!)
+```
+
+**REGLA ABSOLUTA**:
+- 🛑 **TODO código** (tests, fixes, configuraciones) **DEBE estar en** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA modifiques** el repositorio principal en `{base_path}/<repo-name>/`
+- ✅ **Trabaja SOLO** dentro del worktree del repositorio específico
+
 ## ✅ Checklist de Validación
 
 ### 1. Completitud de la Implementación
@@ -79,14 +102,14 @@ Checklist:
 - [ ] Sin warnings críticos
 ```
 
-### 3. Pruebas
+### 3. Tests
 
 Para cada repositorio:
 
 ```bash
 cd <repositorio>
 
-# Ejecutar pruebas unitarias (ejemplos por stack):
+# Ejecutar tests unitarios (ejemplos por stack):
 # Node.js: npm run test:unit / jest / vitest
 # Python: pytest tests/unit / python -m unittest
 # Java: mvn test / gradle test
@@ -96,7 +119,7 @@ cd <repositorio>
 # PHP: ./vendor/bin/phpunit --testsuite=unit
 # C#: dotnet test --filter Category=Unit
 
-# Ejecutar pruebas de integración (ejemplos por stack):
+# Ejecutar tests de integración (ejemplos por stack):
 # Node.js: npm run test:integration
 # Python: pytest tests/integration
 # Java: mvn verify / gradle integrationTest
@@ -117,19 +140,19 @@ cd <repositorio>
 
 Checklist:
 ```markdown
-## Pruebas
+## Tests
 
 ### <repo-1>
-- [ ] Todas las pruebas unitarias pasando
-- [ ] Todas las pruebas de integración pasando
-- [ ] Cobertura de pruebas adecuada (>= X%)
-- [ ] Nuevas pruebas añadidas para nuevas funcionalidades
+- [ ] Todos los tests unitarios pasan
+- [ ] Todos los tests de integración pasan
+- [ ] Cobertura de tests adecuada (>= X%)
+- [ ] Nuevos tests añadidos para nuevas funcionalidades
 
 ### <repo-2>
-- [ ] Todas las pruebas unitarias pasando
-- [ ] Todas las pruebas de integración pasando
-- [ ] Cobertura de pruebas adecuada (>= X%)
-- [ ] Nuevas pruebas añadidas para nuevas funcionalidades
+- [ ] Todos los tests unitarios pasan
+- [ ] Todos los tests de integración pasan
+- [ ] Cobertura de tests adecuada (>= X%)
+- [ ] Nuevos tests añadidos para nuevas funcionalidades
 ```
 
 ### 4. Documentación
@@ -141,7 +164,7 @@ Checklist:
 - [ ] Comentarios de código adecuados
 - [ ] Documentación de APIs actualizada (si hay cambios)
 - [ ] Changelog actualizado
-- [ ] Documentación técnica actualizada en las metaspecs (si aplica)
+- [ ] Documentación técnica actualizada en metaspecs (si aplica)
 ```
 
 ### 5. Commits
@@ -150,9 +173,9 @@ Checklist:
 ## Commits
 
 - [ ] Todos los commits tienen mensajes claros y descriptivos
-- [ ] Los commits siguen el estándar del proyecto (conventional commits, etc.)
+- [ ] Commits siguen el estándar del proyecto (conventional commits, etc.)
 - [ ] No hay commits con mensajes genéricos ("fix", "update", etc.)
-- [ ] Los commits están organizados lógicamente
+- [ ] Commits están organizados lógicamente
 - [ ] No hay commits de debug o temporales
 ```
 
@@ -161,7 +184,7 @@ Checklist:
 ```markdown
 ## Sincronización
 
-- [ ] Las branches están actualizadas con la branch base (main/develop)
+- [ ] Branches están actualizadas con la branch base (main/develop)
 - [ ] No hay conflictos de merge
 - [ ] Cambios entre repositorios están sincronizados
 - [ ] Dependencias entre repos fueron probadas
@@ -172,7 +195,7 @@ Checklist:
 ```markdown
 ## Seguridad
 
-- [ ] No hay credenciales ni secrets en el código
+- [ ] No hay credenciales o secretos en el código
 - [ ] No hay datos sensibles en logs
 - [ ] Dependencias de seguridad fueron verificadas
 - [ ] No hay vulnerabilidades conocidas introducidas
@@ -183,7 +206,7 @@ Checklist:
 ```markdown
 ## Performance
 
-- [ ] No hay regresiones de performance evidentes
+- [ ] No hay regresiones de performance obvias
 - [ ] Queries/operaciones costosas fueron optimizadas
 - [ ] No hay memory leaks introducidos
 - [ ] Requisitos de performance del PRD fueron cumplidos
@@ -191,7 +214,7 @@ Checklist:
 
 ## 🔍 Validación Cruzada
 
-Si se modificaron múltiples repositorios:
+Si múltiples repositorios fueron modificados:
 
 ```markdown
 ## Validación Cruzada
@@ -199,12 +222,12 @@ Si se modificaron múltiples repositorios:
 - [ ] Probé la integración entre los repositorios localmente
 - [ ] APIs/contratos entre repos están consistentes
 - [ ] No hay breaking changes no documentados
-- [ ] El orden de deploy/merge está claro
+- [ ] Orden de deploy/merge está claro
 ```
 
 ## 📄 Preparación de la Descripción del PR
 
-Cree `./.sessions/<ISSUE-ID>/pr-description.md`:
+Crea `./.sessions/<ISSUE-ID>/pr-description.md`:
 
 ```markdown
 ## 🎯 Objetivo
@@ -215,15 +238,15 @@ Cree `./.sessions/<ISSUE-ID>/pr-description.md`:
 - [Cambio 2]
 - [Cambio 3]
 
-## 🔗 Enlaces
+## 🔗 Links
 - **Issue**: [ISSUE-ID]
 - **PRD**: [link o ruta]
 - **Plan Técnico**: [link o ruta]
 
 ## ✅ Checklist
 - [x] Código implementado y probado
-- [x] Pruebas unitarias añadidas/actualizadas
-- [x] Pruebas de integración pasando
+- [x] Tests unitarios añadidos/actualizados
+- [x] Tests de integración pasando
 - [x] Documentación actualizada
 - [x] Linting y formateo OK
 - [x] Build sin errores
@@ -241,17 +264,17 @@ Cree `./.sessions/<ISSUE-ID>/pr-description.md`:
 ## 🚨 Problemas Encontrados
 
 Si alguna validación falla:
-1. 🛑 **PARE** el proceso de creación de PR
-2. 📝 **DOCUMENTE** el problema
-3. 🔧 **CORRIJA** el problema
-4. 🔄 **EJECUTE** `/pre-pr` nuevamente
+1. 🛑 **DETÉN** el proceso de creación de PR
+2. 📝 **DOCUMENTA** el problema
+3. 🔧 **CORRIGE** el problema
+4. 🔄 **EJECUTA** `/pre-pr` nuevamente
 
-## 📊 Informe de Validación
+## 📊 Reporte de Validación
 
-Cree `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
+Crea `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 
 ```markdown
-# Informe de Validación Pre-PR
+# Reporte de Validación Pre-PR
 
 **Fecha**: [fecha/hora]
 **Issue**: [ISSUE-ID]
@@ -263,12 +286,12 @@ Cree `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 - **<repo-1>**: ✅ OK
 - **<repo-2>**: ✅ OK
 
-## Resumen de Pruebas
-- **Pruebas Unitarias**: X/X pasando
-- **Pruebas de Integración**: Y/Y pasando
+## Resumen de Tests
+- **Tests Unitarios**: X/X pasando
+- **Tests de Integración**: Y/Y pasando
 - **Cobertura**: Z%
 
-## Pendientes (si las hay)
+## Pendientes (si hay)
 - [Pendiente 1]
 - [Pendiente 2]
 

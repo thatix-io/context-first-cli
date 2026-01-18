@@ -4,13 +4,36 @@ This command validates that everything is ready to create Pull Requests.
 
 ## 📋 Prerequisites
 
-- Complete implementation (all `/plan` tasks executed)
+- Complete implementation (all tasks from `/plan` executed)
 - All commits made
 - Clean and organized workspace
 
 ## 🎯 Objective
 
 Ensure that the implementation is complete, tested, and ready for review before creating the PRs.
+
+## 🛑 CRITICAL: WHERE TO WORK
+
+**⚠️ ATTENTION: ALL CODE (tests, fixes, adjustments) MUST BE CREATED INSIDE THE WORKTREE!**
+
+**✅ CORRECT** - Work inside the worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/.eslintrc.js  ✅
+```
+
+**❌ WRONG** - NEVER create code outside the worktree:
+```
+<orchestrator>/.sessions/test.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/test.ts  ❌
+{base_path}/<repo-name>/test.ts  ❌ (main repository!)
+```
+
+**ABSOLUTE RULE**:
+- 🛑 **ALL code** (tests, fixes, configurations) **MUST be in** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NEVER modify** the main repository at `{base_path}/<repo-name>/`
+- ✅ **Work ONLY** inside the specific repository’s worktree
 
 ## ✅ Validation Checklist
 
@@ -19,10 +42,10 @@ Ensure that the implementation is complete, tested, and ready for review before 
 ```markdown
 ## Completeness Check
 
-- [ ] All plan tasks have been executed
+- [ ] All tasks from the plan have been executed
 - [ ] All functional requirements from the PRD have been implemented
 - [ ] All acceptance criteria have been met
-- [ ] No functionality is left half-done
+- [ ] No functionality is half-done
 ```
 
 ### 2. Code Quality
@@ -163,7 +186,7 @@ Checklist:
 
 - [ ] Branches are up to date with the base branch (main/develop)
 - [ ] No merge conflicts
-- [ ] Changes between repositories are synchronized
+- [ ] Changes across repositories are synchronized
 - [ ] Dependencies between repos have been tested
 ```
 
@@ -184,7 +207,7 @@ Checklist:
 ## Performance
 
 - [ ] No obvious performance regressions
-- [ ] Costly queries/operations have been optimized
+- [ ] Expensive queries/operations have been optimized
 - [ ] No memory leaks introduced
 - [ ] PRD performance requirements have been met
 ```
@@ -234,16 +257,16 @@ Create `./.sessions/<ISSUE-ID>/pr-description.md`:
 3. [Expected result]
 
 ## 🔍 Notes for Reviewers
-- [Attention point 1]
-- [Attention point 2]
+- [Point of attention 1]
+- [Point of attention 2]
 ```
 
 ## 🚨 Issues Found
 
 If any validation fails:
 1. 🛑 **STOP** the PR creation process
-2. 📝 **DOCUMENT** the issue
-3. 🔧 **FIX** the issue
+2. 📝 **DOCUMENT** the problem
+3. 🔧 **FIX** the problem
 4. 🔄 **RUN** `/pre-pr` again
 
 ## 📊 Validation Report
@@ -253,11 +276,11 @@ Create `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 ```markdown
 # Pre-PR Validation Report
 
-**Date**: [date/time]
+**Date**: [date/time]  
 **Issue**: [ISSUE-ID]
 
 ## Overall Status
-✅ Ready for PR / ⚠️ Pending / ❌ Blocked
+✅ Ready for PR / ⚠️ Pending Issues / ❌ Blocked
 
 ## Validated Repositories
 - **<repo-1>**: ✅ OK
@@ -268,9 +291,9 @@ Create `./.sessions/<ISSUE-ID>/pre-pr-report.md`:
 - **Integration Tests**: Y/Y passing
 - **Coverage**: Z%
 
-## Pending Items (if any)
-- [Pending item 1]
-- [Pending item 2]
+## Pending Issues (if any)
+- [Pending issue 1]
+- [Pending issue 2]
 
 ## Next Steps
 - [x] All validations passed
@@ -295,4 +318,4 @@ If all validations passed:
 /pr
 ```
 
-This command will create the Pull Requests for all modified repositories.
+This command will create Pull Requests for all modified repositories.

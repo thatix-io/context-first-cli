@@ -10,6 +10,29 @@ Antes de criar PRs, certifique-se de que:
 - Todos os testes estão passando
 - A documentação está atualizada
 
+## 🛑 CRÍTICO: ONDE TRABALHAR
+
+**⚠️ ATENÇÃO: Se precisar fazer ajustes de última hora, TODO CÓDIGO DEVE SER CRIADO DENTRO DO WORKTREE!**
+
+**✅ CORRETO** - Trabalhar dentro do worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/README.md  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/CHANGELOG.md  ✅
+```
+
+**❌ ERRADO** - NUNCA criar código fora do worktree:
+```
+<orchestrator>/.sessions/file.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/file.ts  ❌
+{base_path}/<repo-name>/file.ts  ❌ (repositório principal!)
+```
+
+**REGRA ABSOLUTA**:
+- 🛑 **Qualquer ajuste de código** (docs, changelog, fixes) **DEVE estar em** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA modifique** o repositório principal em `{base_path}/<repo-name>/`
+- ✅ **Trabalhe APENAS** dentro do worktree do repositório específico
+
 ## 🎯 Processo de Criação de PRs
 
 ### 1. Identificar Repositórios Modificados

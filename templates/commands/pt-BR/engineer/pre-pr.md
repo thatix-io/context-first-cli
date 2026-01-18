@@ -12,6 +12,29 @@ Este comando valida que tudo está pronto para criar Pull Requests.
 
 Garantir que a implementação está completa, testada e pronta para revisão antes de criar os PRs.
 
+## 🛑 CRÍTICO: ONDE TRABALHAR
+
+**⚠️ ATENÇÃO: TODO CÓDIGO (testes, fixes, ajustes) DEVE SER CRIADO DENTRO DO WORKTREE!**
+
+**✅ CORRETO** - Trabalhar dentro do worktree:
+```
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/src/file.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/tests/test.ts  ✅
+<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/.eslintrc.js  ✅
+```
+
+**❌ ERRADO** - NUNCA criar código fora do worktree:
+```
+<orchestrator>/.sessions/test.ts  ❌
+<orchestrator>/.sessions/<ISSUE-ID>/test.ts  ❌
+{base_path}/<repo-name>/test.ts  ❌ (repositório principal!)
+```
+
+**REGRA ABSOLUTA**:
+- 🛑 **TODO código** (testes, fixes, configurações) **DEVE estar em** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
+- 🛑 **NUNCA modifique** o repositório principal em `{base_path}/<repo-name>/`
+- ✅ **Trabalhe APENAS** dentro do worktree do repositório específico
+
 ## ✅ Checklist de Validação
 
 ### 1. Completude da Implementação
