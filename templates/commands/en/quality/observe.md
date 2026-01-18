@@ -10,11 +10,49 @@ Create a structured record of technical and product decisions, ensuring:
 - **Audit**: Complete history of choices for future review
 - **Learning**: Documentation of trade-offs and alternatives considered
 
-**IMPORTANT**: This command does NOT generate new decisions. It only RECORDS decisions that have already been made during the development process.
+**IMPORTANT**: This command DOES NOT generate new decisions. It only RECORDS decisions that have already been made during the development process.
+
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 
 ## 📋 Prerequisites
 
-- You have run at least one of the commands that generate decisions:
+- Have executed at least one of the commands that generate decisions:
   - `/spec` - generates PRD with product decisions
   - `/plan` - generates plan.md with technical decisions
   - `/work` - implementation generates decisions during development
@@ -47,9 +85,9 @@ Analyze the session files (`./.sessions/<ISSUE-ID>/`) to identify decisions:
 - Read `./.sessions/<ISSUE-ID>/work.md`
 - Identify decisions in:
   - Refactorings performed
-  - Changes in approach
-  - Optimizations applied
-  - Handling of edge cases
+  - Approach changes
+  - Applied optimizations
+  - Edge case handling
 
 ### 2. Document Each Decision
 
@@ -145,7 +183,7 @@ For critical decisions, document the impact:
 
 Periodically review the decisions made:
 - Do they still make sense?
-- Were the trade-offs proven correct?
+- Have the trade-offs proven correct?
 - Are there learnings to document?
 - Does any decision need to be reversed?
 

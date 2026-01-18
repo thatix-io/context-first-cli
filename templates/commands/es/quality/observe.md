@@ -12,7 +12,44 @@ Crear un registro estructurado de decisiones técnicas y de producto, garantizan
 
 **IMPORTANTE**: Este comando NO genera decisiones nuevas. Solo REGISTRA decisiones que ya fueron tomadas en el proceso de desarrollo.
 
-## 📋 Requisitos previos
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
+## 📋 Pre-requisitos
 
 - Haber ejecutado al menos uno de los comandos que generan decisiones:
   - `/spec` - genera PRD con decisiones de producto
@@ -28,7 +65,7 @@ Analice los archivos de la sesión (`./.sessions/<ISSUE-ID>/`) para identificar 
 **Después de `/spec`** - Decisiones de Producto:
 - Lea `./.sessions/<ISSUE-ID>/prd.md`
 - Identifique decisiones en:
-  - Alcance (qué entra/no entra en la feature)
+  - Alcance (qué entra/no entra en la funcionalidad)
   - Personas atendidas (quién es el público objetivo)
   - Métricas de éxito (cómo medir resultados)
   - Requisitos no funcionales (performance, accesibilidad)
@@ -41,7 +78,7 @@ Analice los archivos de la sesión (`./.sessions/<ISSUE-ID>/`) para identificar 
   - Elección de bibliotecas o herramientas
   - Patrones de implementación
   - Estructura de datos
-  - Estrategia de tests
+  - Estrategia de pruebas
 
 **Durante `/work`** - Decisiones de Implementación:
 - Lea `./.sessions/<ISSUE-ID>/work.md`
@@ -92,7 +129,7 @@ Guarde en `./.sessions/<ISSUE-ID>/decisions.md`:
 # Registro de Decisiones - [ISSUE-ID]
 
 ## Resumen
-[Breve resumen de las principales decisiones tomadas en esta feature]
+[Breve resumen de las principales decisiones tomadas en esta funcionalidad]
 
 ## Decisiones de Producto
 
@@ -161,7 +198,7 @@ Periódicamente, revise las decisiones tomadas:
 
 ## 🎯 Resultado
 
-Después de ejecutar este comando, tendrá:
+Después de ejecutar este comando, tendrás:
 - Registro completo de decisiones en `./.sessions/<ISSUE-ID>/decisions.md`
 - Trazabilidad de cada elección realizada
 - Documentación para futuras referencias

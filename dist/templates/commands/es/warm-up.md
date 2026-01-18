@@ -14,6 +14,44 @@ pwd
 
 Si no está en un workspace, pregunte al usuario qué workspace usar o si debe crear uno nuevo con `feature:start`.
 
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orchestrator)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orchestrator)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrá:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
+
 ## 2. Cargar Configuración del Proyecto
 
 Ya está en el orchestrator del proyecto (raíz del repositorio actual).
@@ -32,7 +70,7 @@ Lea el `context-manifest.json` del orchestrator para entender:
 
 ## 4. Cargar MetaSpecs
 
-El repositorio de MetaSpecs es **separado** y está definido en `context-manifest.json` con `role: "metaspecs"`.
+El repositorio de MetaSpecs es **separado** y está definido en el `context-manifest.json` con `role: "metaspecs"`.
 
 **Localice el repositorio de metaspecs:**
 
@@ -46,14 +84,14 @@ El repositorio de MetaSpecs es **separado** y está definido en `context-manifes
 1. **`README.md`** - Visión general del proyecto y estructura de documentación
 2. **`index.md`** (en la raíz o en subcarpetas) - Índice de especificaciones disponibles
 
-**Use los índices como referencia** para navegar hasta las especificaciones específicas que necesita. No asuma que archivos específicos existen - siempre consulte los índices primero.
+**Use los índices como referencia** para navegar hasta las especificaciones específicas que necesite. No asuma que archivos específicos existen - siempre consulte los índices primero.
 
 ## 5. Cargar Sesión Actual (si existe)
 
 Verifique si existe una sesión guardada para este workspace:
 
 ```bash
-# Buscar sesión en orchestrator
+# Buscar sesión en el orchestrator
 ls -la .sessions/<ISSUE-ID>/ 2>/dev/null
 ```
 
@@ -68,15 +106,15 @@ Para cada repositorio presente en el workspace, lea:
 ## 7. Navegación Inteligente
 
 - **Código**: Use herramientas de búsqueda (glob, grep) para localizar archivos relevantes
-- **Documentación**: Use los índices de MetaSpecs como referencia
+- **Documentación**: Use los índices de los MetaSpecs como referencia
 - **Espere Instrucciones**: NO lea otros archivos ahora. Espere el próximo comando.
 
 ## 8. Principio Jidoka (Parar al Detectar Problemas)
 
-Si detecta desalineamiento, conflictos o problemas:
+Si detecta desalineamientos, conflictos o problemas:
 1. 🛑 **PARE** inmediatamente
 2. 📝 **DOCUMENTE** el problema encontrado
-3. 💬 **ALERTE** al usuario antes de proceder
+3. 💬 **ALERTE** al usuario antes de continuar
 
 ---
 

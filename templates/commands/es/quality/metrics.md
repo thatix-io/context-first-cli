@@ -9,11 +9,49 @@ Medir y documentar la calidad de la implementación mediante métricas objetivas
 - Complejidad del código
 - Deuda técnica
 - Rendimiento
-- Cumplimiento con estándares
+- Conformidad con estándares
 
-## 📋 Requisitos previos
+## 📋 Configuración del Proyecto
 
-- Implementación finalizada (después de `/work`)
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orquestador)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orquestador)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
+
+## 📋 Requisitos Previos
+
+- Implementación completada (después de `/work`)
 - Pruebas implementadas
 - Build funcionando
 
@@ -142,7 +180,7 @@ Si aplica, mida rendimiento:
 ## Tamaño e Impacto
 
 ### Líneas de Código
-- **Añadidas**: +X líneas
+- **Agregadas**: +X líneas
 - **Eliminadas**: -Y líneas
 - **Modificadas**: Z líneas
 
@@ -254,7 +292,7 @@ Si alguna métrica está fuera de lo aceptable:
 
 ## 🎯 Resultado
 
-Tras ejecutar este comando, tendrá:
+Después de ejecutar este comando, tendrás:
 - Informe completo de métricas
 - Comparación con baseline y metas
 - Identificación de problemas de calidad

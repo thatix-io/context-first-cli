@@ -11,6 +11,43 @@ Measure and document the quality of the implementation through objective metrics
 - Performance
 - Compliance with standards
 
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Required Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+
 ## 📋 Prerequisites
 
 - Implementation completed (after `/work`)
@@ -57,14 +94,14 @@ Document:
 
 ### 2. Code Complexity
 
-Analyze the cyclomatic complexity of the modified files:
+Analyze the cyclomatic complexity of modified files:
 
 ```markdown
 ## Code Complexity
 
 ### Files with High Complexity
-- **arquivo1.ts**: Complexity 15 (recommended: < 10)
-- **arquivo2.ts**: Complexity 12
+- **file1.ts**: Complexity 15 (recommended: < 10)
+- **file2.ts**: Complexity 12
 
 ### Recommendations
 - [Refactoring suggestion 1]
@@ -163,12 +200,12 @@ Identify technical debt introduced or resolved:
 ```markdown
 ## Technical Debt
 
-### Introduced Debt
+### Debt Introduced
 - **Item 1**: [Description and justification]
   - Severity: High / Medium / Low
   - Resolution plan: [when and how to resolve]
 
-### Resolved Debt
+### Debt Resolved
 - **Item 1**: [What was resolved]
   - Impact: [improvement achieved]
 ```
@@ -185,7 +222,7 @@ Create `./.sessions/<ISSUE-ID>/metrics.md`:
 
 ## Executive Summary
 
-- **Test Coverage**: X% (target: Y%)
+- **Test Coverage**: X% (goal: Y%)
 - **Code Quality**: ✅ / ⚠️ / ❌
 - **Performance**: ✅ / ⚠️ / ❌
 - **Technical Debt**: Low / Medium / High
@@ -210,7 +247,7 @@ Create `./.sessions/<ISSUE-ID>/metrics.md`:
 
 ## Approval for Merge
 
-- [ ] Test coverage >= target
+- [ ] Test coverage >= goal
 - [ ] No critical quality issues
 - [ ] Performance within requirements
 - [ ] Technical debt documented and approved
@@ -229,18 +266,18 @@ If the project has goals defined in metaspecs, validate:
 - **Performance**: < 100ms
 
 ### Status
-- Coverage: ✅ 85% (target: 80%)
-- Complexity: ⚠️ 12 (target: 10) - Justified
-- Performance: ✅ 85ms (target: 100ms)
+- Coverage: ✅ 85% (goal: 80%)
+- Complexity: ⚠️ 12 (goal: 10) - Justified
+- Performance: ✅ 85ms (goal: 100ms)
 ```
 
 ## 🚨 Alerts
 
 If any metric is out of acceptable range:
-1. 🛑 **DOCUMENT** the problem
+1. 🛑 **DOCUMENT** the issue
 2. 💬 **ALERT** the user
 3. 🔧 **PROPOSE** corrective actions
-4. ⏸️ **CONSIDER** blocking the merge until resolved
+4. ⏸️ **CONSIDER** blocking the merge until resolution
 
 ---
 
@@ -252,11 +289,11 @@ If any metric is out of acceptable range:
 
 ---
 
-## 🎯 Result
+## 🎯 Outcome
 
 After running this command, you will have:
 - Complete metrics report
 - Comparison with baseline and goals
 - Identification of quality issues
-- Recommended actions
+- Recommendations for actions
 - Objective basis for merge approval

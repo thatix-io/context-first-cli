@@ -558,9 +558,33 @@ export const featureCommands = {
     }
 
     // Load metadata to get repository list
-    const metadata = await loadWorkspaceMetadata(workspacePath);
+    let metadata = await loadWorkspaceMetadata(workspacePath);
+    
+    // Fallback: If metadata doesn't exist, reconstruct from worktrees
     if (!metadata) {
-      exitWithError('Could not load workspace metadata');
+      console.log(chalk.yellow('⚠ Workspace metadata not found, reconstructing from worktrees...'));
+      
+      const entries = await fs.readdir(workspacePath, { withFileTypes: true });
+      const repositories = entries
+        .filter(entry => entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules')
+        .map(entry => entry.name);
+      
+      if (repositories.length === 0) {
+        exitWithError('No repositories found in workspace');
+      }
+      
+      metadata = {
+        issueId,
+        repositories,
+        language: 'en',
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+        status: 'active',
+      };
+      
+      // Save reconstructed metadata for future use
+      await saveWorkspaceMetadata(workspacePath, metadata);
+      console.log(chalk.green(`✓ Reconstructed metadata with ${repositories.length} repository(ies)`));
     }
 
     const targetBranch = options.targetBranch || 'main';

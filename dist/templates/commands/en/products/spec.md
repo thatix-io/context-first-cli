@@ -6,16 +6,53 @@ This command creates the complete specification (Product Requirements Document) 
 
 **This command is ONLY for requirements documentation:**
 - ✅ Create PRD (Product Requirements Document)
-- ✅ Update issue in task manager via MCP
+- ✅ Update issue in the task manager via MCP
 - ✅ **READ** files from main repositories (read-only)
 - ❌ **DO NOT implement code**
 - ❌ **DO NOT edit code files**
 - ❌ **DO NOT checkout branches in main repositories**
-- ❌ **DO NOT commit**
+- ❌ **DO NOT make commits**
 
 **Next step**: `/start` to begin development.
 
 ---
+
+## 📋 Project Configuration
+
+**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+
+### Mandatory Files
+
+1. **`context-manifest.json`** (orchestrator root)
+   - List of project repositories
+   - Roles of each repository (metaspecs, application, etc.)
+   - URLs and dependencies between repositories
+
+2. **`ai.properties.md`** (orchestrator root)
+   - Project settings (`project_name`, `base_path`)
+   - Task management system (`task_management_system`)
+   - Credentials and specific configurations
+
+### How to Read
+
+```bash
+# 1. Read context-manifest.json
+cat context-manifest.json
+
+# 2. Read ai.properties.md
+cat ai.properties.md
+```
+
+### Essential Information
+
+After reading the files, you will have:
+- ✅ Complete list of project repositories
+- ✅ Location of the metaspecs repository
+- ✅ Base path to locate repositories
+- ✅ Configured task management system
+- ✅ Project-specific configurations
+
+**🛑 DO NOT proceed without reading these files!** They contain critical information for correct command execution.
 
 ## 📋 Prerequisites
 
@@ -29,7 +66,7 @@ This command creates the complete specification (Product Requirements Document) 
 2. Find the repository with `"role": "metaspecs"`
 3. Read `ai.properties.md` to get the `base_path`
 4. The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
-5. Read the relevant `index.md` files to ensure compliance with:
+5. Read relevant `index.md` files to ensure compliance with:
    - System architecture
    - Design patterns
    - Technical constraints
@@ -133,7 +170,7 @@ Create a complete PRD that will serve as the single source of truth for implemen
 - **External**: [external APIs, if any]
 
 ### Data Model
-[Describe changes to the data model, if any]
+[Describe changes to data model, if any]
 ```
 
 ### 6. Acceptance Criteria
@@ -162,7 +199,7 @@ Create a complete PRD that will serve as the single source of truth for implemen
 ```markdown
 ## Out of Scope
 
-Features that WILL NOT be implemented in this version:
+Features that will NOT be implemented in this version:
 - [Item 1]
 - [Item 2]
 

@@ -469,9 +469,28 @@ exports.featureCommands = {
             (0, config_1.exitWithError)(`Workspace for ${issueId} not found`);
         }
         // Load metadata to get repository list
-        const metadata = await (0, config_1.loadWorkspaceMetadata)(workspacePath);
+        let metadata = await (0, config_1.loadWorkspaceMetadata)(workspacePath);
+        // Fallback: If metadata doesn't exist, reconstruct from worktrees
         if (!metadata) {
-            (0, config_1.exitWithError)('Could not load workspace metadata');
+            console.log(chalk_1.default.yellow('⚠ Workspace metadata not found, reconstructing from worktrees...'));
+            const entries = await promises_1.default.readdir(workspacePath, { withFileTypes: true });
+            const repositories = entries
+                .filter(entry => entry.isDirectory() && !entry.name.startsWith('.') && entry.name !== 'node_modules')
+                .map(entry => entry.name);
+            if (repositories.length === 0) {
+                (0, config_1.exitWithError)('No repositories found in workspace');
+            }
+            metadata = {
+                issueId,
+                repositories,
+                language: 'en',
+                createdAt: new Date().toISOString(),
+                lastUpdated: new Date().toISOString(),
+                status: 'active',
+            };
+            // Save reconstructed metadata for future use
+            await (0, config_1.saveWorkspaceMetadata)(workspacePath, metadata);
+            console.log(chalk_1.default.green(`✓ Reconstructed metadata with ${repositories.length} repository(ies)`));
         }
         const targetBranch = options.targetBranch || 'main';
         const branchName = `feature/${issueId}`;

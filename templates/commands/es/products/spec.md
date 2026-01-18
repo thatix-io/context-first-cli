@@ -1,15 +1,15 @@
 # Creación de Especificación (PRD)
 
-Este comando crea la especificación completa (Product Requirements Document) de la feature.
+Este comando crea la especificación completa (Product Requirements Document) de la funcionalidad.
 
 ## ⚠️ IMPORTANTE: Este Comando NO Implementa Código
 
 **Este comando es SÓLO para documentación de requisitos:**
 - ✅ Crear PRD (Product Requirements Document)
-- ✅ Actualizar issue en el task manager vía MCP
-- ✅ **LEER** archivos de los repositorios principales (read-only)
+- ✅ Actualizar issue en el gestor de tareas vía MCP
+- ✅ **LEER** archivos de los repositorios principales (solo lectura)
 - ❌ **NO implementar código**
-- ❌ **NO hacer edits en archivos de código**
+- ❌ **NO hacer ediciones en archivos de código**
 - ❌ **NO hacer checkout de branches en los repositorios principales**
 - ❌ **NO hacer commits**
 
@@ -17,19 +17,56 @@ Este comando crea la especificación completa (Product Requirements Document) de
 
 ---
 
-## 📋 Requisitos Previos
+## 📋 Configuración del Proyecto
+
+**⚠️ IMPORTANTE: ¡Siempre lea los archivos de configuración del proyecto ANTES de ejecutar este comando!**
+
+### Archivos Obligatorios
+
+1. **`context-manifest.json`** (raíz del orquestador)
+   - Lista de repositorios del proyecto
+   - Roles de cada repositorio (metaspecs, application, etc.)
+   - URLs y dependencias entre repositorios
+
+2. **`ai.properties.md`** (raíz del orquestador)
+   - Configuraciones del proyecto (`project_name`, `base_path`)
+   - Sistema de gestión de tareas (`task_management_system`)
+   - Credenciales y configuraciones específicas
+
+### Cómo Leer
+
+```bash
+# 1. Leer context-manifest.json
+cat context-manifest.json
+
+# 2. Leer ai.properties.md
+cat ai.properties.md
+```
+
+### Información Esencial
+
+Después de leer los archivos, tendrás:
+- ✅ Lista completa de repositorios del proyecto
+- ✅ Ubicación del repositorio de metaspecs
+- ✅ Base path para localizar repositorios
+- ✅ Sistema de gestión de tareas configurado
+- ✅ Configuraciones específicas del proyecto
+
+**🛑 NO continúe sin leer estos archivos!** Contienen información crítica para la correcta ejecución del comando.
+
+## 📋 Pre-requisitos
 
 - Issue refinada vía `/refine`
-- Aprobación para continuar con la feature
+- Aprobación para continuar con la funcionalidad
 
 ## 📚 Cargar MetaSpecs
 
 **Localizar MetaSpecs automáticamente**:
-1. Lea `context-manifest.json` del orchestrator
+1. Lea `context-manifest.json` del orquestador
 2. Encuentre el repositorio con `"role": "metaspecs"`
 3. Lea `ai.properties.md` para obtener el `base_path`
 4. El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
-5. Lea los archivos `index.md` relevantes para garantizar conformidad con:
+5. Lea los archivos `index.md` relevantes para asegurar conformidad con:
    - Arquitectura del sistema
    - Patrones de diseño
    - Restricciones técnicas
@@ -44,13 +81,13 @@ Crear un PRD completo que servirá como fuente única de verdad para la implemen
 ### 1. Visión General
 
 ```markdown
-# [Título de la Feature]
+# [Título de la Funcionalidad]
 
 ## Contexto
 [¿Por qué estamos construyendo esto? ¿Qué problema resuelve?]
 
 ## Objetivo
-[¿Qué queremos lograr con esta feature?]
+[¿Qué queremos lograr con esta funcionalidad?]
 
 ## Métricas de Éxito
 - [Métrica 1]: [Cómo medir]
@@ -142,12 +179,12 @@ Crear un PRD completo que servirá como fuente única de verdad para la implemen
 ## Criterios de Aceptación
 
 ### Funcional
-- [ ] [Criterio específico y testable]
-- [ ] [Criterio específico y testable]
+- [ ] [Criterio específico y comprobable]
+- [ ] [Criterio específico y comprobable]
 
 ### Técnico
-- [ ] Tests unitarios con cobertura >= X%
-- [ ] Tests de integración implementados
+- [ ] Pruebas unitarias con cobertura >= X%
+- [ ] Pruebas de integración implementadas
 - [ ] Performance dentro de los requisitos
 - [ ] Documentación actualizada
 
@@ -207,15 +244,15 @@ Justificación: [Por qué quedan para después]
 ```markdown
 ## Plan de Pruebas
 
-### Tests Unitarios
-- [Área 1 a testear]
-- [Área 2 a testear]
+### Pruebas Unitarias
+- [Área 1 a probar]
+- [Área 2 a probar]
 
-### Tests de Integración
+### Pruebas de Integración
 - [Escenario 1]
 - [Escenario 2]
 
-### Tests Manuales
+### Pruebas Manuales
 - [Escenario 1]
 - [Escenario 2]
 ```
@@ -224,18 +261,18 @@ Justificación: [Por qué quedan para después]
 
 **PRIORIDAD 1: Usar MCP (Model Context Protocol)**
 
-- Lea `ai.properties.md` del orchestrator para identificar el `task_management_system`
+- Lea `ai.properties.md` del orquestador para identificar el `task_management_system`
 - Use el MCP apropiado para actualizar la issue con el PRD:
   - Añada el PRD completo como comentario en la issue
-  - O adjunte como archivo (si el task manager lo soporta)
-  - Actualice status/labels (ej: "spec-ready", "ready-for-dev")
+  - O adjunte como archivo (si el gestor de tareas lo soporta)
+  - Actualice estado/etiquetas (ej: "spec-ready", "ready-for-dev")
 - Informe al usuario: "✅ PRD añadido a la issue [ID]"
 
 **FALLBACK: Crear archivo .md sólo si MCP falla**
 
 Si MCP no está disponible o falla:
 - Guarde en `./.sessions/<ISSUE-ID>/prd.md`
-- Informe al usuario: "⚠️ PRD guardado localmente en .sessions/ (task manager no disponible)"
+- Informe al usuario: "⚠️ PRD guardado localmente en .sessions/ (gestor de tareas no disponible)"
 
 ## 🔍 Revisión y Aprobación
 
@@ -243,7 +280,7 @@ Antes de finalizar:
 1. Revise el PRD con stakeholders
 2. Valide contra metaspecs (si están disponibles)
 3. Obtenga aprobación para iniciar implementación
-4. **Vía MCP**: Actualice la issue en el task manager con status "Listo para Desarrollo"
+4. **Vía MCP**: Actualice la issue en el gestor de tareas con estado "Listo para Desarrollo"
 5. **Fallback**: Documente la aprobación en `./.sessions/<ISSUE-ID>/prd.md`
 
 ---
@@ -258,10 +295,10 @@ Antes de finalizar:
 
 ## 🎯 Próximo Paso
 
-Tras la aprobación del PRD:
+Después de la aprobación del PRD:
 
 ```bash
 /start
 ```
 
-Este comando iniciará el desarrollo de la feature.
+Este comando iniciará el desarrollo de la funcionalidad.
