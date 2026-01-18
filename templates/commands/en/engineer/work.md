@@ -7,7 +7,7 @@ This command executes a unit of work in the current workspace, implementing part
 Before executing, make sure that:
 - You have run `/start` and `/plan` to have the technical plan
 - You are in the correct workspace: `<orchestrator>/.sessions/<ISSUE-ID>/`
-- You have the files `.sessions/<ISSUE-ID>/` available:
+- You have the `.sessions/<ISSUE-ID>/` files available:
   - `context.md` (immutable)
   - `architecture.md` (immutable)
   - `plan.md` (mutable)
@@ -45,7 +45,7 @@ Before executing, make sure that:
 - ✅ **IMPLEMENT** code in the workspace repositories
 - ✅ **MAKE COMMITS** in the workspace repositories
 - ❌ **DO NOT modify `context.md` or `architecture.md`**
-- ❌ **DO NOT checkout branches in the main repositories (outside the workspace)**
+- ❌ **DO NOT checkout branches in the main repositories (outside workspace)**
 
 ## 📚 Load MetaSpecs
 
@@ -59,7 +59,7 @@ Before executing, make sure that:
    - Respect defined architecture
    - Use correct conventions
 
-## 🎯 Objective
+## 🎯 Goal
 
 Implement a specific unit of work from the plan, which may involve:
 - Creating new files/components
@@ -68,6 +68,25 @@ Implement a specific unit of work from the plan, which may involve:
 - Updating documentation
 
 ## 📝 Work Process
+
+**⚠️ IMPORTANT: PROGRESS CONTROL**
+
+This command executes work in **incremental phases**. After completing each **MAIN PHASE** (e.g., Phase 1 → Phase 2):
+
+1. 🛑 **STOP** execution
+2. 📊 **PRESENT** a summary of what was done
+3. ❓ **ASK** the developer if they want to:
+   - Review the implemented code
+   - Make adjustments before continuing
+   - Proceed to the next phase
+
+**IMPORTANT**:
+- ✅ **PAUSE** between main phases (Phase 1 → Phase 2 → Phase 3)
+- ❌ **DO NOT pause** between subphases (Phase 1.1 → Phase 1.2 → Phase 1.3)
+
+**DO NOT implement everything at once**. Work main phase by main phase, waiting for developer confirmation.
+
+---
 
 ### 1. Identify Unit of Work
 
@@ -78,6 +97,8 @@ Based on the technical plan (`./.sessions/<ISSUE-ID>/plan.md`), identify:
 - Dependencies with other tasks
 
 ### 2. Implementation
+
+
 
 **IMPORTANT**: Work ONLY inside the workspace at `.sessions/<ISSUE-ID>/`
 
@@ -93,18 +114,22 @@ git branch  # should show * feature/<ISSUE-ID>
 # Implement the code here
 ```
 
-Perform the implementation following:
+Execute the implementation following:
 - **Project standards**: Consult style and architecture guides
 - **Approved stack**: Use only technologies documented in the metaspecs
 - **Tests**: Implement tests according to project standards
 - **Documentation**: Update comments and docs when necessary
+
+
 
 ### 3. Local Validation
 
 Before committing:
 - Run unit/integration tests
 - Check linting and formatting
-- Confirm that existing functionality is not broken
+- Confirm no existing functionality is broken
+
+
 
 ### 4. Commit
 
@@ -127,6 +152,12 @@ Refs: <ISSUE-ID>"
 ```
 
 **Commit types**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
+
+**⚠️ MANDATORY PAUSE**: After completing the ENTIRE main phase (identification + implementation + validation + commit + plan.md update), **STOP** and show the developer:
+- Complete summary of the phase
+- Files created/modified
+- Commits made
+- Ask if they want to review or proceed to the next phase
 
 ### 5. Update Plan.md
 

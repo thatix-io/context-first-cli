@@ -69,6 +69,25 @@ Implementar uma unidade de trabalho específica do plano, que pode envolver:
 
 ## 📝 Processo de Trabalho
 
+**⚠️ IMPORTANTE: CONTROLE DE PROGRESSO**
+
+Este comando executa o trabalho em **fases incrementais**. Após completar cada **FASE PRINCIPAL** (ex: Fase 1 → Fase 2):
+
+1. 🛑 **PARE** a execução
+2. 📊 **APRESENTE** um resumo do que foi feito
+3. ❓ **PERGUNTE** ao desenvolvedor se ele quer:
+   - Revisar o código implementado
+   - Fazer ajustes antes de continuar
+   - Prosseguir para a próxima fase
+
+**IMPORTANTE**:
+- ✅ **PAUSE** entre fases principais (Fase 1 → Fase 2 → Fase 3)
+- ❌ **NÃO pause** entre subfases (Fase 1.1 → Fase 1.2 → Fase 1.3)
+
+**NÃO implemente tudo de uma vez**. Trabalhe fase principal por fase principal, aguardando confirmação do desenvolvedor.
+
+---
+
 ### 1. Identificar Unidade de Trabalho
 
 Com base no plano técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
@@ -78,6 +97,8 @@ Com base no plano técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
 - Dependências com outras tarefas
 
 ### 2. Implementação
+
+
 
 **IMPORTANTE**: Trabalhe APENAS dentro do workspace em `.sessions/<ISSUE-ID>/`
 
@@ -99,12 +120,16 @@ Execute a implementação seguindo:
 - **Testes**: Implemente testes conforme padrões do projeto
 - **Documentação**: Atualize comentários e docs quando necessário
 
+
+
 ### 3. Validação Local
 
 Antes de commitar:
 - Execute testes unitários/integração
 - Verifique linting e formatação
 - Confirme que não quebrou funcionalidades existentes
+
+
 
 ### 4. Commit
 
@@ -127,6 +152,12 @@ Refs: <ISSUE-ID>"
 ```
 
 **Tipos de commit**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
+
+**⚠️ PAUSA OBRIGATÓRIA**: Após completar TODA a fase principal (identificação + implementação + validação + commit + atualização do plan.md), **PARE** e mostre ao desenvolvedor:
+- Resumo completo da fase
+- Arquivos criados/modificados
+- Commits realizados
+- Pergunte se ele quer revisar ou prosseguir para a próxima fase
 
 ### 5. Atualização do Plan.md
 

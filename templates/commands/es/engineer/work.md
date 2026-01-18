@@ -2,7 +2,7 @@
 
 Este comando ejecuta una unidad de trabajo en el workspace actual, implementando parte del plan técnico.
 
-## 📋 Prerrequisitos
+## 📋 Requisitos Previos
 
 Antes de ejecutar, asegúrese de que:
 - Ha ejecutado `/start` y `/plan` para tener el plan técnico
@@ -31,7 +31,7 @@ Antes de ejecutar, asegúrese de que:
 ```
 
 **REGLA DE ORO**:
-- ✅ Trabaje SOLO dentro de `<orchestrator>/.sessions/<ISSUE-ID>/`
+- ✅ Trabaje SÓLO dentro de `<orchestrator>/.sessions/<ISSUE-ID>/`
 - ✅ Haga commits en los worktrees dentro del workspace
 - ❌ NUNCA haga checkout en los repositorios principales
 - ❌ NUNCA navegue a `{base_path}/{repo-id}/`
@@ -56,7 +56,7 @@ Antes de ejecutar, asegúrese de que:
 4. El metaspecs está en: `{base_path}/{metaspecs-repo-id}/`
 5. Lea los archivos `index.md` relevantes durante la implementación para:
    - Seguir patrones de código
-   - Respetar la arquitectura definida
+   - Respetar arquitectura definida
    - Usar convenciones correctas
 
 ## 🎯 Objetivo
@@ -64,22 +64,43 @@ Antes de ejecutar, asegúrese de que:
 Implementar una unidad de trabajo específica del plan, que puede involucrar:
 - Crear nuevos archivos/componentes
 - Modificar archivos existentes
-- Añadir tests
+- Añadir pruebas
 - Actualizar documentación
 
 ## 📝 Proceso de Trabajo
 
+**⚠️ IMPORTANTE: CONTROL DE PROGRESO**
+
+Este comando ejecuta el trabajo en **fases incrementales**. Después de completar cada **FASE PRINCIPAL** (ej: Fase 1 → Fase 2):
+
+1. 🛑 **PARE** la ejecución
+2. 📊 **PRESENTE** un resumen de lo realizado
+3. ❓ **PREGUNTE** al desarrollador si quiere:
+   - Revisar el código implementado
+   - Hacer ajustes antes de continuar
+   - Continuar a la siguiente fase
+
+**IMPORTANTE**:
+- ✅ **PAUSE** entre fases principales (Fase 1 → Fase 2 → Fase 3)
+- ❌ **NO pause** entre subfases (Fase 1.1 → Fase 1.2 → Fase 1.3)
+
+**NO implemente todo de una vez**. Trabaje fase principal por fase principal, esperando confirmación del desarrollador.
+
+---
+
 ### 1. Identificar Unidad de Trabajo
 
-Basándose en el plan técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
-- Qué tarea específica se implementará ahora
+Basado en el plan técnico (`./.sessions/<ISSUE-ID>/plan.md`), identifique:
+- Qué tarea específica será implementada ahora
 - En cuál(es) repositorio(s) del workspace
 - Qué archivos serán creados/modificados
 - Dependencias con otras tareas
 
 ### 2. Implementación
 
-**IMPORTANTE**: Trabaje SOLO dentro del workspace en `.sessions/<ISSUE-ID>/`
+
+
+**IMPORTANTE**: Trabaje SÓLO dentro del workspace en `.sessions/<ISSUE-ID>/`
 
 Para cada repositorio en el workspace:
 
@@ -95,16 +116,20 @@ git branch  # debe mostrar * feature/<ISSUE-ID>
 
 Ejecute la implementación siguiendo:
 - **Patrones del proyecto**: Consulte guías de estilo y arquitectura
-- **Stack aprobada**: Use solo tecnologías documentadas en las metaspecs
-- **Tests**: Implemente tests conforme a los patrones del proyecto
+- **Stack aprobada**: Use sólo tecnologías documentadas en las metaspecs
+- **Pruebas**: Implemente pruebas conforme a los patrones del proyecto
 - **Documentación**: Actualice comentarios y docs cuando sea necesario
+
+
 
 ### 3. Validación Local
 
 Antes de commitear:
-- Ejecute tests unitarios/de integración
+- Ejecute pruebas unitarias/integración
 - Verifique linting y formato
 - Confirme que no rompió funcionalidades existentes
+
+
 
 ### 4. Commit
 
@@ -128,6 +153,12 @@ Refs: <ISSUE-ID>"
 
 **Tipos de commit**: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
+**⚠️ PAUSA OBLIGATORIA**: Después de completar TODA la fase principal (identificación + implementación + validación + commit + actualización del plan.md), **PARE** y muestre al desarrollador:
+- Resumen completo de la fase
+- Archivos creados/modificados
+- Commits realizados
+- Pregunte si quiere revisar o continuar a la siguiente fase
+
 ### 5. Actualización del Plan.md
 
 **POR CADA tarea completada**, actualice `./.sessions/<ISSUE-ID>/plan.md`:
@@ -142,7 +173,7 @@ Refs: <ISSUE-ID>"
 - `path/to/file1.ts` ✅
 - `path/to/file2.vue` ✅
 
-**Tests**:
+**Pruebas**:
 - Unit test: [Descripción] ✅
 - Integration test: [Descripción] ✅
 
@@ -153,17 +184,17 @@ Refs: <ISSUE-ID>"
 
 **Marque estado de las tareas**:
 - `[No Iniciada ⏳]` - Tarea aún no comenzó
-- `[En Progreso ⏰]` - Tarea en desarrollo ahora
+- `[En Progreso ⏰]` - Tarea en curso ahora
 - `[Completada ✅]` - Tarea finalizada y validada
 
 ## 🔍 Checklist de Calidad
 
 Antes de considerar la unidad completa:
-- [ ] Código implementado y testeado
-- [ ] Tests pasando
+- [ ] Código implementado y probado
+- [ ] Pruebas pasando
 - [ ] Linting/formato OK
 - [ ] Documentación actualizada (si es necesario)
-- [ ] Commit realizado en todos los repos afectados
+- [ ] Commit realizado en todos los repositorios afectados
 - [ ] `plan.md` actualizado con progreso y comentarios
 
 ## ⚠️ Principio Jidoka
@@ -186,7 +217,7 @@ Si encuentra problemas durante la implementación:
 
 ## 🎯 Próximos Pasos
 
-- **Continuar implementación**: Ejecute `/work` nuevamente para la próxima unidad
+- **Continuar implementación**: Ejecute `/work` nuevamente para la siguiente unidad
 - **Finalizar feature**: Cuando todo esté implementado, ejecute `/pre-pr`
 
 ## 💡 Consejos
@@ -194,4 +225,4 @@ Si encuentra problemas durante la implementación:
 - Trabaje en unidades pequeñas e incrementales
 - Commit frecuente (commits atómicos)
 - Documente decisiones importantes en la sesión
-- Mantenga los repos sincronizados entre sí
+- Mantenga los repositorios sincronizados entre sí
