@@ -10,6 +10,9 @@ export interface AiProperties {
     linear_team_id?: string;
     github_org?: string;
     github_repo?: string;
+    azure_organization?: string;
+    azure_project?: string;
+    azure_team?: string;
     branch_prefix?: string;
     branch_pattern?: string;
     [key: string]: any;

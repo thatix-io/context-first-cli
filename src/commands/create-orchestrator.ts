@@ -8,7 +8,7 @@ interface ScaffoldAnswers {
   projectName: string;
   description: string;
   metaspecsUrl: string;
-  taskManager: 'jira' | 'linear' | 'github' | 'none';
+  taskManager: 'jira' | 'linear' | 'github' | 'azure' | 'none';
   language: 'en' | 'es' | 'pt-BR';
   initGit: boolean;
 }
@@ -60,6 +60,7 @@ export async function createOrchestratorCommand() {
           { name: 'Jira', value: 'jira' },
           { name: 'Linear', value: 'linear' },
           { name: 'GitHub Issues', value: 'github' },
+          { name: 'Azure Boards', value: 'azure' },
           { name: 'None (manual)', value: 'none' },
         ],
         default: 'jira',
@@ -270,7 +271,7 @@ function generateAiProperties(answers: ScaffoldAnswers): string {
 base_path=/path/to/your/workspace
 auto_clone=true
 
-## Configuração ${answers.taskManager === 'jira' ? 'Jira' : answers.taskManager === 'linear' ? 'Linear' : 'Task Manager'}
+## Configuração ${answers.taskManager === 'jira' ? 'Jira' : answers.taskManager === 'linear' ? 'Linear' : answers.taskManager === 'azure' ? 'Azure Boards' : 'Task Manager'}
 task_management_system=${answers.taskManager}
 ${answers.taskManager === 'jira' ? `jira_site=https://your-org.atlassian.net
 jira_cloud_id=your-cloud-id
@@ -280,6 +281,9 @@ ${answers.taskManager === 'linear' ? `linear_api_key=your-api-key
 linear_team_id=your-team-id` : ''}
 ${answers.taskManager === 'github' ? `github_org=your-org
 github_repo=your-repo` : ''}
+${answers.taskManager === 'azure' ? `azure_organization=your-org
+azure_project=your-project
+azure_team=your-team` : ''}
 
 ## Convenções de Branch
 branch_prefix=feature

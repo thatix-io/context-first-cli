@@ -125,6 +125,7 @@ Once the user approves, save the requirements:
      - For Jira: Use Jira MCP with `description` field
      - For Linear: Use Linear MCP with `description` field
      - For GitHub: Use GitHub MCP with `body` field
+     - For Azure Boards: Use Azure Boards MCP with `description` field
      - Include all refined content in the issue description/body field
      - If content is too long and API errors occur, consider creating a summarized version
    - **ALWAYS overwrite** the existing body (do not append)

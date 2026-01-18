@@ -125,6 +125,7 @@ Una vez que el usuario apruebe, guarda los requisitos:
      - Para Jira: Usa MCP de Jira con campo `description`
      - Para Linear: Usa MCP de Linear con campo `description`
      - Para GitHub: Usa MCP de GitHub con campo `body`
+     - Para Azure Boards: Usa MCP de Azure Boards con campo `description`
      - Incluye todo el contenido refinado en el campo description/body de la issue
      - Si el contenido es muy extenso y hay error de API, considera crear versión resumida
    - **SIEMPRE sobrescribe** el body existente (no agregar al final)

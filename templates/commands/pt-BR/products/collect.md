@@ -124,6 +124,7 @@ Apenas certifique-se de que a ideia esteja **adequadamente compreendida**.
    - Se `task_management_system=jira`: Use MCP do Jira para criar a issue
    - Se `task_management_system=linear`: Use MCP do Linear para criar a issue
    - Se `task_management_system=github`: Use MCP do GitHub para criar a issue
+   - Se `task_management_system=azure`: Use MCP do Azure Boards para criar a issue
    
    **Ao usar MCP:**
    - Crie a issue diretamente no task manager

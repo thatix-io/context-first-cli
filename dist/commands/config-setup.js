@@ -71,7 +71,7 @@ async function configSetupCommand() {
                 type: 'list',
                 name: 'taskManager',
                 message: 'Select your task management system:',
-                choices: ['jira', 'linear', 'github', 'none'],
+                choices: ['jira', 'linear', 'github', 'azure', 'none'],
             },
             {
                 type: 'input',
@@ -96,6 +96,18 @@ async function configSetupCommand() {
                 name: 'githubRepo',
                 message: 'GitHub repository (e.g., owner/repo):',
                 when: (answers) => answers.taskManager === 'github',
+            },
+            {
+                type: 'input',
+                name: 'azureOrg',
+                message: 'Azure DevOps organization:',
+                when: (answers) => answers.taskManager === 'azure',
+            },
+            {
+                type: 'input',
+                name: 'azureProject',
+                message: 'Azure DevOps project:',
+                when: (answers) => answers.taskManager === 'azure',
             },
         ]);
         // Generate ai.properties.md content
@@ -122,6 +134,10 @@ async function configSetupCommand() {
         }
         else if (taskAnswers.taskManager === 'github') {
             content += `github_repo=${taskAnswers.githubRepo}\n`;
+        }
+        else if (taskAnswers.taskManager === 'azure') {
+            content += `azure_organization=${taskAnswers.azureOrg}\n`;
+            content += `azure_project=${taskAnswers.azureProject}\n`;
         }
         content += `\n## Docker Configuration\n\n`;
         content += `# Base ports for services (will be incremented by issue number)\n`;
