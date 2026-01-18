@@ -35,14 +35,31 @@ cd <repositório>
 # Verificar status
 git status
 
-# Verificar linting
-npm run lint  # ou comando equivalente
+# Verificar linting (exemplos por stack):
+# Node.js: npm run lint / yarn lint / pnpm lint
+# Python: flake8 . / pylint src/ / black --check .
+# Java: mvn checkstyle:check / gradle check
+# Go: golangci-lint run / go vet ./...
+# Ruby: rubocop
+# Rust: cargo clippy
+# PHP: ./vendor/bin/phpcs
+# C#: dotnet format --verify-no-changes
 
-# Verificar formatação
-npm run format:check  # ou comando equivalente
+# Verificar formatação (exemplos por stack):
+# Node.js: npm run format:check / prettier --check .
+# Python: black --check . / autopep8 --diff .
+# Java: mvn formatter:validate
+# Go: gofmt -l . / go fmt ./...
+# Ruby: rubocop --format-only
+# Rust: cargo fmt --check
 
-# Verificar build
-npm run build  # ou comando equivalente
+# Verificar build (exemplos por stack):
+# Node.js: npm run build / yarn build
+# Python: python setup.py build
+# Java: mvn compile / gradle build
+# Go: go build ./...
+# Ruby: rake build
+# Rust: cargo build
 ```
 
 Checklist:
@@ -69,14 +86,33 @@ Para cada repositório:
 ```bash
 cd <repositório>
 
-# Executar testes unitários
-npm run test:unit  # ou comando equivalente
+# Executar testes unitários (exemplos por stack):
+# Node.js: npm run test:unit / jest / vitest
+# Python: pytest tests/unit / python -m unittest
+# Java: mvn test / gradle test
+# Go: go test ./... -short
+# Ruby: rspec spec/unit / rake test:unit
+# Rust: cargo test --lib
+# PHP: ./vendor/bin/phpunit --testsuite=unit
+# C#: dotnet test --filter Category=Unit
 
-# Executar testes de integração
-npm run test:integration  # ou comando equivalente
+# Executar testes de integração (exemplos por stack):
+# Node.js: npm run test:integration
+# Python: pytest tests/integration
+# Java: mvn verify / gradle integrationTest
+# Go: go test ./... -run Integration
+# Ruby: rspec spec/integration
+# Rust: cargo test --test '*'
+# PHP: ./vendor/bin/phpunit --testsuite=integration
 
-# Verificar cobertura
-npm run test:coverage  # ou comando equivalente
+# Verificar cobertura (exemplos por stack):
+# Node.js: npm run test:coverage / jest --coverage
+# Python: pytest --cov=src tests/
+# Java: mvn jacoco:report / gradle jacocoTestReport
+# Go: go test -cover ./...
+# Ruby: rspec --coverage
+# Rust: cargo tarpaulin
+# PHP: ./vendor/bin/phpunit --coverage-html coverage/
 ```
 
 Checklist:

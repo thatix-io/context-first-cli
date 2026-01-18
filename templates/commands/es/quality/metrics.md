@@ -24,10 +24,17 @@ Medir y documentar la calidad de la implementación mediante métricas objetivas
 Para cada repositorio modificado:
 
 ```bash
-cd <repositório>
+cd <repositorio>
 
-# Ejecutar pruebas con cobertura
-npm run test:coverage  # ou comando equivalente
+# Ejecutar pruebas con cobertura (ejemplos por stack):
+# Node.js: npm run test:coverage / jest --coverage
+# Python: pytest --cov=src tests/
+# Java: mvn jacoco:report / gradle jacocoTestReport
+# Go: go test -cover ./...
+# Ruby: rspec --coverage
+# Rust: cargo tarpaulin
+# PHP: ./vendor/bin/phpunit --coverage-html coverage/
+# C#: dotnet test /p:CollectCoverage=true
 
 # Capturar resultados
 ```
@@ -67,14 +74,29 @@ Analice la complejidad ciclomática de los archivos modificados:
 ### 3. Calidad del Código
 
 ```bash
-# Ejecutar linting
-npm run lint
+# Ejecutar linting (ejemplos por stack):
+# Node.js: npm run lint / eslint .
+# Python: flake8 . / pylint src/
+# Java: mvn checkstyle:check
+# Go: golangci-lint run
+# Ruby: rubocop
+# Rust: cargo clippy
 
-# Verificar formato
-npm run format:check
+# Verificar formato (ejemplos por stack):
+# Node.js: prettier --check .
+# Python: black --check .
+# Java: mvn formatter:validate
+# Go: gofmt -l .
+# Ruby: rubocop --format-only
+# Rust: cargo fmt --check
 
-# Análisis estático (si está disponible)
-npm run analyze
+# Análisis estático (ejemplos por stack):
+# Node.js: npm run analyze (si está configurado)
+# Python: mypy src/ / bandit -r src/
+# Java: mvn pmd:check / spotbugs:check
+# Go: go vet ./...
+# Ruby: brakeman (para Rails)
+# Rust: cargo audit
 ```
 
 Documente:

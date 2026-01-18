@@ -30,19 +30,36 @@ Garantizar que la implementación está completa, probada y lista para revisión
 Para cada repositorio modificado:
 
 ```bash
-cd <repositório>
+cd <repositorio>
 
 # Verificar estado
 git status
 
-# Verificar linting
-npm run lint  # o comando equivalente
+# Verificar linting (ejemplos por stack):
+# Node.js: npm run lint / yarn lint / pnpm lint
+# Python: flake8 . / pylint src/ / black --check .
+# Java: mvn checkstyle:check / gradle check
+# Go: golangci-lint run / go vet ./...
+# Ruby: rubocop
+# Rust: cargo clippy
+# PHP: ./vendor/bin/phpcs
+# C#: dotnet format --verify-no-changes
 
-# Verificar formateo
-npm run format:check  # o comando equivalente
+# Verificar formateo (ejemplos por stack):
+# Node.js: npm run format:check / prettier --check .
+# Python: black --check . / autopep8 --diff .
+# Java: mvn formatter:validate
+# Go: gofmt -l . / go fmt ./...
+# Ruby: rubocop --format-only
+# Rust: cargo fmt --check
 
-# Verificar build
-npm run build  # o comando equivalente
+# Verificar build (ejemplos por stack):
+# Node.js: npm run build / yarn build
+# Python: python setup.py build
+# Java: mvn compile / gradle build
+# Go: go build ./...
+# Ruby: rake build
+# Rust: cargo build
 ```
 
 Checklist:
@@ -67,16 +84,35 @@ Checklist:
 Para cada repositorio:
 
 ```bash
-cd <repositório>
+cd <repositorio>
 
-# Ejecutar pruebas unitarias
-npm run test:unit  # o comando equivalente
+# Ejecutar pruebas unitarias (ejemplos por stack):
+# Node.js: npm run test:unit / jest / vitest
+# Python: pytest tests/unit / python -m unittest
+# Java: mvn test / gradle test
+# Go: go test ./... -short
+# Ruby: rspec spec/unit / rake test:unit
+# Rust: cargo test --lib
+# PHP: ./vendor/bin/phpunit --testsuite=unit
+# C#: dotnet test --filter Category=Unit
 
-# Ejecutar pruebas de integración
-npm run test:integration  # o comando equivalente
+# Ejecutar pruebas de integración (ejemplos por stack):
+# Node.js: npm run test:integration
+# Python: pytest tests/integration
+# Java: mvn verify / gradle integrationTest
+# Go: go test ./... -run Integration
+# Ruby: rspec spec/integration
+# Rust: cargo test --test '*'
+# PHP: ./vendor/bin/phpunit --testsuite=integration
 
-# Verificar cobertura
-npm run test:coverage  # o comando equivalente
+# Verificar cobertura (ejemplos por stack):
+# Node.js: npm run test:coverage / jest --coverage
+# Python: pytest --cov=src tests/
+# Java: mvn jacoco:report / gradle jacocoTestReport
+# Go: go test -cover ./...
+# Ruby: rspec --coverage
+# Rust: cargo tarpaulin
+# PHP: ./vendor/bin/phpunit --coverage-html coverage/
 ```
 
 Checklist:

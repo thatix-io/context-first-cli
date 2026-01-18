@@ -26,8 +26,15 @@ Para cada repositório modificado:
 ```bash
 cd <repositório>
 
-# Executar testes com cobertura
-npm run test:coverage  # ou comando equivalente
+# Executar testes com cobertura (exemplos por stack):
+# Node.js: npm run test:coverage / jest --coverage
+# Python: pytest --cov=src tests/
+# Java: mvn jacoco:report / gradle jacocoTestReport
+# Go: go test -cover ./...
+# Ruby: rspec --coverage
+# Rust: cargo tarpaulin
+# PHP: ./vendor/bin/phpunit --coverage-html coverage/
+# C#: dotnet test /p:CollectCoverage=true
 
 # Capturar resultados
 ```
@@ -67,14 +74,29 @@ Analise a complexidade ciclomática dos arquivos modificados:
 ### 3. Qualidade do Código
 
 ```bash
-# Executar linting
-npm run lint
+# Executar linting (exemplos por stack):
+# Node.js: npm run lint / eslint .
+# Python: flake8 . / pylint src/
+# Java: mvn checkstyle:check
+# Go: golangci-lint run
+# Ruby: rubocop
+# Rust: cargo clippy
 
-# Verificar formatação
-npm run format:check
+# Verificar formatação (exemplos por stack):
+# Node.js: prettier --check .
+# Python: black --check .
+# Java: mvn formatter:validate
+# Go: gofmt -l .
+# Ruby: rubocop --format-only
+# Rust: cargo fmt --check
 
-# Análise estática (se disponível)
-npm run analyze
+# Análise estática (exemplos por stack):
+# Node.js: npm run analyze (se configurado)
+# Python: mypy src/ / bandit -r src/
+# Java: mvn pmd:check / spotbugs:check
+# Go: go vet ./...
+# Ruby: brakeman (para Rails)
+# Rust: cargo audit
 ```
 
 Documente:

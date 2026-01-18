@@ -24,10 +24,17 @@ Measure and document the quality of the implementation through objective metrics
 For each modified repository:
 
 ```bash
-cd <repositório>
+cd <repository>
 
-# Run tests with coverage
-npm run test:coverage  # or equivalent command
+# Run tests with coverage (examples by stack):
+# Node.js: npm run test:coverage / jest --coverage
+# Python: pytest --cov=src tests/
+# Java: mvn jacoco:report / gradle jacocoTestReport
+# Go: go test -cover ./...
+# Ruby: rspec --coverage
+# Rust: cargo tarpaulin
+# PHP: ./vendor/bin/phpunit --coverage-html coverage/
+# C#: dotnet test /p:CollectCoverage=true
 
 # Capture results
 ```
@@ -67,14 +74,29 @@ Analyze the cyclomatic complexity of the modified files:
 ### 3. Code Quality
 
 ```bash
-# Run linting
-npm run lint
+# Run linting (examples by stack):
+# Node.js: npm run lint / eslint .
+# Python: flake8 . / pylint src/
+# Java: mvn checkstyle:check
+# Go: golangci-lint run
+# Ruby: rubocop
+# Rust: cargo clippy
 
-# Check formatting
-npm run format:check
+# Check formatting (examples by stack):
+# Node.js: prettier --check .
+# Python: black --check .
+# Java: mvn formatter:validate
+# Go: gofmt -l .
+# Ruby: rubocop --format-only
+# Rust: cargo fmt --check
 
-# Static analysis (if available)
-npm run analyze
+# Static analysis (examples by stack):
+# Node.js: npm run analyze (if configured)
+# Python: mypy src/ / bandit -r src/
+# Java: mvn pmd:check / spotbugs:check
+# Go: go vet ./...
+# Ruby: brakeman (for Rails)
+# Rust: cargo audit
 ```
 
 Document:
