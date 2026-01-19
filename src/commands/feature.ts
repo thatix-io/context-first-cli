@@ -708,6 +708,160 @@ export const featureCommands = {
     }
   },
 
+  'add-repo': async (issueId: string) => {
+    console.log(chalk.blue.bold(`\n➕ Adding repositories to feature: ${issueId}\n`));
+
+    const sessionsDir = await getSessionsDir();
+    if (!sessionsDir) {
+      exitWithError('No configuration found. Run "context-cli init" first.');
+    }
+
+    const workspacePath = path.join(sessionsDir, issueId);
+
+    if (!(await pathExists(workspacePath))) {
+      exitWithError(`Workspace for ${issueId} not found`);
+    }
+
+    // Load existing metadata
+    let metadata = await loadWorkspaceMetadata(workspacePath);
+    if (!metadata) {
+      exitWithError('Could not load workspace metadata. Run "context-cli feature start" first.');
+    }
+
+    // Load configuration
+    const configResult = await findConfig();
+    if (!configResult) {
+      exitWithError('No configuration found');
+    }
+
+    const { configDir } = configResult;
+    let orchestratorPath: string;
+    const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
+    
+    if (await pathExists(aiPropertiesInConfigDir)) {
+      orchestratorPath = configDir;
+    } else {
+      orchestratorPath = path.join(configDir, '.context-orchestrator');
+    }
+
+    const aiProperties = await loadAiProperties(orchestratorPath);
+    const basePath = getBasePath(aiProperties);
+    
+    if (!basePath) {
+      exitWithError('Could not determine base_path from ai.properties.md');
+    }
+
+    // Load manifest
+    const manifest = await loadManifest(orchestratorPath);
+    if (!manifest || !manifest.repositories) {
+      exitWithError('Could not load context-manifest.json');
+    }
+
+    // Filter out repositories already in workspace
+    const availableRepos = manifest.repositories.filter(
+      repo => !metadata!.repositories.includes(repo.id)
+    );
+
+    if (availableRepos.length === 0) {
+      console.log(chalk.yellow('All repositories from manifest are already in this workspace.'));
+      return;
+    }
+
+    // Prompt for repository selection
+    const { selectedRepoIds } = await inquirer.prompt([
+      {
+        type: 'checkbox',
+        name: 'selectedRepoIds',
+        message: 'Select additional repositories to add:',
+        choices: availableRepos.map(repo => ({
+          name: `${repo.id} - ${repo.description || 'No description'}`,
+          value: repo.id,
+        })),
+        validate: (answer: string[]) => {
+          if (answer.length === 0) {
+            return 'You must select at least one repository';
+          }
+          return true;
+        },
+      },
+    ]);
+
+    // Ask about .env files
+    const { copyEnv } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'copyEnv',
+        message: 'Copy .env* files from main repositories to new worktrees?',
+        default: true,
+      },
+    ]);
+
+    const selectedRepos = manifest.repositories.filter(repo =>
+      selectedRepoIds.includes(repo.id)
+    );
+
+    const branchName = `feature/${issueId}`;
+
+    // Create worktrees for selected repositories
+    console.log(chalk.blue('\nCreating worktrees...'));
+    
+    for (const repo of selectedRepos) {
+      const mainRepoPath = path.join(basePath, repo.id);
+      const worktreePath = path.join(workspacePath, repo.id);
+
+      try {
+        // Ensure repository is cloned
+        if (isAutoCloneEnabled(aiProperties)) {
+          await ensureRepoCloned(mainRepoPath, repo.url);
+        }
+
+        // Create worktree
+        await createWorktree(mainRepoPath, worktreePath, branchName);
+        console.log(chalk.green(`  ✓ Created worktree for ${repo.id}`));
+
+        // Copy .env files if requested
+        if (copyEnv) {
+          try {
+            const envFiles = await fs.readdir(mainRepoPath);
+            const envFilesToCopy = envFiles.filter(file => file.startsWith('.env'));
+            
+            if (envFilesToCopy.length > 0) {
+              console.log(chalk.gray(`    Copying .env* files...`));
+              for (const envFile of envFilesToCopy) {
+                await fs.copyFile(
+                  path.join(mainRepoPath, envFile),
+                  path.join(worktreePath, envFile)
+                );
+                console.log(chalk.gray(`      ✓ Copied ${envFile}`));
+              }
+            } else {
+              console.log(chalk.gray(`    No .env* files found in ${repo.id}`));
+            }
+          } catch (error: any) {
+            console.log(chalk.yellow(`    ⚠ Failed to copy .env files: ${error.message}`));
+          }
+        }
+      } catch (error: any) {
+        console.log(chalk.yellow(`  ⚠ Failed to create worktree for ${repo.id}: ${error.message}`));
+      }
+    }
+
+    // Update metadata
+    metadata.repositories.push(...selectedRepoIds);
+    metadata.lastUpdated = new Date().toISOString();
+    await saveWorkspaceMetadata(workspacePath, metadata);
+    console.log(chalk.green('\n✓ Updated workspace metadata'));
+
+    // Update docker-compose.yml
+    console.log(chalk.blue('\nUpdating docker-compose.yml...'));
+    await generateDockerCompose(workspacePath, issueId, manifest.repositories.filter(r => metadata.repositories.includes(r.id)));
+    console.log(chalk.green('✓ Updated docker-compose.yml'));
+
+    console.log(chalk.green.bold('\n✅ Repositories added successfully!'));
+    console.log(chalk.blue('\n📁 Added repositories:'));
+    selectedRepoIds.forEach((id: string) => console.log(chalk.white(`   - ${id}`)));
+  },
+
   end: async (issueId: string, options: { force?: boolean }) => {
     // Alias for remove command
     await featureCommands.remove(issueId, options);

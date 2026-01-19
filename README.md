@@ -158,6 +158,7 @@ npx context-first-cli@latest <command>
 | `feature start <id>` | Create isolated workspace with worktrees |
 | `feature list` | List all active workspaces |
 | `feature switch <id>` | Get command to switch workspace |
+| `feature add-repo <id>` | Add repositories to existing workspace |
 | `feature merge <id>` | Merge feature and clean up |
 | `feature end <id>` | Clean up workspace without merging |
 
@@ -266,6 +267,33 @@ docker-compose up -d
 - Frontend: `http://localhost:8123`
 - Postgres: `localhost:5523`
 - Redis: `localhost:6423`
+
+#### Add Repositories (If Needed)
+
+If you realize you need additional repositories after starting:
+
+```bash
+# From orchestrator directory
+npx context-first-cli@latest feature add-repo FIN-123
+```
+
+**What happens**:
+1. Shows repositories not yet in workspace
+2. Lets you select additional repos
+3. Creates worktrees for selected repos
+4. Copies `.env*` files (optional)
+5. Updates `docker-compose.yml`
+
+**Example**:
+```bash
+$ npx context-first-cli@latest feature add-repo FIN-123
+? Select additional repositories: backend, shared-utils
+? Copy .env* files? Yes
+✓ Created worktree for backend
+✓ Created worktree for shared-utils
+✓ Updated workspace metadata
+✓ Updated docker-compose.yml
+```
 
 #### Work on Feature
 

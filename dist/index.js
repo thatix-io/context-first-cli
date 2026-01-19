@@ -65,6 +65,10 @@ feature
     .option('-f, --force', 'Force merge without confirmation')
     .action(feature_1.featureCommands.merge);
 feature
+    .command('add-repo <issue-id>')
+    .description('Add repositories to an existing feature workspace')
+    .action(feature_1.featureCommands['add-repo']);
+feature
     .command('end <issue-id>')
     .description('Archive and clean up a completed feature workspace')
     .option('-f, --force', 'Force cleanup without confirmation')

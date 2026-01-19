@@ -14,6 +14,7 @@ export declare const featureCommands: {
         keepWorkspace?: boolean;
         force?: boolean;
     }) => Promise<void>;
+    'add-repo': (issueId: string) => Promise<void>;
     end: (issueId: string, options: {
         force?: boolean;
     }) => Promise<void>;

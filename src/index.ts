@@ -79,6 +79,11 @@ feature
   .action(featureCommands.merge);
 
 feature
+  .command('add-repo <issue-id>')
+  .description('Add repositories to an existing feature workspace')
+  .action(featureCommands['add-repo']);
+
+feature
   .command('end <issue-id>')
   .description('Archive and clean up a completed feature workspace')
   .option('-f, --force', 'Force cleanup without confirmation')
