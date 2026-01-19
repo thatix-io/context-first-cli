@@ -608,19 +608,10 @@ exports.featureCommands = {
         if (!metadata) {
             (0, config_1.exitWithError)('Could not load workspace metadata. Run "context-cli feature start" first.');
         }
-        // Load configuration
-        const configResult = await (0, config_1.findConfig)();
-        if (!configResult) {
+        // Get orchestrator path
+        const orchestratorPath = await getOrchestratorPath();
+        if (!orchestratorPath) {
             (0, config_1.exitWithError)('No configuration found');
-        }
-        const { configDir } = configResult;
-        let orchestratorPath;
-        const aiPropertiesInConfigDir = path_1.default.join(configDir, 'ai.properties.md');
-        if (await (0, config_1.pathExists)(aiPropertiesInConfigDir)) {
-            orchestratorPath = configDir;
-        }
-        else {
-            orchestratorPath = path_1.default.join(configDir, '.context-orchestrator');
         }
         const aiProperties = await (0, ai_properties_1.loadAiProperties)(orchestratorPath);
         const basePath = (0, ai_properties_1.getBasePath)(aiProperties);
