@@ -12,43 +12,9 @@ Before executing, make sure that:
   - `architecture.md` (immutable)
   - `plan.md` (mutable)
 
-## 📋 Project Configuration
+## Configuration
 
-**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
-
-### Required Files
-
-1. **`context-manifest.json`** (orchestrator root)
-   - List of project repositories
-   - Roles of each repository (metaspecs, application, etc.)
-   - URLs and dependencies between repositories
-
-2. **`ai.properties.md`** (orchestrator root)
-   - Project settings (`project_name`, `base_path`)
-   - Task management system (`task_management_system`)
-   - Credentials and specific configurations
-
-### How to Read
-
-```bash
-# 1. Read context-manifest.json
-cat context-manifest.json
-
-# 2. Read ai.properties.md
-cat ai.properties.md
-```
-
-### Essential Information
-
-After reading the files, you will have:
-- ✅ Complete list of project repositories
-- ✅ Location of the metaspecs repository
-- ✅ Base path to locate repositories
-- ✅ Configured task management system
-- ✅ Project-specific configurations
-
-**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
-
+Read `context-manifest.json` and `ai.properties.md` from the orchestrator to get repositories, base_path, and task_management_system.
 
 ## 📍 IMPORTANT: Understand the Structure
 
@@ -95,7 +61,7 @@ After reading the files, you will have:
 **ABSOLUTE RULE**:
 - 🛑 **EVERY code file** (`.ts`, `.js`, `.py`, `.java`, etc.) **MUST be inside** `<orchestrator>/.sessions/<ISSUE-ID>/<repo-name>/`
 - 🛑 **NEVER create code** directly in `<orchestrator>/.sessions/` or `<orchestrator>/.sessions/<ISSUE-ID>/`
-- ✅ **Only valid place**: Inside the repository’s worktree
+- ✅ **Only valid place**: Inside the repository's worktree
 
 ## ⚠️ IMPORTANT: Immutable Files
 

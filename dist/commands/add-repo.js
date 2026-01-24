@@ -35,8 +35,8 @@ async function addRepoCommand() {
                     if (!input.trim()) {
                         return 'Repository folder name is required';
                     }
-                    if (!/^[a-z0-9-]+$/.test(input)) {
-                        return 'Folder name must contain only lowercase letters, numbers, and hyphens';
+                    if (!/^[a-zA-Z0-9_-]+$/.test(input)) {
+                        return 'Folder name must contain only letters, numbers, hyphens, and underscores';
                     }
                     return true;
                 },

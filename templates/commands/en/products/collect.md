@@ -18,59 +18,11 @@ You are a product specialist responsible for collecting and documenting new idea
 
 ---
 
-## 📋 Project Setup
+## Configuration
 
-**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
+Read `context-manifest.json` and `ai.properties.md` from the orchestrator to get repositories, base_path, and task_management_system.
 
-### Mandatory Files
-
-1. **`context-manifest.json`** (orchestrator root)
-   - List of project repositories
-   - Roles of each repository (metaspecs, application, etc.)
-   - URLs and dependencies between repositories
-
-2. **`ai.properties.md`** (orchestrator root)
-   - Project settings (`project_name`, `base_path`)
-   - Task management system (`task_management_system`)
-   - Credentials and specific configurations
-
-### How to Read
-
-```bash
-# 1. Read context-manifest.json
-cat context-manifest.json
-
-# 2. Read ai.properties.md
-cat ai.properties.md
-```
-
-### Essential Information
-
-After reading the files, you will have:
-- ✅ Complete list of project repositories
-- ✅ Location of the metaspecs repository
-- ✅ Base path to locate repositories
-- ✅ Configured task management system
-- ✅ Project-specific configurations
-
-**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
-
-## Project Context
-
-Before starting, load the context by consulting:
-
-1. **Automatically locate MetaSpecs**:
-   - Read `context-manifest.json` from the orchestrator
-   - Find the repository with `"role": "metaspecs"`
-   - Read `ai.properties.md` to get the `base_path`
-   - The metaspecs are located at: `{base_path}/{metaspecs-repo-id}/`
-   - Read the `index.md` files as reference
-
-2. **Project structure**:
-   - `context-manifest.json` - List of repositories and their roles
-   - `README.md` of involved repositories
-
-## Your Goal
+## Objective
 
 Understand the user's request and capture it as an issue in the task manager (via MCP).
 
@@ -134,7 +86,7 @@ Just ensure the idea is **adequately understood**.
    - Example split:
      ```
      Original Issue: "Complete payment system"
-     
+
      Suggested Split:
      - FIN-101: Payment gateway integration (backend)
      - FIN-102: Checkout interface (frontend)
@@ -155,22 +107,22 @@ Just ensure the idea is **adequately understood**.
 5. **Issue Saving**
 
    **PRIORITY 1: Use MCP (Model Context Protocol)**
-   
+
    Check if MCP is configured for the task manager:
    - Read `ai.properties.md` from the orchestrator to identify the `task_management_system`
    - If `task_management_system=jira`: Use Jira MCP to create the issue
    - If `task_management_system=linear`: Use Linear MCP to create the issue
    - If `task_management_system=github`: Use GitHub MCP to create the issue
    - If `task_management_system=azure`: Use Azure Boards MCP to create the issue
-   
+
    **When using MCP:**
    - Create the issue directly in the task manager
    - Obtain the created issue ID (e.g., FIN-123, LIN-456)
    - Inform the user: "✅ Issue [ID] created in [task manager]"
    - **DO NOT create a .md file**
-   
+
    **FALLBACK: Create .md file only if MCP fails**
-   
+
    If MCP is not available or fails:
    - Create a file in `./.sessions/<ISSUE-ID>/collect.md`
    - Use manual ID format: `LOCAL-001`, `LOCAL-002`, etc.

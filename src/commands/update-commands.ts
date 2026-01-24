@@ -18,13 +18,17 @@ export async function updateCommands() {
   console.log(chalk.green('✓ Found orchestrator directory'));
 
   // 2. Detectar qual pasta de comandos existe
+  const genericCommandsPath = path.join(process.cwd(), 'commands');
   const claudeCommandsPath = path.join(process.cwd(), '.claude', 'commands');
   const cursorCommandsPath = path.join(process.cwd(), '.cursor', 'commands');
-  
+
   let commandsPath: string;
   let aiProvider: string;
 
-  if (fs.existsSync(claudeCommandsPath)) {
+  if (fs.existsSync(genericCommandsPath)) {
+    commandsPath = genericCommandsPath;
+    aiProvider = 'generic';
+  } else if (fs.existsSync(claudeCommandsPath)) {
     commandsPath = claudeCommandsPath;
     aiProvider = 'claude';
   } else if (fs.existsSync(cursorCommandsPath)) {
@@ -32,14 +36,15 @@ export async function updateCommands() {
     aiProvider = 'cursor';
   } else {
     console.log(chalk.red('❌ Error: No commands directory found'));
-    console.log(chalk.yellow('Expected .claude/commands or .cursor/commands'));
+    console.log(chalk.yellow('Expected commands/, .claude/commands or .cursor/commands'));
     process.exit(1);
   }
 
-  console.log(chalk.green(`✓ Found ${aiProvider} commands directory`));
+  console.log(chalk.green(`✓ Found ${aiProvider === 'generic' ? 'commands' : aiProvider + ' commands'} directory`));
 
   // 3. Fazer backup dos comandos atuais
-  const backupPath = path.join(process.cwd(), `.${aiProvider}-commands-backup-${Date.now()}`);
+  const backupSuffix = aiProvider === 'generic' ? 'commands' : `${aiProvider}-commands`;
+  const backupPath = path.join(process.cwd(), `.${backupSuffix}-backup-${Date.now()}`);
   
   const { shouldBackup } = await inquirer.prompt([
     {

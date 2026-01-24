@@ -1,123 +1,59 @@
 # Aquecimento - Carregamento de Contexto
 
-Este comando prepara o ambiente carregando o contexto completo do projeto e do workspace atual.
+Prepara o ambiente carregando o contexto otimizado do projeto.
 
-## 1. Identificar Workspace Atual
+## 1. Carregar Configuração
 
-Verifique se você está dentro de um workspace criado pelo `context-cli`:
+Leia os arquivos do orchestrator:
+- **`context-manifest.json`** - Repositórios e roles
+- **`ai.properties.md`** - base_path, task_management_system
 
-```bash
-# Verificar se está em um diretório de workspace
-pwd
-# O workspace geralmente está em ~/workspaces/<ISSUE-ID>/
+## 2. Carregar Contexto Compacto (OTIMIZADO)
+
+**IMPORTANTE**: Use carregamento PROGRESSIVO para economizar janela de contexto.
+
+### Obrigatório (warm-up)
+
+Localize metaspecs via `context-manifest.json` (role: "specs-provider"):
+
+```
+{base_path}/{metaspecs-id}/specs/_meta/WARM_UP_CONTEXT.md  (~100 linhas)
 ```
 
-Se não estiver em um workspace, pergunte ao usuário qual workspace usar ou se deve criar um novo com `feature:start`.
+Este arquivo contém TODOS os essenciais:
+- Stack tecnológica
+- Hierarquia de contexto
+- 5 regras críticas
+- Padrões de código mínimos
+- Tabela de carregamento sob demanda
 
-## 📋 Configuração do Projeto
+### Sob Demanda (NÃO carregar durante warm-up)
 
-**⚠️ IMPORTANTE: Sempre leia os arquivos de configuração do projeto ANTES de executar este comando!**
+| Necessidade | Documento |
+|-------------|-----------|
+| Gerar código | `CLAUDE.meta.md` |
+| Arquitetura | `ARCHITECTURE.md` |
+| Feature específica | `features/{FEATURE}.md` |
+| Anti-patterns completos | `ANTI_PATTERNS.md` |
 
-### Arquivos Obrigatórios
+## 3. Verificar Repositórios
 
-1. **`context-manifest.json`** (raiz do orchestrator)
-   - Lista de repositórios do projeto
-   - Roles de cada repositório (metaspecs, application, etc.)
-   - URLs e dependências entre repositórios
+Para cada repositório no `context-manifest.json`:
+- Verificar existência em `{base_path}/{repo-id}/`
+- **NÃO** ler README.md agora (sob demanda)
 
-2. **`ai.properties.md`** (raiz do orchestrator)
-   - Configurações do projeto (`project_name`, `base_path`)
-   - Sistema de gerenciamento de tarefas (`task_management_system`)
-   - Credenciais e configurações específicas
-
-### Como Ler
-
-```bash
-# 1. Ler context-manifest.json
-cat context-manifest.json
-
-# 2. Ler ai.properties.md
-cat ai.properties.md
-```
-
-### Informações Essenciais
-
-Após ler os arquivos, você terá:
-- ✅ Lista completa de repositórios do projeto
-- ✅ Localização do repositório de metaspecs
-- ✅ Base path para localizar repositórios
-- ✅ Sistema de task management configurado
-- ✅ Configurações específicas do projeto
-
-**🛑 NÃO prossiga sem ler estes arquivos!** Eles contêm informações críticas para a execução correta do comando.
-
-
-## 2. Carregar Configuração do Projeto
-
-Você já está no orchestrator do projeto (raiz do repositório atual).
-
-1. **Verifique se está na raiz do orchestrator**: `pwd` deve mostrar o diretório do orchestrator
-2. **Leia o arquivo `context-manifest.json`** na raiz do orchestrator
-3. **Leia o arquivo `ai.properties.md`** para obter configurações locais (base_path, etc.)
-
-## 3. Carregar Manifesto do Projeto
-
-Leia o `context-manifest.json` do orchestrator para entender:
-- Lista completa de repositórios do ecossistema
-- URL do repositório de MetaSpecs
-- Dependências entre repositórios
-- Roles de cada repositório (application, library, service, specs-provider)
-
-## 4. Carregar MetaSpecs
-
-O repositório de MetaSpecs é **separado** e está definido no `context-manifest.json` com `role: "metaspecs"`.
-
-**Localize o repositório de metaspecs:**
-
-1. Leia `context-manifest.json` e encontre o repositório com `role: "metaspecs"`
-2. Obtenha o `id` desse repositório (ex: "my-project-metaspecs")
-3. Leia `ai.properties.md` para obter o `base_path`
-4. O repositório de metaspecs está em: `{base_path}/{metaspecs-id}/`
-
-**Leia sempre os arquivos de índice primeiro:**
-
-1. **`README.md`** - Visão geral do projeto e estrutura de documentação
-2. **`index.md`** (na raiz ou em subpastas) - Índice de especificações disponíveis
-
-**Use os índices como referência** para navegar até as especificações específicas que você precisa. Não assuma que arquivos específicos existem - sempre consulte os índices primeiro.
-
-## 5. Carregar Sessão Atual (se existir)
-
-Verifique se existe uma sessão salva para este workspace:
+## 4. Verificar Sessão (se existir)
 
 ```bash
-# Procurar por sessão no orchestrator
 ls -la .sessions/<ISSUE-ID>/ 2>/dev/null
 ```
 
-Se existir, leia os arquivos de sessão para recuperar o contexto da última execução.
+## 5. Princípio Jidoka
 
-## 6. Contexto dos Repositórios
-
-Para cada repositório presente no workspace, leia:
-- `README.md` - Propósito e visão geral do repositório
-- Arquivo de configuração principal (`package.json`, `pom.xml`, `requirements.txt`, etc.)
-
-## 7. Navegação Inteligente
-
-- **Código**: Use ferramentas de busca (glob, grep) para localizar arquivos relevantes
-- **Documentação**: Use os índices dos MetaSpecs como referência
-- **Aguarde Instruções**: NÃO leia outros arquivos agora. Aguarde o próximo comando.
-
-## 8. Princípio Jidoka (Parar ao Detectar Problemas)
-
-Se detectar desalinhamento, conflitos ou problemas:
-1. 🛑 **PARE** imediatamente
-2. 📝 **DOCUMENTE** o problema encontrado
-3. 💬 **ALERTE** o usuário antes de prosseguir
+Se problemas detectados: **PARE**, documente, alerte o usuário.
 
 ---
 
-**Argumentos fornecidos**: #$ARGUMENTS
+**Argumentos**: #$ARGUMENTS
 
 **Status**: Contexto carregado. Aguardando próximo comando.

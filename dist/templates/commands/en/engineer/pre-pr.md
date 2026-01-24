@@ -1,4 +1,4 @@
-# Preparation for Pull Request
+# Pull Request Preparation
 
 This command validates that everything is ready to create Pull Requests.
 
@@ -8,43 +8,9 @@ This command validates that everything is ready to create Pull Requests.
 - All commits made
 - Clean and organized workspace
 
-## 📋 Project Configuration
+## Configuration
 
-**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
-
-### Required Files
-
-1. **`context-manifest.json`** (orchestrator root)
-   - List of project repositories
-   - Roles of each repository (metaspecs, application, etc.)
-   - URLs and dependencies between repositories
-
-2. **`ai.properties.md`** (orchestrator root)
-   - Project settings (`project_name`, `base_path`)
-   - Task management system (`task_management_system`)
-   - Credentials and specific configurations
-
-### How to Read
-
-```bash
-# 1. Read context-manifest.json
-cat context-manifest.json
-
-# 2. Read ai.properties.md
-cat ai.properties.md
-```
-
-### Essential Information
-
-After reading the files, you will have:
-- ✅ Complete list of project repositories
-- ✅ Location of the metaspecs repository
-- ✅ Base path to locate repositories
-- ✅ Configured task management system
-- ✅ Project-specific configurations
-
-**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
-
+Read `context-manifest.json` and `ai.properties.md` from the orchestrator to get repositories, base_path, and task_management_system.
 
 ## 🎯 Objective
 

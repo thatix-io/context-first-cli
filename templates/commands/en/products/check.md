@@ -12,42 +12,9 @@ This command validates requirements, decisions, or implementations against the p
 - ❌ **DO NOT modify code**
 - ❌ **DO NOT modify `context.md` or `architecture.md`**
 
-## 📋 Project Configuration
+## Configuration
 
-**⚠️ IMPORTANT: Always read the project configuration files BEFORE running this command!**
-
-### Required Files
-
-1. **`context-manifest.json`** (root of the orchestrator)
-   - List of project repositories
-   - Roles of each repository (metaspecs, application, etc.)
-   - URLs and dependencies between repositories
-
-2. **`ai.properties.md`** (root of the orchestrator)
-   - Project settings (`project_name`, `base_path`)
-   - Task management system
-   - Credentials and specific configurations
-
-### How to Read
-
-```bash
-# 1. Read context-manifest.json
-cat context-manifest.json
-
-# 2. Read ai.properties.md
-cat ai.properties.md
-```
-
-### Essential Information
-
-After reading the files, you will have:
-- ✅ Complete list of project repositories
-- ✅ Location of the metaspecs repository
-- ✅ Base path to locate repositories
-- ✅ Configured task management system
-- ✅ Specific project configurations
-
-**🛑 DO NOT proceed without reading these files!** They contain critical information for the correct execution of the command.
+Read `context-manifest.json` and `ai.properties.md` from the orchestrator to get repositories, base_path, and task_management_system.
 
 ## 🎯 Objective
 

@@ -21,8 +21,8 @@ async function createOrchestratorCommand() {
                     if (!input.trim()) {
                         return 'Project name is required';
                     }
-                    if (!/^[a-z0-9-]+$/.test(input)) {
-                        return 'Project name must contain only lowercase letters, numbers, and hyphens';
+                    if (!/^[a-zA-Z0-9_-]+$/.test(input)) {
+                        return 'Project name must contain only letters, numbers, hyphens, and underscores';
                     }
                     return true;
                 },
