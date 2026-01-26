@@ -17,6 +17,7 @@ Orchestrate multi-repository workflows, create isolated feature workspaces, and 
 - [Installation](#installation)
 - [Commands](#commands)
 - [Workflow Guide](#workflow-guide)
+  - [AI Commands Workflow](#ai-commands-workflow)
 - [Docker Support](#docker-support)
 - [Architecture](#architecture)
 - [Examples](#examples)
@@ -174,6 +175,106 @@ npx context-first-cli@latest <command>
 
 ## Workflow Guide
 
+### AI Commands Workflow
+
+Context-First CLI includes **markdown-based AI commands** that guide AI assistants through a structured development workflow. These commands are installed in your orchestrator and can be invoked in AI assistants like Claude, Cursor, or Windsurf.
+
+#### Complete Workflow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        CONTEXT-FIRST WORKFLOW                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────┐                                                               │
+│  │ warm-up  │  Load project context, metaspecs, and configuration          │
+│  └────┬─────┘                                                               │
+│       │                                                                     │
+│       ▼                                                                     │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                      PRODUCT DISCOVERY                               │   │
+│  │                                                                       │   │
+│  │  ┌─────────┐    ┌────────┐    ┌──────┐    ┌───────┐                 │   │
+│  │  │ collect │ -> │ refine │ -> │ spec │ -> │ check │                 │   │
+│  │  └─────────┘    └────────┘    └──────┘    └───────┘                 │   │
+│  │   Gather         Refine &      Create      Validate                  │   │
+│  │   requirements   prioritize    specs       alignment                 │   │
+│  │                                                                       │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│       │                                                                     │
+│       ▼                                                                     │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                      ENGINEERING                                     │   │
+│  │                                                                       │   │
+│  │  ┌───────┐    ┌──────┐    ┌──────┐    ┌────────┐    ┌────┐         │   │
+│  │  │ start │ -> │ plan │ -> │ work │ -> │ pre-pr │ -> │ pr │         │   │
+│  │  └───────┘    └──────┘    └──────┘    └────────┘    └────┘         │   │
+│  │   Create       Plan        Implement   Review &      Create         │   │
+│  │   workspace    approach    feature     validate      PR             │   │
+│  │                                                                       │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### Command Reference
+
+| Phase | Command | Description |
+|-------|---------|-------------|
+| **Context** | `/warm-up` | Load project context, metaspecs, and configuration files |
+| **Products** | `/products/collect` | Gather requirements from stakeholders and documentation |
+| | `/products/refine` | Refine and prioritize collected requirements |
+| | `/products/spec` | Create detailed technical specifications |
+| | `/products/check` | Validate alignment between specs and implementation |
+| **Engineer** | `/engineer/start` | Create workspace, branches, and initial context |
+| | `/engineer/plan` | Create implementation plan with architecture decisions |
+| | `/engineer/work` | Implement the feature following the plan |
+| | `/engineer/pre-pr` | Run validations, tests, and pre-PR checklist |
+| | `/engineer/pr` | Create Pull Request with proper documentation |
+| **Quality** | `/quality/observe` | Monitor and analyze code quality |
+| | `/quality/metrics` | Collect and report quality metrics |
+
+#### Using the Commands
+
+1. **Start your session** with `/warm-up` to load the project context
+2. **For new features**, follow the product discovery flow: `collect` → `refine` → `spec` → `check`
+3. **For implementation**, follow the engineering flow: `start` → `plan` → `work` → `pre-pr` → `pr`
+
+**Example session:**
+
+```bash
+# In your AI assistant (Claude, Cursor, etc.)
+
+/warm-up
+# AI loads project context and metaspecs
+
+/engineer/start FIN-123
+# AI creates workspace and initial documentation
+
+/engineer/plan
+# AI creates implementation plan
+
+/engineer/work
+# AI implements the feature
+
+/engineer/pre-pr
+# AI runs tests and validations
+
+/engineer/pr
+# AI creates the Pull Request
+```
+
+#### Available Languages
+
+Commands are available in:
+- 🇺🇸 **English** (`en`)
+- 🇪🇸 **Español** (`es`)
+- 🇧🇷 **Português** (`pt-BR`)
+
+Select your language when running `create:orchestrator` or `update:commands`.
+
+---
+
 ### Initial Setup (Once Per Project)
 
 #### Step 1: Create Orchestrator
@@ -301,12 +402,13 @@ $ npx context-first-cli@latest feature add-repo FIN-123
 # Open in editor
 code .
 
-# Use AI commands (if configured)
-/start    # Create context.md and architecture.md
-/plan     # Create plan.md
-/work     # Implement feature
-/pre-pr   # Review before PR
-/pr       # Create pull request
+# Use AI commands (in your AI assistant)
+/warm-up              # Load project context
+/engineer/start       # Create context.md and architecture.md
+/engineer/plan        # Create implementation plan
+/engineer/work        # Implement feature
+/engineer/pre-pr      # Review and validate before PR
+/engineer/pr          # Create pull request
 ```
 
 #### Stop Services
