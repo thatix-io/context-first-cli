@@ -2,6 +2,27 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs/promises';
 import inquirer from 'inquirer';
+
+async function copyEnvFilesRecursively(srcDir: string, destDir: string, logIndent: string = '      '): Promise<void> {
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      const subEntries = await fs.readdir(srcPath, { withFileTypes: true });
+      const hasEnvFiles = subEntries.some(e => e.isFile() && e.name.startsWith('.env'));
+      const hasSubDirs = subEntries.some(e => e.isDirectory());
+      if (hasEnvFiles || hasSubDirs) {
+        await fs.mkdir(destPath, { recursive: true });
+        await copyEnvFilesRecursively(srcPath, destPath, logIndent);
+      }
+    } else if (entry.isFile() && entry.name.startsWith('.env')) {
+      await fs.copyFile(srcPath, destPath);
+      const relPath = path.relative(srcDir, srcPath);
+      console.log(chalk.gray(`${logIndent}✓ Copied ${relPath}`));
+    }
+  }
+}
 import {
   findConfig,
   loadManifest,
@@ -246,20 +267,8 @@ export const featureCommands = {
         // Copy .env* files if requested
         if (copyEnvFiles) {
           try {
-            const envFiles = await fs.readdir(mainRepoPath);
-            const envFilesToCopy = envFiles.filter(file => file.startsWith('.env'));
-            
-            if (envFilesToCopy.length > 0) {
-              console.log(chalk.blue(`    Copying .env* files...`));
-              for (const envFile of envFilesToCopy) {
-                const sourcePath = path.join(mainRepoPath, envFile);
-                const destPath = path.join(worktreePath, envFile);
-                await fs.copyFile(sourcePath, destPath);
-                console.log(chalk.gray(`      ✓ Copied ${envFile}`));
-              }
-            } else {
-              console.log(chalk.gray(`    No .env* files found in ${repo.id}`));
-            }
+            console.log(chalk.blue(`    Copying .env* files...`));
+            await copyEnvFilesRecursively(mainRepoPath, worktreePath, '      ');
           } catch (error: any) {
             console.log(chalk.yellow(`    ⚠ Failed to copy .env files: ${error.message}`));
           }
@@ -812,21 +821,8 @@ export const featureCommands = {
         // Copy .env files if requested
         if (copyEnv) {
           try {
-            const envFiles = await fs.readdir(mainRepoPath);
-            const envFilesToCopy = envFiles.filter(file => file.startsWith('.env'));
-            
-            if (envFilesToCopy.length > 0) {
-              console.log(chalk.gray(`    Copying .env* files...`));
-              for (const envFile of envFilesToCopy) {
-                await fs.copyFile(
-                  path.join(mainRepoPath, envFile),
-                  path.join(worktreePath, envFile)
-                );
-                console.log(chalk.gray(`      ✓ Copied ${envFile}`));
-              }
-            } else {
-              console.log(chalk.gray(`    No .env* files found in ${repo.id}`));
-            }
+            console.log(chalk.gray(`    Copying .env* files...`));
+            await copyEnvFilesRecursively(mainRepoPath, worktreePath, '      ');
           } catch (error: any) {
             console.log(chalk.yellow(`    ⚠ Failed to copy .env files: ${error.message}`));
           }
