@@ -9,6 +9,7 @@ interface Repository {
   url: string;
   dependsOn?: string[];
   description: string;
+  mainBranch?: string;
 }
 
 interface ContextManifest {
@@ -95,6 +96,18 @@ export async function addRepoCommand() {
         default: 'application',
       },
       {
+        type: 'input',
+        name: 'mainBranch',
+        message: 'Main branch name (the branch to merge into):',
+        default: 'main',
+        validate: (input: string) => {
+          if (!input.trim()) {
+            return 'Main branch name is required';
+          }
+          return true;
+        },
+      },
+      {
         type: 'checkbox',
         name: 'dependsOn',
         message: 'Dependencies (select repositories this one depends on):',
@@ -132,6 +145,7 @@ export async function addRepoCommand() {
       role: answers.role,
       url: answers.url,
       description: answers.description,
+      mainBranch: answers.mainBranch || 'main',
     };
 
     if (answers.dependsOn && answers.dependsOn.length > 0) {
@@ -149,6 +163,7 @@ export async function addRepoCommand() {
     console.log(chalk.gray(`  ID: ${answers.id}`));
     console.log(chalk.gray(`  Role: ${answers.role}`));
     console.log(chalk.gray(`  URL: ${answers.url}`));
+    console.log(chalk.gray(`  Main branch: ${newRepo.mainBranch}`));
     if (newRepo.dependsOn && newRepo.dependsOn.length > 0) {
       console.log(chalk.gray(`  Dependencies: ${newRepo.dependsOn.join(', ')}`));
     }

@@ -596,16 +596,53 @@ export const featureCommands = {
       console.log(chalk.green(`✓ Reconstructed metadata with ${repositories.length} repository(ies)`));
     }
 
-    const targetBranch = options.targetBranch || 'main';
     const branchName = `feature/${issueId}`;
+
+    // Load ai.properties to get base_path
+    const configResult = await findConfig();
+    if (!configResult) {
+      exitWithError('No configuration found');
+    }
+
+    const { configDir } = configResult;
+
+    // Determine orchestrator path
+    let orchestratorPath: string;
+    const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
+
+    if (await pathExists(aiPropertiesInConfigDir)) {
+      orchestratorPath = configDir;
+    } else {
+      orchestratorPath = path.join(configDir, '.context-orchestrator');
+    }
+
+    const aiProperties = await loadAiProperties(orchestratorPath);
+    const basePath = getBasePath(aiProperties);
+
+    if (!basePath) {
+      exitWithError('Could not determine base_path from ai.properties.md');
+    }
+
+    // Load manifest to get per-repo mainBranch configuration
+    const manifest = await loadManifest(orchestratorPath);
+
+    // Build a map of repoId -> targetBranch
+    const getTargetBranch = (repoId: string): string => {
+      if (options.targetBranch) return options.targetBranch;
+      const repoConfig = manifest?.repositories.find(r => r.id === repoId);
+      return repoConfig?.mainBranch || 'main';
+    };
 
     // Confirm merge
     if (!options.force) {
+      const branchSummary = metadata.repositories
+        .map(id => `${id} → ${getTargetBranch(id)}`)
+        .join(', ');
       const { confirm } = await inquirer.prompt([
         {
           type: 'confirm',
           name: 'confirm',
-          message: `Merge ${branchName} into ${targetBranch} in ${metadata.repositories.length} repository(ies)?`,
+          message: `Merge ${branchName} into target branches (${branchSummary})?`,
           default: false,
         },
       ]);
@@ -616,47 +653,23 @@ export const featureCommands = {
       }
     }
 
-    // Load ai.properties to get base_path
-    const configResult = await findConfig();
-    if (!configResult) {
-      exitWithError('No configuration found');
-    }
-
-    const { configDir } = configResult;
-    
-    // Determine orchestrator path
-    let orchestratorPath: string;
-    const aiPropertiesInConfigDir = path.join(configDir, 'ai.properties.md');
-    
-    if (await pathExists(aiPropertiesInConfigDir)) {
-      orchestratorPath = configDir;
-    } else {
-      orchestratorPath = path.join(configDir, '.context-orchestrator');
-    }
-    
-    const aiProperties = await loadAiProperties(orchestratorPath);
-    const basePath = getBasePath(aiProperties);
-    
-    if (!basePath) {
-      exitWithError('Could not determine base_path from ai.properties.md');
-    }
-
     // Merge each repository
-    console.log(chalk.blue(`\nMerging ${branchName} into ${targetBranch}...\n`));
-    
+    console.log(chalk.blue(`\nMerging ${branchName}...\n`));
+
     const mergeErrors: string[] = [];
-    
+
     for (const repoId of metadata.repositories) {
       const mainRepoPath = path.join(basePath, repoId);
-      
+      const targetBranch = getTargetBranch(repoId);
+
       if (!(await pathExists(mainRepoPath))) {
         console.log(chalk.yellow(`  ⚠ Repository ${repoId} not found at ${mainRepoPath}, skipping`));
         continue;
       }
 
       try {
-        console.log(chalk.gray(`  Processing ${repoId}...`));
-        
+        console.log(chalk.gray(`  Processing ${repoId} (→ ${targetBranch})...`));
+
         // Merge branch FIRST (while worktree still exists for conflict resolution)
         await mergeBranch(mainRepoPath, branchName, targetBranch);
         console.log(chalk.green(`    ✓ Merged ${branchName} into ${targetBranch}`));
@@ -709,11 +722,11 @@ export const featureCommands = {
     }
 
     console.log(chalk.green.bold('\n🎉 Feature merged successfully!'));
-    
+
     if (!options.noPush) {
-      console.log(chalk.gray(`\n💡 Changes have been pushed to ${targetBranch}`));
+      console.log(chalk.gray('\n💡 Changes have been pushed to their respective target branches'));
     } else {
-      console.log(chalk.yellow(`\n⚠️ Remember to push ${targetBranch} manually (--no-push was used)`));
+      console.log(chalk.yellow('\n⚠️ Remember to push the target branches manually (--no-push was used)'));
     }
   },
 

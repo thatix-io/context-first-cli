@@ -11,6 +11,7 @@ const update_commands_1 = require("./commands/update-commands");
 const feature_1 = require("./commands/feature");
 const doctor_1 = require("./commands/doctor");
 const status_1 = require("./commands/status");
+const set_repo_branch_1 = require("./commands/set-repo-branch");
 const program = new commander_1.Command();
 program
     .name('context-cli')
@@ -73,6 +74,10 @@ feature
     .description('Archive and clean up a completed feature workspace')
     .option('-f, --force', 'Force cleanup without confirmation')
     .action(feature_1.featureCommands.end);
+program
+    .command('repo:set-branch [repo-id]')
+    .description('Update the main branch for a repository in context-manifest.json')
+    .action(set_repo_branch_1.setRepoBranchCommand);
 // Diagnostic commands
 program
     .command('doctor')

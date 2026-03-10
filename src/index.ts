@@ -11,6 +11,7 @@ import { updateCommands } from './commands/update-commands';
 import { featureCommands } from './commands/feature';
 import { doctorCommand } from './commands/doctor';
 import { statusCommand } from './commands/status';
+import { setRepoBranchCommand } from './commands/set-repo-branch';
 
 const program = new Command();
 
@@ -88,6 +89,11 @@ feature
   .description('Archive and clean up a completed feature workspace')
   .option('-f, --force', 'Force cleanup without confirmation')
   .action(featureCommands.end);
+
+program
+  .command('repo:set-branch [repo-id]')
+  .description('Update the main branch for a repository in context-manifest.json')
+  .action(setRepoBranchCommand);
 
 // Diagnostic commands
 program

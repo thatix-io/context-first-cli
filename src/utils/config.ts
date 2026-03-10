@@ -23,6 +23,7 @@ export interface Repository {
   url: string;
   dependsOn?: string[];
   description: string;
+  mainBranch?: string;
 }
 
 export interface WorkspaceMetadata {
